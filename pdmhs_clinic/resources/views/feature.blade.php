@@ -523,10 +523,12 @@
             <ul class="nav-links">
                 <li><a href="{{ route('home') }}">Home</a></li>
                 <li><a href="{{ route('features') }}" class="active">Features</a></li>
-                <li><a href="{{ route('scanner') }}">Scanner</a></li>
-                
+                <li><a href="{{ route('scanner') }}">QR Scanner</a></li>
                 <li><a href="{{ route('students.index') }}">Students</a></li>
                 <li><a href="{{ route('clinic-visits.index') }}">Clinic Visits</a></li>
+                <li><a href="{{ route('immunizations.index') }}">Immunizations</a></li>
+                <li><a href="{{ route('health-incidents.index') }}">Health Incidents</a></li>
+                <li><a href="{{ route('vitals.index') }}">Vitals</a></li>
                 <li><a href="{{ route('login') }}">Login</a></li>
             </ul>
         </div>

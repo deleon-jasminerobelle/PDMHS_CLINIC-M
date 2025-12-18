@@ -260,12 +260,15 @@
         <div class="nav-container">
             <a href="/" class="logo">PDMHS</a>
             <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/features">Features</a></li>
-                <li><a href="/architecture">Architecture</a></li>
-                <li><a href="/scanner">Scanner</a></li>
-                <li><a href="/login" class="active">Login</a></li>
-                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="{{ route('home') }}">Home</a></li>
+                <li><a href="{{ route('features') }}">Features</a></li>
+                <li><a href="{{ route('scanner') }}">QR Scanner</a></li>
+                <li><a href="{{ route('students.index') }}">Students</a></li>
+                <li><a href="{{ route('clinic-visits.index') }}">Clinic Visits</a></li>
+                <li><a href="{{ route('immunizations.index') }}">Immunizations</a></li>
+                <li><a href="{{ route('health-incidents.index') }}">Health Incidents</a></li>
+                <li><a href="{{ route('vitals.index') }}">Vitals</a></li>
+                <li><a href="{{ route('login') }}" class="active">Login</a></li>
             </ul>
         </div>
     </nav>
@@ -276,7 +279,7 @@
             <p>Sign in to access the PDMHS High School Clinic Management System</p>
         </div>
 
-        <form method="POST" action="/login">
+        <form method="POST" action="{{ route('login.post') }}">
             @csrf
             <div class="form-group">
                 <label for="email">Email Address</label>

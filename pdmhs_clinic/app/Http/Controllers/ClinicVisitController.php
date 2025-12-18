@@ -13,7 +13,7 @@ class ClinicVisitController extends Controller
      */
     public function index()
     {
-        $clinicVisits = ClinicVisit::with('student')->get();
+        $clinicVisits = ClinicVisit::with('student')->paginate(10);
         return view('visits.index', compact('clinicVisits'));
     }
 

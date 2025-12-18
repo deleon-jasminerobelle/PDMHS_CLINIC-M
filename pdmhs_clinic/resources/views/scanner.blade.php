@@ -360,12 +360,15 @@
         <div class="nav-container">
             <a href="/" class="logo">PDMHS</a>
             <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/features">Features</a></li>
-                <li><a href="/architecture">Architecture</a></li>
-                <li><a href="/scanner" class="active">Scanner</a></li>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="{{ route('home') }}">Home</a></li>
+                <li><a href="{{ route('features') }}">Features</a></li>
+                <li><a href="{{ route('scanner') }}" class="active">QR Scanner</a></li>
+                <li><a href="{{ route('students.index') }}">Students</a></li>
+                <li><a href="{{ route('clinic-visits.index') }}">Clinic Visits</a></li>
+                <li><a href="{{ route('immunizations.index') }}">Immunizations</a></li>
+                <li><a href="{{ route('health-incidents.index') }}">Health Incidents</a></li>
+                <li><a href="{{ route('vitals.index') }}">Vitals</a></li>
+                <li><a href="{{ route('login') }}">Login</a></li>
             </ul>
         </div>
     </nav>
