@@ -54,9 +54,6 @@
                         <a class="nav-link" href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('features') }}">Features</a>
                     </li>
                     <li class="nav-item">
@@ -66,7 +63,16 @@
                         <a class="nav-link" href="{{ route('students.index') }}">Students</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('clinic.visits.index') }}">Clinic Visits</a>
+                        <a class="nav-link" href="{{ route('clinic-visits.index') }}">Clinic Visits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('immunizations.index') }}">Immunizations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('health-incidents.index') }}">Health Incidents</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('vitals.index') }}">Vitals</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">

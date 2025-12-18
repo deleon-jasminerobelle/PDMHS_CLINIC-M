@@ -526,8 +526,7 @@
                 <li><a href="{{ route('scanner') }}">Scanner</a></li>
                 
                 <li><a href="{{ route('students.index') }}">Students</a></li>
-                <li><a href="{{ route('clinic.visits.index') }}">Clinic Visits</a></li>
-                <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ route('clinic-visits.index') }}">Clinic Visits</a></li>
                 <li><a href="{{ route('login') }}">Login</a></li>
             </ul>
         </div>

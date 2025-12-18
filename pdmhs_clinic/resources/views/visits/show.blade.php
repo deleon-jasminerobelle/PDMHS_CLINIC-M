@@ -10,10 +10,10 @@
                 <div class="flex justify-between items-center">
                     <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Clinic Visit Details</h1>
                     <div class="flex space-x-2">
-                        <a href="{{ route('clinic.visits.edit', $clinicVisit) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
+                        <a href="{{ route('clinic-visits.edit', $clinicVisit) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
                             Edit Visit
                         </a>
-                        <a href="{{ route('clinic.visits.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                        <a href="{{ route('clinic-visits.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
                             Back to Visits
                         </a>
                     </div>

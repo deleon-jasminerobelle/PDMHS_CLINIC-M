@@ -9,7 +9,7 @@
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex justify-between items-center">
                     <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Edit Clinic Visit</h1>
-                    <a href="{{ route('clinic.visits.show', $clinicVisit) }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                    <a href="{{ route('clinic-visits.show', $clinicVisit) }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
                         Cancel
                     </a>
                 </div>

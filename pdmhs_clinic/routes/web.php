@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ClinicVisitController;
+use App\Http\Controllers\ImmunizationController;
+use App\Http\Controllers\HealthIncidentController;
+use App\Http\Controllers\VitalController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,3 +30,9 @@ Route::get('/login', function () {
 Route::get('/student-health-form', function () {
     return view('student-health-form');
 })->name('student-health-form');
+
+Route::resource('students', StudentController::class);
+Route::resource('clinic-visits', ClinicVisitController::class)->parameters(['clinic-visits' => 'clinicVisit']);
+Route::resource('immunizations', ImmunizationController::class);
+Route::resource('health-incidents', HealthIncidentController::class)->parameters(['health-incidents' => 'healthIncident']);
+Route::resource('vitals', VitalController::class);

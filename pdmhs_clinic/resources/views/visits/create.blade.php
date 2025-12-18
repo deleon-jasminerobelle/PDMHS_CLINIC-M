@@ -8,7 +8,7 @@
                 <h3>Create New Clinic Visit</h3>
             </div>
             <div class="card-body">
-                <form action="{{ route('clinic.visits.store') }}" method="POST">
+                <form action="{{ route('clinic-visits.store') }}" method="POST">
                     @csrf
 
                     <div class="row">
@@ -137,7 +137,7 @@
                     </div>
 
                     <div class="d-flex justify-content-between">
-                        <a href="{{ route('clinic.visits.index') }}" class="btn btn-secondary">Cancel</a>
+                        <a href="{{ route('clinic-visits.index') }}" class="btn btn-secondary">Cancel</a>
                         <button type="submit" class="btn btn-primary">Create Clinic Visit</button>
                     </div>
                 </form>
