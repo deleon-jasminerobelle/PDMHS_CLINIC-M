@@ -2,14 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
@@ -17,10 +13,14 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+<<<<<<< HEAD
             StudentSeeder::class,
             ImmunizationSeeder::class,
             ClinicVisitSeeder::class,
             HealthIncidentSeeder::class,
+=======
+            AdviserSeeder::class,
+>>>>>>> ba9aaa71bc9abfb6ff0b899eb0b1e7a9be6803ee
         ]);
     }
 }
