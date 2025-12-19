@@ -9,43 +9,51 @@ class Student extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'student_id';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
+        'student_id',
         'first_name',
         'last_name',
         'date_of_birth',
-        'gender',
         'grade_level',
-        'student_id',
-        'emergency_contact_name',
-        'emergency_contact_phone',
-        'medical_conditions',
+        'section',
+        'school',
+        'sex',
+        'age',
+        'adviser',
+        'blood_type',
+        'height',
+        'weight',
+        'temperature',
+        'blood_pressure',
         'allergies',
-        'medications',
-        'insurance_provider',
-        'insurance_policy_number',
+        'medical_conditions',
+        'family_history',
+        'smoke_exposure',
+        'medication',
+        'vaccination_history',
+        'emergency_contact_name',
+        'emergency_contact_number',
+        'emergency_relation',
+        'emergency_address',
+        'parent_certification',
+        'bmi',
+        'has_allergies',
+        'has_medical_condition',
+        'has_surgery',
+        'surgery_details',
     ];
 
     protected $casts = [
         'date_of_birth' => 'date',
+        'allergies' => 'array',
+        'medical_conditions' => 'array',
+        'family_history' => 'array',
+        'medication' => 'array',
+        'parent_certification' => 'array',
+        'vaccination_history' => 'array',
     ];
-
-    public function clinicVisits()
-    {
-        return $this->hasMany(ClinicVisit::class);
-    }
-
-    public function healthIncidents()
-    {
-        return $this->hasMany(HealthIncident::class);
-    }
-
-    public function immunizations()
-    {
-        return $this->hasMany(Immunization::class);
-    }
-
-    public function vitals()
-    {
-        return $this->hasMany(Vital::class);
-    }
 }
