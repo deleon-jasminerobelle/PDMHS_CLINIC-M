@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - PDMHS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -115,7 +118,7 @@
             box-shadow: 0 32px 64px rgba(30, 64, 175, 0.15);
             border: 1px solid rgba(30, 64, 175, 0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             position: relative;
             overflow: hidden;
         }
@@ -242,6 +245,197 @@
             text-decoration: underline;
         }
 
+        /* Alert Messages */
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+
+        .error-text {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Role Selection */
+        .role-selection {
+            margin-bottom: 32px;
+        }
+
+        .role-selection h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            color: var(--dark);
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .role-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .role-btn {
+            padding: 16px 12px;
+            border: 2px solid var(--light);
+            border-radius: 16px;
+            background: var(--white);
+            color: var(--gray);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .role-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .role-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(30, 64, 175, 0.15);
+        }
+
+        .role-btn.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(30, 64, 175, 0.2);
+        }
+
+        .role-btn .role-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+            filter: grayscale(0.3);
+            transition: all 0.3s ease;
+        }
+
+        .role-btn:hover .role-icon {
+            filter: grayscale(0);
+            transform: scale(1.1);
+        }
+
+        .role-btn.active .role-icon {
+            filter: grayscale(0);
+            transform: scale(1.15);
+        }
+
+        /* Role-specific styling */
+        .role-btn[data-role="admin"]:hover,
+        .role-btn[data-role="admin"].active {
+            border-color: #dc2626;
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #dc2626;
+        }
+
+        .role-btn[data-role="clinic_staff"]:hover,
+        .role-btn[data-role="clinic_staff"].active {
+            border-color: #059669;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #059669;
+        }
+
+        .role-btn[data-role="adviser"]:hover,
+        .role-btn[data-role="adviser"].active {
+            border-color: #7c3aed;
+            background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+            color: #7c3aed;
+        }
+
+        .role-btn[data-role="student"]:hover,
+        .role-btn[data-role="student"].active {
+            border-color: #ea580c;
+            background: linear-gradient(135deg, #fed7aa, #fdba74);
+            color: #ea580c;
+        }
+
+        /* Top border colors */
+        .role-btn[data-role="admin"]:hover::before,
+        .role-btn[data-role="admin"].active::before {
+            background: #dc2626;
+        }
+
+        .role-btn[data-role="clinic_staff"]:hover::before,
+        .role-btn[data-role="clinic_staff"].active::before {
+            background: #059669;
+        }
+
+        .role-btn[data-role="adviser"]:hover::before,
+        .role-btn[data-role="adviser"].active::before {
+            background: #7c3aed;
+        }
+
+        .role-btn[data-role="student"]:hover::before,
+        .role-btn[data-role="student"].active::before {
+            background: #ea580c;
+        }
+
+        .role-btn .role-name {
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .role-btn .role-desc {
+            font-size: 10px;
+            opacity: 0.7;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        .role-btn:hover .role-desc,
+        .role-btn.active .role-desc {
+            opacity: 0.9;
+        }
+
+        .login-form {
+            display: none;
+        }
+
+        .login-form.active {
+            display: block;
+        }
+
+
+
         /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
@@ -279,30 +473,143 @@
             <p>Sign in to access the PDMHS High School Clinic Management System</p>
         </div>
 
-        <form method="POST" action="{{ route('login.post') }}">
-            @csrf
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
             </div>
+        @endif
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        @if ($errors->any())
+            <div class="alert alert-error">
+                @foreach ($errors->all() as $error)
+                    {{ $error }}
+                @endforeach
             </div>
+        @endif
 
-            <button type="submit" class="btn btn-primary">
-                Sign In
-            </button>
+        <!-- Role Selection -->
+        <div class="role-selection">
+            <h3>Select Your Role</h3>
+            <div class="role-buttons">
+                <div class="role-btn" data-role="admin">
+                    <div class="role-icon">🛡️</div>
+                    <div class="role-name">Admin</div>
+                </div>
+                <div class="role-btn" data-role="clinic_staff">
+                    <div class="role-icon">🩺</div>
+                    <div class="role-name">Clinic Staff</div>
+                </div>
+                <div class="role-btn" data-role="adviser">
+                    <div class="role-icon">📚</div>
+                    <div class="role-name">Adviser</div>
+                </div>
+                <div class="role-btn" data-role="student">
+                    <div class="role-icon">🎓</div>
+                    <div class="role-name">Student</div>
+                </div>
+            </div>
+        </div>
 
-            <a href="/dashboard" class="btn btn-secondary">
-                Continue as Guest
-            </a>
-        </form>
+        <!-- Login Forms for each role -->
+        <div id="admin-form" class="login-form">
+            <form method="POST" action="{{ route('login.post') }}">
+                @csrf
+                <div class="form-group">
+                    <label for="admin-email">Email Address</label>
+                    <input type="email" id="admin-email" name="username" placeholder="Enter admin email" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin-password">Password</label>
+                    <input type="password" id="admin-password" name="password" placeholder="Enter admin password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In as Admin</button>
+            </form>
+        </div>
+
+        <div id="clinic_staff-form" class="login-form">
+            <form method="POST" action="{{ route('login.post') }}">
+                @csrf
+                <div class="form-group">
+                    <label for="staff-email">Email Address</label>
+                    <input type="email" id="staff-email" name="username" placeholder="Enter staff email" required>
+                </div>
+                <div class="form-group">
+                    <label for="staff-password">Password</label>
+                    <input type="password" id="staff-password" name="password" placeholder="Enter staff password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In as Clinic Staff</button>
+            </form>
+        </div>
+
+        <div id="adviser-form" class="login-form">
+            <form method="POST" action="{{ route('login.post') }}">
+                @csrf
+                <div class="form-group">
+                    <label for="adviser-email">Email Address</label>
+                    <input type="email" id="adviser-email" name="username" placeholder="Enter adviser email" required>
+                </div>
+                <div class="form-group">
+                    <label for="adviser-password">Password</label>
+                    <input type="password" id="adviser-password" name="password" placeholder="Enter adviser password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In as Adviser</button>
+            </form>
+        </div>
+
+        <div id="student-form" class="login-form">
+            <form method="POST" action="{{ route('login.post') }}">
+                @csrf
+                <div class="form-group">
+                    <label for="student-email">Email Address</label>
+                    <input type="email" id="student-email" name="username" placeholder="Enter student email" required>
+                </div>
+                <div class="form-group">
+                    <label for="student-password">Password</label>
+                    <input type="password" id="student-password" name="password" placeholder="Enter student password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In as Student</button>
+            </form>
+        </div>
+
+
 
         <div class="login-footer">
             <p>Don't have an account? <a href="/register">Contact Administrator</a></p>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleButtons = document.querySelectorAll('.role-btn');
+            const loginForms = document.querySelectorAll('.login-form');
+
+            roleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const selectedRole = this.dataset.role;
+                    
+                    // Remove active class from all buttons
+                    roleButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Hide all forms
+                    loginForms.forEach(form => form.classList.remove('active'));
+                    
+                    // Show selected form
+                    const selectedForm = document.getElementById(selectedRole + '-form');
+                    if (selectedForm) {
+                        selectedForm.classList.add('active');
+                    }
+                });
+            });
+
+            // Auto-select student role by default
+            const studentButton = document.querySelector('[data-role="student"]');
+            if (studentButton) {
+                studentButton.click();
+            }
+        });
+    </script>
 </body>
 </html>

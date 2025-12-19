@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -16,22 +18,30 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'username' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
+        // Try to authenticate with email (using username field as email)
+        if (Auth::attempt(['email' => $request->username, 'password' => $request->password])) {
             $request->session()->regenerate();
             $user = Auth::user();
-            if ($user->role === 'admin') {
-                return redirect()->route('students.index'); // or wherever admins go
+
+            // Redirect based on role
+            if ($user->isAdmin() || $user->isClinicStaff()) {
+                return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
+            } elseif ($user->isAdviser()) {
+                return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
+            } elseif ($user->isStudent()) {
+                return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
+            } else {
+                return redirect()->route('dashboard')->with('success', 'Welcome back!');
             }
-            return redirect()->route('student-health-form');
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+            'username' => 'The provided credentials do not match our records.',
+        ])->withInput($request->only('username'));
     }
 
     public function logout(Request $request)
@@ -39,6 +49,7 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        
+        return redirect()->route('login')->with('success', 'You have been logged out successfully.');
     }
 }
