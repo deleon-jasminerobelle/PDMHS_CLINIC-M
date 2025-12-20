@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adviser Dashboard - PDMHS Clinic</title>
+    <title>Clinic Staff Dashboard - PDMHS Clinic</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -64,7 +64,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('adviser.dashboard') }}">
+            <a class="navbar-brand" href="{{ route('clinic-staff.dashboard') }}">
                 <i class="fas fa-heartbeat me-2"></i>
                 PDMHS Clinic
             </a>
@@ -72,16 +72,15 @@
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                         <i class="fas fa-user me-1"></i>
-                        {{ $user->name ?? $adviser->full_name }}
+                        {{ $user->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('adviser.dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
                         <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}" class="d-inline">
                                 @csrf
-                                <button type="submit" class="dropdown-item">
+                                <button type="submit" class="dropdown-item text-danger">
                                     <i class="fas fa-sign-out-alt me-2"></i>Logout
                                 </button>
                             </form>
@@ -112,7 +111,7 @@
 
         <!-- Header -->
         <div class="mb-4">
-            <h1 class="h3 mb-1 welcome-header">Welcome, {{ $adviser->full_name }}!</h1>
+            <h1 class="h3 mb-1 welcome-header">Welcome back, {{ $user->name }}!</h1>
         </div>
 
         <!-- Statistics Cards -->
@@ -120,55 +119,60 @@
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-blue">
                     <h2>0</h2>
-                    <p>Total Students</p>
+                    <p>Fit for Activities</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-orange">
                     <h2>0</h2>
-                    <p>Recent Clinic Visits</p>
+                    <p>Pending Assessment</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-yellow">
                     <h2>0</h2>
-                    <p>Students w/th Allergies</p>
+                    <p>Restricted Activities</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-purple">
                     <h2>0</h2>
-                    <p>Pending Visits</p>
+                    <p>Special Medical Needs</p>
                 </div>
             </div>
         </div>
 
-        <!-- Advised Students Section -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="section-card">
-                    <div class="section-header">
-                        <h5 class="mb-0">Advised Students (0)</h5>
-                    </div>
-                    <div class="section-content">
-                        <p class="text-muted text-center" style="font-style: italic;">No students assigned yet</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Medical Visits Section -->
+        <!-- Student Health Status Section -->
         <div class="row">
             <div class="col-12">
                 <div class="section-card">
                     <div class="section-header">
-                        <h5 class="mb-0">Recent Medical Visits (Last 30 Days)</h5>
+                        <h5 class="mb-0">Student Health Status</h5>
                     </div>
                     <div class="section-content">
-                        <p class="text-muted text-center" style="font-style: italic;">No recent clinic visits</p>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>LRN</th>
+                                        <th>Status</th>
+                                        <th>Last Check-up</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            <p class="text-muted" style="font-style: italic;">No student health records available</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

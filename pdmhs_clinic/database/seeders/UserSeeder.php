@@ -44,25 +44,25 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'student@pdmhs.edu.ph'],
             [
-                'name' => 'Juan Dela Cruz',
+                'name' => 'Clarence Villas',
                 'password' => Hash::make('student123'),
                 'role' => 'student',
             ]
         );
 
         User::firstOrCreate(
-            ['email' => 'maria.garcia@pdmhs.edu.ph'],
+            ['email' => 'student2@pdmhs.edu.ph'],
             [
-                'name' => 'Maria Garcia',
+                'name' => 'Student Two',
                 'password' => Hash::make('student123'),
                 'role' => 'student',
             ]
         );
 
         User::firstOrCreate(
-            ['email' => 'pedro.santos@pdmhs.edu.ph'],
+            ['email' => 'student3@pdmhs.edu.ph'],
             [
-                'name' => 'Pedro Santos',
+                'name' => 'Student Three',
                 'password' => Hash::make('student123'),
                 'role' => 'student',
             ]

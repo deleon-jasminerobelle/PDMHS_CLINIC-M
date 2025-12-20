@@ -14,14 +14,19 @@ class Student extends Model
     protected $fillable = [
         'student_id',
         'first_name',
+        'middle_name',
         'last_name',
         'date_of_birth',
+        'gender',
         'grade_level',
         'section',
+        'address',
+        'blood_type',
+        'emergency_contact',
         'contact_number',
         'emergency_contact_name',
         'emergency_contact_number',
-        'address',
+        'is_active'
     ];
 
     protected $casts = [

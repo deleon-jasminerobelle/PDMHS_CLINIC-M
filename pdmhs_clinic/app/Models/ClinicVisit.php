@@ -36,6 +36,6 @@ class ClinicVisit extends Model
 
     public function vitals()
     {
-        return $this->hasMany(Vital::class);
+        return $this->hasMany(Vitals::class);
     }
 }

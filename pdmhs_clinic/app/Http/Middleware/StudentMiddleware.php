@@ -15,14 +15,22 @@ class StudentMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        }
+        try {
+            if (!auth()->check()) {
+                return redirect()->route('login')->with('error', 'Please log in to access this page.');
+            }
 
-        if (!auth()->user()->isStudent()) {
-            return redirect()->route('dashboard')->with('error', 'Access denied. Students only.');
-        }
+            $user = auth()->user();
+            
+            if (!$user || !$user->isStudent()) {
+                auth()->logout();
+                return redirect()->route('login')->with('error', 'Access denied. Students only.');
+            }
 
-        return $next($request);
+            return $next($request);
+        } catch (\Exception $e) {
+            \Log::error('Student Middleware Error: ' . $e->getMessage());
+            return redirect()->route('login')->with('error', 'An error occurred. Please try logging in again.');
+        }
     }
 }

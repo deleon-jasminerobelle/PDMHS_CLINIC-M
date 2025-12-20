@@ -17,31 +17,51 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
-        ]);
+        try {
+            $request->validate([
+                'username' => 'required|string',
+                'password' => 'required|string',
+            ]);
 
-        // Try to authenticate with email (using username field as email)
-        if (Auth::attempt(['email' => $request->username, 'password' => $request->password])) {
-            $request->session()->regenerate();
-            $user = Auth::user();
+            // Try to authenticate with email (using username field as email)
+            if (Auth::attempt(['email' => $request->username, 'password' => $request->password], $request->filled('remember'))) {
+                $request->session()->regenerate();
+                $user = Auth::user();
 
-            // Redirect based on role
-            if ($user->isAdmin() || $user->isClinicStaff()) {
-                return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
-            } elseif ($user->isAdviser()) {
-                return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
-            } elseif ($user->isStudent()) {
-                return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
-            } else {
-                return redirect()->route('dashboard')->with('success', 'Welcome back!');
+                \Log::info('User logged in successfully', [
+                    'user_id' => $user->id,
+                    'email' => $user->email,
+                    'role' => $user->role
+                ]);
+
+                // Redirect based on role to specific dashboard
+                switch ($user->role) {
+                    case 'student':
+                        return redirect()->route('student.dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
+                    case 'adviser':
+                        return redirect()->route('adviser.dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
+                    case 'clinic_staff':
+                        return redirect()->route('clinic-staff.dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
+                    default:
+                        return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
+                }
             }
-        }
 
-        return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
-        ])->withInput($request->only('username'));
+            \Log::warning('Failed login attempt', [
+                'username' => $request->username,
+                'ip' => $request->ip()
+            ]);
+
+            return back()->withErrors([
+                'username' => 'The provided credentials do not match our records.',
+            ])->withInput($request->only('username'));
+
+        } catch (\Exception $e) {
+            \Log::error('Login Error: ' . $e->getMessage());
+            return back()->withErrors([
+                'username' => 'An error occurred during login. Please try again.',
+            ])->withInput($request->only('username'));
+        }
     }
 
     public function logout(Request $request)

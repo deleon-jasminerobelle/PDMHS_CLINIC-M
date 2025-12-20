@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AdviserMiddleware
+class ClinicStaffMiddleware
 {
     /**
      * Handle an incoming request.
@@ -24,14 +24,14 @@ class AdviserMiddleware
 
             $user = Auth::user();
             
-            if (!$user || $user->role !== 'adviser') {
+            if (!$user || $user->role !== 'clinic_staff') {
                 Auth::logout();
-                return redirect()->route('login')->with('error', 'Access denied. Adviser role required.');
+                return redirect()->route('login')->with('error', 'Access denied. Clinic staff role required.');
             }
 
             return $next($request);
         } catch (\Exception $e) {
-            \Log::error('Adviser Middleware Error: ' . $e->getMessage());
+            \Log::error('Clinic Staff Middleware Error: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'An error occurred. Please try logging in again.');
         }
     }

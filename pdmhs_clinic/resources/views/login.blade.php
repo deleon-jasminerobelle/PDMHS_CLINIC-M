@@ -252,18 +252,61 @@
             margin-bottom: 24px;
             font-weight: 600;
             font-size: 14px;
+            border: 2px solid;
+            animation: slideInDown 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            animation: progressBar 3s ease-out;
         }
 
         .alert-success {
             background: linear-gradient(135deg, #d1fae5, #a7f3d0);
             color: #065f46;
-            border: 1px solid #10b981;
+            border-color: #10b981;
+        }
+
+        .alert-success::before {
+            background: #10b981;
         }
 
         .alert-error {
             background: linear-gradient(135deg, #fee2e2, #fecaca);
             color: #991b1b;
-            border: 1px solid #ef4444;
+            border-color: #ef4444;
+            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2);
+        }
+
+        .alert-error::before {
+            background: #ef4444;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes progressBar {
+            from {
+                width: 100%;
+            }
+            to {
+                width: 0%;
+            }
         }
 
         .error-text {
@@ -271,6 +314,16 @@
             font-size: 12px;
             margin-top: 4px;
             display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         /* Role Selection */
@@ -475,14 +528,15 @@
 
         @if (session('success'))
             <div class="alert alert-success">
-                {{ session('success') }}
+                <strong>✓ Success!</strong> {{ session('success') }}
             </div>
         @endif
 
         @if ($errors->any())
             <div class="alert alert-error">
+                <strong>⚠ Login Failed!</strong>
                 @foreach ($errors->all() as $error)
-                    {{ $error }}
+                    <br>• {{ $error }}
                 @endforeach
             </div>
         @endif
@@ -516,11 +570,18 @@
                 @csrf
                 <div class="form-group">
                     <label for="admin-email">Email Address</label>
-                    <input type="email" id="admin-email" name="username" placeholder="Enter admin email" required>
+                    <input type="email" id="admin-email" name="username" placeholder="Enter admin email" 
+                           value="{{ old('username') }}" required>
+                    @error('username')
+                        <span class="error-text">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="admin-password">Password</label>
                     <input type="password" id="admin-password" name="password" placeholder="Enter admin password" required>
+                    @error('password')
+                        <span class="error-text">{{ $message }}</span>
+                    @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Sign In as Admin</button>
             </form>
@@ -531,11 +592,18 @@
                 @csrf
                 <div class="form-group">
                     <label for="staff-email">Email Address</label>
-                    <input type="email" id="staff-email" name="username" placeholder="Enter staff email" required>
+                    <input type="email" id="staff-email" name="username" placeholder="Enter staff email" 
+                           value="{{ old('username') }}" required>
+                    @error('username')
+                        <span class="error-text">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="staff-password">Password</label>
                     <input type="password" id="staff-password" name="password" placeholder="Enter staff password" required>
+                    @error('password')
+                        <span class="error-text">{{ $message }}</span>
+                    @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Sign In as Clinic Staff</button>
             </form>
@@ -546,11 +614,18 @@
                 @csrf
                 <div class="form-group">
                     <label for="adviser-email">Email Address</label>
-                    <input type="email" id="adviser-email" name="username" placeholder="Enter adviser email" required>
+                    <input type="email" id="adviser-email" name="username" placeholder="Enter adviser email" 
+                           value="{{ old('username') }}" required>
+                    @error('username')
+                        <span class="error-text">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="adviser-password">Password</label>
                     <input type="password" id="adviser-password" name="password" placeholder="Enter adviser password" required>
+                    @error('password')
+                        <span class="error-text">{{ $message }}</span>
+                    @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Sign In as Adviser</button>
             </form>
@@ -561,11 +636,18 @@
                 @csrf
                 <div class="form-group">
                     <label for="student-email">Email Address</label>
-                    <input type="email" id="student-email" name="username" placeholder="Enter student email" required>
+                    <input type="email" id="student-email" name="username" placeholder="Enter student email" 
+                           value="{{ old('username') }}" required>
+                    @error('username')
+                        <span class="error-text">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="student-password">Password</label>
                     <input type="password" id="student-password" name="password" placeholder="Enter student password" required>
+                    @error('password')
+                        <span class="error-text">{{ $message }}</span>
+                    @enderror
                 </div>
                 <button type="submit" class="btn btn-primary">Sign In as Student</button>
             </form>
@@ -582,6 +664,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             const roleButtons = document.querySelectorAll('.role-btn');
             const loginForms = document.querySelectorAll('.login-form');
+
+            // Store original button texts
+            const buttonTexts = {
+                'admin-form': 'Sign In as Admin',
+                'clinic_staff-form': 'Sign In as Clinic Staff', 
+                'adviser-form': 'Sign In as Adviser',
+                'student-form': 'Sign In as Student'
+            };
 
             roleButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -600,6 +690,13 @@
                     const selectedForm = document.getElementById(selectedRole + '-form');
                     if (selectedForm) {
                         selectedForm.classList.add('active');
+                        
+                        // Reset button text when switching forms
+                        const submitBtn = selectedForm.querySelector('.btn-primary');
+                        if (submitBtn && buttonTexts[selectedRole + '-form']) {
+                            submitBtn.innerHTML = buttonTexts[selectedRole + '-form'];
+                            submitBtn.disabled = false;
+                        }
                     }
                 });
             });
@@ -609,7 +706,87 @@
             if (studentButton) {
                 studentButton.click();
             }
+
+            // Auto-dismiss alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateY(-20px)';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 300);
+                }, 5000);
+            });
+
+            // Add shake animation to form on error
+            const errorAlert = document.querySelector('.alert-error');
+            if (errorAlert) {
+                const activeForm = document.querySelector('.login-form.active');
+                if (activeForm) {
+                    activeForm.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        activeForm.style.animation = '';
+                    }, 500);
+                }
+            }
+
+            // Add form validation feedback with proper reset
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                const submitBtn = form.querySelector('.btn-primary');
+                const formId = form.parentElement.id;
+                const originalText = buttonTexts[formId] || 'Sign In';
+                
+                // Ensure button starts with correct text
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                form.addEventListener('submit', function(e) {
+                    // Only show loading if form inputs are filled
+                    const emailInput = form.querySelector('input[name="username"]');
+                    const passwordInput = form.querySelector('input[name="password"]');
+                    
+                    if (emailInput.value.trim() && passwordInput.value.trim()) {
+                        submitBtn.innerHTML = '<span style="display: inline-block; width: 16px; height: 16px; border: 2px solid #ffffff; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 8px;"></span>Signing In...';
+                        submitBtn.disabled = true;
+                        
+                        // Reset button after 8 seconds as fallback (in case of network issues)
+                        setTimeout(() => {
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                        }, 8000);
+                    }
+                });
+            });
+
+            // Reset all buttons on page load (in case of refresh after error)
+            Object.keys(buttonTexts).forEach(formId => {
+                const form = document.getElementById(formId);
+                if (form) {
+                    const submitBtn = form.querySelector('.btn-primary');
+                    if (submitBtn) {
+                        submitBtn.innerHTML = buttonTexts[formId];
+                        submitBtn.disabled = false;
+                    }
+                }
+            });
         });
+
+        // Add CSS for shake animation and spinner
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>

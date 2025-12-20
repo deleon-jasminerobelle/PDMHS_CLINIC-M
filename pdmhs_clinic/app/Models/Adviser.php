@@ -9,7 +9,7 @@ class Adviser extends Model
     use HasFactory;
 
     protected $table = 'advisers';
-    protected $primaryKey = 'adviser_id';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'user_id',

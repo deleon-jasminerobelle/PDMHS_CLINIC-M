@@ -11,6 +11,13 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Auth;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// Public routes
 Route::get('/', function () {
     return redirect()->route('student-health-form');
 })->name('home');
@@ -27,6 +34,13 @@ Route::get('/scanner', function () {
     return view('scanner');
 })->name('scanner');
 
+Route::get('/student-health-form', function () {
+    return view('student-health-form');
+})->name('student-health-form');
+
+Route::post('/student-health-form', [HealthFormController::class, 'submitForm'])->name('student.health.store');
+
+// Authentication routes
 Route::get('/login', function () {
     return view('login');
 })->name('login');
@@ -34,38 +48,75 @@ Route::get('/login', function () {
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['auth']);
+// Main dashboard route (redirects based on role)
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard')
+    ->middleware(['auth']);
 
-// Debug route
-Route::get('/debug', function () {
-    $user = \App\Models\User::where('email', 'student@pdmhs.edu.ph')->first();
-    $student = \App\Models\Student::first();
-    
-    return response()->json([
-        'user' => $user ? $user->toArray() : 'Not found',
-        'student' => $student ? $student->toArray() : 'Not found',
-        'students_count' => \App\Models\Student::count(),
-        'users_count' => \App\Models\User::count()
-    ]);
+/*
+|--------------------------------------------------------------------------
+| Role-based Dashboard Routes
+|--------------------------------------------------------------------------
+*/
+
+// Student routes
+Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])->name('dashboard');
+    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
+    Route::put('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
 });
 
 // Adviser routes
-Route::middleware(['adviser'])->group(function () {
-    Route::get('/adviser/dashboard', [DashboardController::class, 'index'])->name('adviser.dashboard');
+Route::middleware(['auth', 'adviser'])->prefix('adviser')->name('adviser.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'adviserDashboard'])->name('dashboard');
 });
 
+// Clinic Staff routes
+Route::middleware(['auth', 'clinic.staff'])->prefix('clinic-staff')->name('clinic-staff.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'clinicStaffDashboard'])->name('dashboard');
+});
 
+/*
+|--------------------------------------------------------------------------
+| Admin/Staff Management Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/student-health-form', function () {
-    return view('student-health-form');
-})->name('student-health-form');
-
-Route::post('/student-health-form', [HealthFormController::class, 'submitForm'])->name('student.health.store');
-
-Route::middleware(['admin.staff'])->group(function () {
+Route::middleware(['auth', 'admin.staff'])->group(function () {
     Route::resource('students', StudentController::class);
     Route::resource('clinic-visits', ClinicVisitController::class)->parameters(['clinic-visits' => 'clinicVisit']);
     Route::resource('immunizations', ImmunizationController::class);
     Route::resource('health-incidents', HealthIncidentController::class)->parameters(['health-incidents' => 'healthIncident']);
     Route::resource('vitals', VitalController::class);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Debug Routes (Remove in production)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/debug', function () {
+    $user = \App\Models\User::where('email', 'student@pdmhs.edu.ph')->first();
+    $student = \App\Models\Student::first();
+    
+    return response()->json([
+        'user' => $user ? $user->toArray() : 'Not found',
+        'user_role' => $user ? $user->role : 'No role',
+        'should_see_dashboard' => $user ? ($user->role === 'student' ? 'student-dashboard' : ($user->role === 'adviser' ? 'adviser-dashboard' : 'dashboard')) : 'unknown',
+        'student' => $student ? $student->toArray() : 'Not found',
+        'students_count' => \App\Models\Student::count(),
+        'users_count' => \App\Models\User::count()
+    ]);
+});
+
+Route::get('/auth-debug', function () {
+    $user = Auth::user();
+    return response()->json([
+        'authenticated' => Auth::check(),
+        'user' => $user ? $user->toArray() : 'Not logged in',
+        'role' => $user ? $user->role : 'No role',
+        'isStudent' => $user ? $user->isStudent() : false,
+        'isClinicStaff' => $user ? $user->isClinicStaff() : false,
+    ]);
+})->middleware('auth');
