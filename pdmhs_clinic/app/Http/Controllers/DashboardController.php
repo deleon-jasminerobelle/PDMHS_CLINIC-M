@@ -55,25 +55,34 @@ class DashboardController extends Controller
 
     public function clinicStaffDashboard()
     {
-        $user = Auth::user();
-        
-        // Debug logging
-        \Log::info('Clinic Staff Dashboard Access Attempt', [
-            'user_id' => $user ? $user->id : 'null',
-            'user_role' => $user ? $user->role : 'null',
-            'user_name' => $user ? $user->name : 'null'
-        ]);
-        
-        // Ensure this is actually clinic staff
-        if ($user->role !== 'clinic_staff') {
-            \Log::warning('Non-clinic-staff trying to access clinic staff dashboard', [
-                'user_role' => $user->role,
-                'user_id' => $user->id
+        try {
+            $user = Auth::user();
+            
+            // Debug logging
+            \Log::info('Clinic Staff Dashboard Access Attempt', [
+                'user_id' => $user ? $user->id : 'null',
+                'user_role' => $user ? $user->role : 'null',
+                'user_name' => $user ? $user->name : 'null'
             ]);
-            return redirect()->route('login')->with('error', 'Access denied.');
+            
+            // Ensure this is actually clinic staff
+            if (!$user || $user->role !== 'clinic_staff') {
+                \Log::warning('Non-clinic-staff trying to access clinic staff dashboard', [
+                    'user_role' => $user ? $user->role : 'null',
+                    'user_id' => $user ? $user->id : 'null'
+                ]);
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'Access denied. Please log in as clinic staff.');
+            }
+            
+            // Regenerate session to prevent expiration issues
+            request()->session()->regenerate();
+            
+            return $this->clinicStaffDashboardView($user);
+        } catch (\Exception $e) {
+            \Log::error('Clinic Staff Dashboard Error: ' . $e->getMessage());
+            return redirect()->route('login')->with('error', 'Session expired. Please log in again.');
         }
-        
-        return $this->clinicStaffDashboardView($user);
     }
 
     public function index()
@@ -117,100 +126,119 @@ class DashboardController extends Controller
 
     private function studentDashboardView($user)
     {
-        // Get student record by matching name (temporary solution)
-        $nameParts = explode(' ', $user->name);
-        $firstName = $nameParts[0] ?? '';
-        $lastName = $nameParts[1] ?? '';
-        
-        $student = Student::where('first_name', $firstName)
-                         ->where('last_name', $lastName)
-                         ->first();
-        
-        if (!$student) {
-            // If exact match fails, try the first student for demo purposes
-            $student = Student::first();
-            if (!$student) {
-                return redirect()->route('login')->with('error', 'No student records found.');
-            }
-        }
-
         try {
-            // Initialize default values
-            $latestVitals = null;
-            $bmi = null;
-            $bmiCategory = null;
+            // Get student record by matching name (temporary solution)
+            $nameParts = explode(' ', $user->name);
+            $firstName = $nameParts[0] ?? '';
+            $lastName = $nameParts[1] ?? '';
+            
+            $student = Student::where('first_name', $firstName)
+                             ->where('last_name', $lastName)
+                             ->first();
+            
+            if (!$student) {
+                // If exact match fails, try the first student for demo purposes
+                $student = Student::first();
+                if (!$student) {
+                    return redirect()->route('login')->with('error', 'No student records found.');
+                }
+            }
+
+            // Initialize all required variables with default values
+            $latestVitals = (object) ['weight' => 'N/A', 'height' => 'N/A'];
+            $bmi = 'N/A';
+            $bmiCategory = 'N/A';
             $allergies = collect();
             $immunizations = collect();
             $totalVisits = 0;
             $recentVisits = collect();
             $lastVisit = null;
+            $age = null;
+
+            // Calculate age if birth date exists
+            if ($student->date_of_birth) {
+                try {
+                    $age = \Carbon\Carbon::parse($student->date_of_birth)->age;
+                } catch (\Exception $e) {
+                    \Log::info('Age calculation failed: ' . $e->getMessage());
+                    $age = 'N/A';
+                }
+            }
 
             // Try to get clinic visits if the relationship exists
             try {
-                $clinicVisits = $student->clinicVisits()
-                    ->orderBy('visit_date', 'desc')
-                    ->get();
-                $totalVisits = $clinicVisits->count();
-                $recentVisits = $clinicVisits->take(5);
-                $lastVisit = $clinicVisits->first();
+                if (method_exists($student, 'clinicVisits')) {
+                    $clinicVisits = $student->clinicVisits()
+                        ->orderBy('visit_date', 'desc')
+                        ->get();
+                    $totalVisits = $clinicVisits->count();
+                    $recentVisits = $clinicVisits->take(5);
+                    $lastVisit = $clinicVisits->first();
+                }
             } catch (\Exception $e) {
-                // If clinic visits don't exist, continue with empty data
                 \Log::info('Clinic visits not available: ' . $e->getMessage());
             }
 
             // Try to get allergies if the relationship exists
             try {
-                $allergies = $student->allergies ?? collect();
+                if (method_exists($student, 'allergies')) {
+                    $allergies = $student->allergies ?? collect();
+                }
             } catch (\Exception $e) {
                 \Log::info('Allergies not available: ' . $e->getMessage());
             }
 
             // Try to get immunizations if the relationship exists
             try {
-                $immunizations = $student->immunizations()
-                    ->orderBy('date_administered', 'desc')
-                    ->get();
+                if (method_exists($student, 'immunizations')) {
+                    $immunizations = $student->immunizations()
+                        ->orderBy('date_administered', 'desc')
+                        ->get();
+                }
             } catch (\Exception $e) {
                 \Log::info('Immunizations not available: ' . $e->getMessage());
             }
 
-            // Calculate age if birth date exists
-            $age = null;
-            if ($student->date_of_birth) {
-                try {
-                    $age = \Carbon\Carbon::parse($student->date_of_birth)->age;
-                } catch (\Exception $e) {
-                    \Log::info('Age calculation failed: ' . $e->getMessage());
-                }
-            }
+            \Log::info('Student Dashboard Data Prepared', [
+                'student_id' => $student->id,
+                'age' => $age,
+                'total_visits' => $totalVisits,
+                'allergies_count' => $allergies->count()
+            ]);
+
+            return view('student-dashboard-simple', compact(
+                'user', 
+                'student', 
+                'lastVisit', 
+                'latestVitals', 
+                'bmi',
+                'bmiCategory',
+                'allergies', 
+                'immunizations', 
+                'age',
+                'recentVisits',
+                'totalVisits'
+            ));
 
         } catch (\Exception $e) {
             \Log::error('Student Dashboard Error: ' . $e->getMessage());
-            // Return with minimal data if there are issues
-            $latestVitals = null;
-            $bmi = null;
-            $bmiCategory = null;
-            $allergies = collect();
-            $immunizations = collect();
-            $age = null;
-            $recentVisits = collect();
-            $totalVisits = 0;
-            $lastVisit = null;
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            // Return with minimal safe data
+            return view('student-dashboard-simple', [
+                'user' => $user,
+                'student' => null,
+                'lastVisit' => null,
+                'latestVitals' => (object) ['weight' => 'N/A', 'height' => 'N/A'],
+                'bmi' => 'N/A',
+                'bmiCategory' => 'N/A',
+                'allergies' => collect(),
+                'immunizations' => collect(),
+                'age' => 'N/A',
+                'recentVisits' => collect(),
+                'totalVisits' => 0
+            ]);
         }
-
-        return view('student-dashboard', compact(
-            'user', 
-            'student', 
-            'lastVisit', 
-            'latestVitals', 
-            'bmi',
-            'bmiCategory',
-            'allergies', 
-            'immunizations', 
-            'age',
-            'recentVisits',
-            'totalVisits'
-        ));
     }
 
     private function adviserDashboardView($user)

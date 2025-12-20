@@ -1,63 +1,3 @@
-<<<<<<< HEAD
-@extends('layouts.app')
-
-@section('content')
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Login to PDMHS Clinic</h4>
-            </div>
-            <div class="card-body">
-                @if($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('login.post') }}">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" value="{{ old('email') }}" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="role" class="form-label">Select Your Role</label>
-                        <select id="role" name="role" class="form-select" required>
-                            <option value="">Choose your role</option>
-                            <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                            <option value="clinic_staff" {{ old('role') == 'clinic_staff' ? 'selected' : '' }}>Clinic Staff</option>
-                            <option value="adviser" {{ old('role') == 'adviser' ? 'selected' : '' }}>Adviser</option>
-                            <option value="student" {{ old('role') == 'student' ? 'selected' : '' }}>Student</option>
-                        </select>
-                    </div>
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">
-                            Sign In
-                        </button>
-                    </div>
-                </form>
-
-                <div class="text-center mt-3">
-                    <p class="mb-0">Don't have an account? <a href="{{ route('register') }}">Sign Up</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
-=======
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -547,8 +487,6 @@
             display: block;
         }
 
-
-
         /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
@@ -560,6 +498,18 @@
                 padding: 32px 24px;
             }
         }
+
+        /* Animation keyframes */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -567,15 +517,8 @@
         <div class="nav-container">
             <a href="/" class="logo">PDMHS</a>
             <ul class="nav-links">
-                <li><a href="{{ route('home') }}">Home</a></li>
-                <li><a href="{{ route('features') }}">Features</a></li>
-                <li><a href="{{ route('scanner') }}">QR Scanner</a></li>
-                <li><a href="{{ route('students.index') }}">Students</a></li>
-                <li><a href="{{ route('clinic-visits.index') }}">Clinic Visits</a></li>
-                <li><a href="{{ route('immunizations.index') }}">Immunizations</a></li>
-                <li><a href="{{ route('health-incidents.index') }}">Health Incidents</a></li>
-                <li><a href="{{ route('vitals.index') }}">Vitals</a></li>
-                <li><a href="{{ route('login') }}" class="active">Login</a></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="#" class="active">Login</a></li>
             </ul>
         </div>
     </nav>
@@ -713,8 +656,6 @@
             </form>
         </div>
 
-
-
         <div class="login-footer">
             <p>Don't have an account? <a href="/register">Contact Administrator</a></p>
         </div>
@@ -832,22 +773,6 @@
                 }
             });
         });
-
-        // Add CSS for shake animation and spinner
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                20%, 40%, 60%, 80% { transform: translateX(5px); }
-            }
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
->>>>>>> ba9aaa71bc9abfb6ff0b899eb0b1e7a9be6803ee

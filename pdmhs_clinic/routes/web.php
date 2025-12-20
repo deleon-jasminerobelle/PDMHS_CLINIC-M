@@ -29,6 +29,16 @@ Route::get('/login', function () {
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// CSRF token refresh route
+Route::get('/csrf-token', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+})->middleware('auth');
+
+// Keep alive route
+Route::post('/keep-alive', function () {
+    return response()->json(['status' => 'alive']);
+})->middleware('auth');
+
 Route::get('/register', function () {
     return view('register');
 })->name('register');
@@ -96,12 +106,6 @@ Route::middleware(['auth', 'admin.staff'])->group(function () {
     Route::get('/architecture', function () {
         return view('architecture');
     })->name('architecture');
-
-    Route::middleware(['check.health.form'])->group(function () {
-        Route::get('/student-dashboard', [HealthFormController::class, 'dashboard'])->name('student.dashboard');
-        Route::get('/student-profile/edit', [HealthFormController::class, 'edit'])->name('student.profile.edit');
-        Route::put('/student-profile', [HealthFormController::class, 'update'])->name('student.profile.update');
-    });
 });
 
 /*
