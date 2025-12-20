@@ -21,9 +21,17 @@ class CheckHealthForm
             if ($user->role === 'admin') {
                 return $next($request);
             }
-            // Check if health form is completed (assuming a session flag or database field)
-            if (!$request->session()->has('health_form_completed')) {
-                return redirect()->route('student-health-form');
+            if ($user->role === 'student') {
+                // Check if user has student_id and if student exists in database
+                if (!$user->student_id) {
+                    return redirect()->route('student-health-form');
+                }
+                $student = \App\Models\Student::where('student_id', $user->student_id)->first();
+                if (!$student) {
+                    return redirect()->route('student-health-form');
+                }
+                // Store student_id in session for later use
+                $request->session()->put('student_id', $user->student_id);
             }
         }
         return $next($request);

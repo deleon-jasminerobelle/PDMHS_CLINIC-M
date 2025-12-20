@@ -72,4 +72,25 @@ class LoginController extends Controller
         
         return redirect()->route('login')->with('success', 'You have been logged out successfully.');
     }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string|in:admin,clinic_staff,adviser,student',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+        ]);
+
+        Auth::login($user);
+
+        return redirect()->route('students.index')->with('success', 'Registration successful!');
+    }
 }
