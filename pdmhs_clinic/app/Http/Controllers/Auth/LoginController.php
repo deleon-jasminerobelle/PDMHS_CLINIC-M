@@ -23,8 +23,38 @@ class LoginController extends Controller
                 'password' => 'required|string',
             ]);
 
+            // Check if user is already logged in with the same credentials
+            if (Auth::check()) {
+                $currentUser = Auth::user();
+                if ($currentUser->email === $request->username) {
+                    // User is already logged in with same credentials, redirect to appropriate dashboard
+                    \Log::info('User already logged in, redirecting to dashboard', [
+                        'user_id' => $currentUser->id,
+                        'email' => $currentUser->email,
+                        'role' => $currentUser->role
+                    ]);
+
+                    switch ($currentUser->role) {
+                        case 'student':
+                            return redirect()->route('student.dashboard')->with('success', 'Welcome back, ' . $currentUser->name . '!');
+                        case 'adviser':
+                            return redirect()->route('adviser.dashboard')->with('success', 'Welcome back, ' . $currentUser->name . '!');
+                        case 'clinic_staff':
+                            return redirect()->route('clinic-staff.dashboard')->with('success', 'Welcome back, ' . $currentUser->name . '!');
+                        default:
+                            return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $currentUser->name . '!');
+                    }
+                } else {
+                    // Different user trying to login, logout current user first
+                    Auth::logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+                }
+            }
+
             // Try to authenticate with email (using username field as email)
             if (Auth::attempt(['email' => $request->username, 'password' => $request->password], $request->filled('remember'))) {
+                // Only regenerate session for new logins, not for already authenticated users
                 $request->session()->regenerate();
                 $user = Auth::user();
 

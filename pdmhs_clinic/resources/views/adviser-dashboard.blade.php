@@ -72,7 +72,7 @@
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                         <i class="fas fa-user me-1"></i>
-                        {{ $user->name ?? $adviser->full_name }}
+                        {{ $user->name }}
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
@@ -80,7 +80,7 @@
                         <li>
                             <form method="POST" action="{{ route('logout') }}" class="d-inline">
                                 @csrf
-                                <button type="submit" class="dropdown-item">
+                                <button type="submit" class="dropdown-item text-danger">
                                     <i class="fas fa-sign-out-alt me-2"></i>Logout
                                 </button>
                             </form>
@@ -111,63 +111,64 @@
 
         <!-- Header -->
         <div class="mb-4">
-            <h1 class="h3 mb-1 welcome-header">Welcome, {{ $adviser->full_name }}!</h1>
+            <h1 class="h3 mb-1 welcome-header">Welcome, {{ $user->name }}!</h1>
+            <p class="text-muted">Adviser Dashboard - Manage your students' health records</p>
         </div>
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-blue">
-                    <h2>0</h2>
+                    <h2>{{ $totalStudents ?? 0 }}</h2>
                     <p>Total Students</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-orange">
-                    <h2>0</h2>
-                    <p>Recent Clinic Visits</p>
+                    <h2>{{ $studentsWithAllergies ?? 0 }}</h2>
+                    <p>Students with Allergies</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-yellow">
-                    <h2>0</h2>
-                    <p>Students w/th Allergies</p>
+                    <h2>{{ $pendingVisits ?? 0 }}</h2>
+                    <p>Pending Visits</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-purple">
-                    <h2>0</h2>
-                    <p>Pending Visits</p>
+                    <h2>{{ isset($recentVisits) ? $recentVisits->count() : 0 }}</h2>
+                    <p>Recent Visits</p>
                 </div>
             </div>
         </div>
 
-        <!-- Advised Students Section -->
+        <!-- Students List -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="section-card">
                     <div class="section-header">
-                        <h5 class="mb-0">Advised Students (0)</h5>
+                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Advised Students</h5>
                     </div>
                     <div class="section-content">
-                        <p class="text-muted text-center" style="font-style: italic;">No students assigned yet</p>
+                        <p class="text-muted" style="font-style: italic;">No students assigned to you yet.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Recent Medical Visits Section -->
+        <!-- Recent Medical Visits -->
         <div class="row">
             <div class="col-12">
                 <div class="section-card">
                     <div class="section-header">
-                        <h5 class="mb-0">Recent Medical Visits (Last 30 Days)</h5>
+                        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Medical Visits</h5>
                     </div>
                     <div class="section-content">
-                        <p class="text-muted text-center" style="font-style: italic;">No recent clinic visits</p>
+                        <p class="text-muted" style="font-style: italic;">No recent medical visits for your students.</p>
                     </div>
                 </div>
             </div>
