@@ -91,6 +91,16 @@ class LoginController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('students.index')->with('success', 'Registration successful!');
+        // Redirect based on role to specific dashboard
+        switch ($user->role) {
+            case 'student':
+                return redirect()->route('student.dashboard')->with('success', 'Registration successful! Welcome, ' . $user->name . '!');
+            case 'adviser':
+                return redirect()->route('adviser.dashboard')->with('success', 'Registration successful! Welcome, ' . $user->name . '!');
+            case 'clinic_staff':
+                return redirect()->route('clinic-staff.dashboard')->with('success', 'Registration successful! Welcome, ' . $user->name . '!');
+            default:
+                return redirect()->route('dashboard')->with('success', 'Registration successful! Welcome, ' . $user->name . '!');
+        }
     }
 }
