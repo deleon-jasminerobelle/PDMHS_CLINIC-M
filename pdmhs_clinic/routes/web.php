@@ -45,6 +45,10 @@ Route::get('/register', function () {
 
 Route::post('/register', [LoginController::class, 'register'])->name('register.post');
 
+Route::get('/feature', function () {
+    return view('feature');
+})->name('features');
+
 Route::get('/student-health-form', function () {
     return view('student-health-form');
 })->name('student-health-form');
@@ -94,10 +98,6 @@ Route::middleware(['auth', 'admin.staff'])->group(function () {
 
     Route::get('/health-form', [HealthFormController::class, 'index'])->name('health-form.index');
     Route::post('/health-form', [HealthFormController::class, 'store'])->name('health-form.store');
-
-    Route::get('/feature', function () {
-        return view('feature');
-    })->name('features');
 
     Route::get('/scanner', function () {
         return view('scanner');

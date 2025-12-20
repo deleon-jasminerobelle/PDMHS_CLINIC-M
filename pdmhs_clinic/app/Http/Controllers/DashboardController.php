@@ -206,7 +206,7 @@ class DashboardController extends Controller
                 'allergies_count' => $allergies->count()
             ]);
 
-            return view('student-dashboard-simple', compact(
+            return view('student-dashboard', compact(
                 'user', 
                 'student', 
                 'lastVisit', 
@@ -225,7 +225,7 @@ class DashboardController extends Controller
             \Log::error('Stack trace: ' . $e->getTraceAsString());
             
             // Return with minimal safe data
-            return view('student-dashboard-simple', [
+            return view('student-dashboard', [
                 'user' => $user,
                 'student' => null,
                 'lastVisit' => null,

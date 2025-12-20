@@ -41,76 +41,6 @@
             overflow-x: hidden;
         }
 
-        /* Navigation */
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(30, 64, 175, 0.1);
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 80px;
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
-
-        .logo::before {
-            content: "🏥";
-            font-size: 32px;
-            -webkit-text-fill-color: initial;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 8px;
-            list-style: none;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--gray);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 15px;
-            padding: 10px 20px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-            background: var(--light);
-            transform: translateY(-2px);
-        }
-
-        .nav-links a.active {
-            color: var(--primary);
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-        }
-
         /* Login Form */
         .login-container {
             background: var(--white);
@@ -499,9 +429,6 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
 
             .login-container {
                 margin: 2rem;
@@ -523,16 +450,6 @@
     </style>
 </head>
 <body>
-    <nav>
-        <div class="nav-container">
-            <a href="/" class="logo">PDMHS</a>
-            <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="#" class="active">Login</a></li>
-            </ul>
-        </div>
-    </nav>
-
     <div class="login-container">
         <div class="login-header">
             <h1>Welcome Back</h1>
