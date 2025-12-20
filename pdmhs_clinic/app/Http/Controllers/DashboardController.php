@@ -51,12 +51,13 @@ class DashboardController extends Controller
                 'user' => $user,
                 'student' => null,
                 'lastVisit' => null,
-                'latestVitals' => (object) ['weight' => 'N/A', 'height' => 'N/A'],
-                'bmi' => 'N/A',
-                'bmiCategory' => 'N/A',
+                'latestVitals' => (object) ['weight' => '', 'height' => ''],
+                'bmi' => '',
+                'bmiCategory' => '',
+                'bloodType' => '',
                 'allergies' => collect(),
                 'immunizations' => collect(),
-                'age' => 'N/A',
+                'age' => '',
                 'recentVisits' => collect(),
                 'totalVisits' => 0
             ];
@@ -203,15 +204,15 @@ class DashboardController extends Controller
             
             // Initialize all required variables with safe default values
             $student = null;
-            $latestVitals = (object) ['weight' => 'N/A', 'height' => 'N/A'];
-            $bmi = 'N/A';
-            $bmiCategory = 'N/A';
+            $latestVitals = (object) ['weight' => '', 'height' => ''];
+            $bmi = '';
+            $bmiCategory = '';
             $allergies = collect();
             $immunizations = collect();
             $totalVisits = 0;
             $recentVisits = collect();
             $lastVisit = null;
-            $age = 'N/A';
+            $age = '';
 
             // Try to get student record by matching name (simplified approach)
             try {
@@ -237,7 +238,7 @@ class DashboardController extends Controller
                             $age = \Carbon\Carbon::parse($student->date_of_birth)->age;
                         } catch (\Exception $e) {
                             \Log::info('Age calculation failed: ' . $e->getMessage());
-                            $age = 'N/A';
+                            $age = '';
                         }
                     }
                 } else {
@@ -277,12 +278,12 @@ class DashboardController extends Controller
                 'user' => $user,
                 'student' => null,
                 'lastVisit' => null,
-                'latestVitals' => (object) ['weight' => 'N/A', 'height' => 'N/A'],
-                'bmi' => 'N/A',
-                'bmiCategory' => 'N/A',
+                'latestVitals' => (object) ['weight' => '', 'height' => ''],
+                'bmi' => '',
+                'bmiCategory' => '',
                 'allergies' => collect(),
                 'immunizations' => collect(),
-                'age' => 'N/A',
+                'age' => '',
                 'recentVisits' => collect(),
                 'totalVisits' => 0
             ]);

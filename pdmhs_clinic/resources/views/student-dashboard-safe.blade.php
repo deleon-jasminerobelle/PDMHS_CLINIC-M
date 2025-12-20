@@ -73,7 +73,7 @@
             </a>
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user me-1"></i>
                         {{ $user->name }}
                     </a>
@@ -81,11 +81,11 @@
                         <li><a class="dropdown-item" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Edit Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
-                            <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                            <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
-                                <button type="submit" class="dropdown-item text-danger">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                </button>
                             </form>
                         </li>
                     </ul>
@@ -119,45 +119,79 @@
 
         <!-- Health Statistics Cards -->
         <div class="row mb-4">
-            <div class="col-md-2 mb-3">
-                <div class="stat-card stat-card-blue">
-                    <h2>{{ $age ?? 'N/A' }}</h2>
-                    <p>Age (Years)</p>
-                </div>
-            </div>
-
-            <div class="col-md-2 mb-3">
-                <div class="stat-card stat-card-orange">
-                    <h2>{{ isset($latestVitals->weight) ? $latestVitals->weight : 'N/A' }}</h2>
-                    <p>Weight (kg)</p>
-                </div>
-            </div>
-
-            <div class="col-md-2 mb-3">
-                <div class="stat-card stat-card-yellow">
-                    <h2>{{ isset($latestVitals->height) ? $latestVitals->height : 'N/A' }}</h2>
-                    <p>Height (cm)</p>
-                </div>
-            </div>
-
-            <div class="col-md-2 mb-3">
-                <div class="stat-card stat-card-purple">
-                    <h2>{{ $bmi ?? 'N/A' }}</h2>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card stat-card-blue d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <h2>{{ $bmi ?? '' }}</h2>
                     <p>BMI</p>
                 </div>
             </div>
 
-            <div class="col-md-2 mb-3">
-                <div class="stat-card stat-card-green">
-                    <h2>{{ $totalVisits ?? 0 }}</h2>
-                    <p>Total Visits</p>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card stat-card-orange d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <h2>{{ $bloodType ?? '' }}</h2>
+                    <p>Blood Type</p>
                 </div>
             </div>
 
-            <div class="col-md-2 mb-3">
-                <div class="stat-card stat-card-red">
+            <div class="col-md-3 mb-3">
+                <div class="stat-card stat-card-yellow d-flex flex-column justify-content-center" style="min-height: 120px;">
                     <h2>{{ isset($allergies) && $allergies ? $allergies->count() : 0 }}</h2>
-                    <p>Known Allergies</p>
+                    <p>Allergies</p>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="stat-card stat-card-purple d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <h2>{{ isset($lastVisit) && $lastVisit ? $lastVisit->visit_date->format('M j') : '' }}</h2>
+                    <p>Last Visit</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Information Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h5 class="mb-0"><i class="fas fa-heartbeat me-2"></i>Health Information</h5>
+                    </div>
+                    <div class="section-content">
+                        <div class="row">
+                            <div class="col-md-2 mb-3">
+                                <div class="text-center">
+                                    <h6 class="text-muted mb-1">Height</h6>
+                                    <h4 class="mb-0">{{ isset($latestVitals->height) && $latestVitals->height ? $latestVitals->height . ' cm' : '' }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <div class="text-center">
+                                    <h6 class="text-muted mb-1">Weight</h6>
+                                    <h4 class="mb-0">{{ isset($latestVitals->weight) && $latestVitals->weight ? $latestVitals->weight . ' kg' : '' }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <div class="text-center">
+                                    <h6 class="text-muted mb-1">Age</h6>
+                                    <h4 class="mb-0">{{ $age ?? '' }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="text-center">
+                                    <h6 class="text-muted mb-1">BMI</h6>
+                                    <h4 class="mb-0">{{ $bmi ?? '' }}</h4>
+                                    @if(isset($bmiCategory) && $bmiCategory)
+                                        <small class="text-muted">({{ $bmiCategory }})</small>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="text-center">
+                                    <h6 class="text-muted mb-1">Blood Type</h6>
+                                    <h4 class="mb-0">{{ $bloodType ?? '' }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -174,15 +208,24 @@
                     </div>
                     <div class="section-content">
                         @if(isset($allergies) && $allergies && $allergies->count() > 0)
-                            @foreach($allergies as $allergy)
-                                <span class="badge bg-info me-2 mb-2">
-                                    <i class="fas fa-exclamation-circle me-1"></i>
-                                    {{ $allergy->allergy_name ?? 'Unknown' }}
-                                    <small>({{ $allergy->severity ?? 'Unknown' }})</small>
-                                </span>
-                            @endforeach
+                            <div class="row">
+                                @foreach($allergies as $allergy)
+                                    <div class="col-md-4 col-sm-6 mb-3">
+                                        <div class="alert alert-info mb-0 d-flex align-items-center" style="padding: 12px; border-radius: 8px;">
+                                            <i class="fas fa-exclamation-circle me-2"></i>
+                                            <div>
+                                                <strong>{{ $allergy->allergy_name ?? 'Unknown' }}</strong>
+                                                <br><small>Severity: {{ $allergy->severity ?? 'Unknown' }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         @else
-                            <p class="text-muted text-center">No known allergies recorded</p>
+                            <div class="text-center py-4">
+                                <i class="fas fa-check-circle text-success mb-2" style="font-size: 2rem;"></i>
+                                <p class="text-muted mb-0">No known allergies recorded</p>
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -212,7 +255,7 @@
                                         @foreach($immunizations as $immunization)
                                             <tr>
                                                 <td>
-                                                    <strong>{{ $immunization->vaccine_name ?? 'N/A' }}</strong>
+                                                    <strong>{{ $immunization->vaccine_name ?? '' }}</strong>
                                                     @if(isset($immunization->vaccine_type))
                                                         <br><small class="text-muted">{{ $immunization->vaccine_type }}</small>
                                                     @endif
@@ -222,10 +265,10 @@
                                                         <div>{{ $immunization->date_administered->format('M j, Y') }}</div>
                                                         <small class="text-muted">{{ $immunization->date_administered->format('g:i A') }}</small>
                                                     @else
-                                                        <div>N/A</div>
+                                                        <div></div>
                                                     @endif
                                                 </td>
-                                                <td>{{ $immunization->administered_by ?? 'N/A' }}</td>
+                                                <td>{{ $immunization->administered_by ?? '' }}</td>
                                                 <td>
                                                     @if(isset($immunization->notes) && $immunization->notes)
                                                         {{ $immunization->notes }}

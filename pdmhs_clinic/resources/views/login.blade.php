@@ -275,7 +275,9 @@
             font-size: 30px;
             font-weight: 800;
             margin-bottom: 16px;
-            color: var(--dark);
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-align: center;
             letter-spacing: -0.5px;
         }
@@ -453,7 +455,7 @@
     <div class="login-container">
         <div class="login-header">
             <h1>Welcome Back</h1>
-            <p>Sign in to access the PDMHS High School Clinic Management System</p>
+            <p style="font-family: 'Albert Sans', sans-serif; font-size: 20px; font-weight: 600; color: var(--gray); margin-top: 8px;">Access your health dashboard</p>
         </div>
 
         @if (session('success'))
