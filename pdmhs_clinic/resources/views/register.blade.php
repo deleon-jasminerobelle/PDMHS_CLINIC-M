@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - PDMHS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -38,15 +39,16 @@
         }
 
         .register-container {
-            background: var(--white);
-            border-radius: 24px;
+            background: #f8f9fa;
+            border-radius: 20px;
             padding: 48px;
             box-shadow: 0 32px 64px rgba(30, 64, 175, 0.15);
             border: 1px solid rgba(30, 64, 175, 0.1);
-            width: 100%;
-            max-width: 400px;
+            width: 800px;
+            min-height: fit-content;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
+            margin: 2rem auto;
         }
 
         .register-container::before {
@@ -65,7 +67,7 @@
         }
 
         .register-header h1 {
-            font-size: 32px;
+            font-size: 40px;
             font-weight: 900;
             margin-bottom: 8px;
             background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
@@ -74,17 +76,30 @@
         }
 
         .register-header p {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 800;
             color: var(--gray);
             font-size: 16px;
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
         }
 
         .form-group label {
             display: block;
+            font-family: 'Albert Sans', sans-serif;
             font-weight: 600;
+            font-size: 20px;
             margin-bottom: 8px;
             color: var(--dark);
         }
@@ -93,16 +108,111 @@
             width: 100%;
             padding: 16px 20px;
             border: 2px solid var(--light);
-            border-radius: 12px;
+            border-radius: 20px;
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 500;
             font-size: 16px;
             transition: all 0.3s ease;
-            background: var(--white);
+            background: #e9ecef;
         }
 
         .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        /* Enhanced Date Picker Styling */
+        input[type="date"] {
+            position: relative;
+            cursor: pointer;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
+        }
+
+        input[type="date"]::-webkit-inner-spin-button,
+        input[type="date"]::-webkit-clear-button {
+            display: none;
+        }
+
+        /* Custom calendar icon */
+        input[type="date"]::before {
+            content: "📅";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            font-size: 18px;
+        }
+
+        /* Date input text styling */
+        input[type="date"]:valid {
+            color: var(--dark);
+        }
+
+        input[type="date"]:invalid {
+            color: var(--gray);
+        }
+
+        /* Calendar Popup Styling */
+        input[type="date"]::-webkit-datetime-edit {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 500;
+        }
+
+        /* Style the calendar popup */
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(0.5);
+        }
+
+        /* Custom calendar dropdown styling */
+        input[type="date"]:focus::-webkit-datetime-edit {
+            background: transparent;
+        }
+
+        /* Calendar popup container */
+        input[type="date"]::-webkit-calendar-picker-indicator:hover {
+            background: rgba(30, 64, 175, 0.1);
+            border-radius: 4px;
+        }
+
+        /* Global calendar popup styling */
+        input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+            padding: 0;
+        }
+
+        input[type="date"]::-webkit-datetime-edit-text {
+            color: var(--gray);
+            padding: 0 0.3em;
+        }
+
+        input[type="date"]::-webkit-datetime-edit-month-field,
+        input[type="date"]::-webkit-datetime-edit-day-field,
+        input[type="date"]::-webkit-datetime-edit-year-field {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 500;
+            color: var(--dark);
+            padding: 0 0.2em;
+        }
+
+        input[type="date"]::-webkit-datetime-edit-month-field:focus,
+        input[type="date"]::-webkit-datetime-edit-day-field:focus,
+        input[type="date"]::-webkit-datetime-edit-year-field:focus {
+            background: rgba(30, 64, 175, 0.1);
+            border-radius: 4px;
+            outline: none;
         }
 
         .form-group input::placeholder {
@@ -113,7 +223,8 @@
             width: 100%;
             padding: 16px 32px;
             border: none;
-            border-radius: 12px;
+            border-radius: 20px;
+            font-family: 'Albert Sans', sans-serif;
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
@@ -170,30 +281,75 @@
 <body>
     <div class="register-container">
         <div class="register-header">
-            <h1>Create Account</h1>
-            <p>Join the PDMHS High School Clinic Management System</p>
+            <h1>Welcome! Create a Account</h1>
         </div>
 
         <form method="POST" action="{{ route('register.post') }}">
             @csrf
             <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name" placeholder="Enter your first name" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="middle_name">Middle Name</label>
+                    <input type="text" id="middle_name" name="middle_name" placeholder="Enter your middle name">
+                    <div style="margin-top: 8px;">
+                        <input type="checkbox" id="no_middle_name" style="width: auto; display: inline-block; margin-right: 8px;">
+                        <label for="no_middle_name" style="display: inline; font-weight: normal; font-size: 14px;">I don't have middle name</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" placeholder="Enter your last name" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="birthday">Birthday</label>
+                    <input type="date" id="birthday" name="birthday" required style="color: var(--gray);" onfocus="this.style.color='var(--dark)'" onblur="if(!this.value) this.style.color='var(--gray)'">
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select your gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" placeholder="Enter your complete address" required>
             </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="contact_number">Contact Number</label>
+                    <input type="tel" id="contact_number" name="contact_number" placeholder="Enter your contact number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="password_confirmation">Confirm Password</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm your password" required>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password_confirmation">Confirm Password</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm your password" required>
+                </div>
             </div>
 
             <div class="form-group">
@@ -211,10 +367,22 @@
                 Create Account
             </button>
         </form>
-
-        <div class="register-footer">
-            <p>Already have an account? <a href="{{ route('login') }}">Sign In</a></p>
-        </div>
     </div>
+
+    <script>
+        // Handle "I don't have middle name" checkbox
+        document.getElementById('no_middle_name').addEventListener('change', function() {
+            const middleNameInput = document.getElementById('middle_name');
+            if (this.checked) {
+                middleNameInput.value = '';
+                middleNameInput.disabled = true;
+                middleNameInput.required = false;
+                middleNameInput.style.backgroundColor = '#f1f5f9';
+            } else {
+                middleNameInput.disabled = false;
+                middleNameInput.style.backgroundColor = '#ffffff';
+            }
+        });
+    </script>
 </body>
 </html>

@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -117,8 +118,8 @@
             padding: 48px;
             box-shadow: 0 32px 64px rgba(30, 64, 175, 0.15);
             border: 1px solid rgba(30, 64, 175, 0.1);
-            width: 100%;
-            max-width: 450px;
+            width: 731px;
+            height: 1024px;
             position: relative;
             overflow: hidden;
         }
@@ -139,7 +140,8 @@
         }
 
         .login-header h1 {
-            font-size: 32px;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 60px;
             font-weight: 900;
             margin-bottom: 8px;
             background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
@@ -158,7 +160,9 @@
 
         .form-group label {
             display: block;
+            font-family: 'Albert Sans', sans-serif;
             font-weight: 600;
+            font-size: 25px;
             margin-bottom: 8px;
             color: var(--dark);
         }
@@ -167,10 +171,10 @@
             width: 100%;
             padding: 16px 20px;
             border: 2px solid var(--light);
-            border-radius: 12px;
+            border-radius: 20px;
             font-size: 16px;
             transition: all 0.3s ease;
-            background: var(--white);
+            background: #e9ecef;
         }
 
         .form-group input:focus {
@@ -187,8 +191,9 @@
             width: 100%;
             padding: 16px 32px;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 20px;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 20px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -231,14 +236,18 @@
         }
 
         .login-footer p {
+            font-family: 'Albert Sans', sans-serif;
             color: var(--gray);
-            font-size: 14px;
+            font-size: 20px;
+            font-weight: 600;
         }
 
         .login-footer a {
+            font-family: 'Albert Sans', sans-serif;
             color: var(--primary);
             text-decoration: none;
             font-weight: 600;
+            font-size: 20px;
         }
 
         .login-footer a:hover {
@@ -332,9 +341,9 @@
         }
 
         .role-selection h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 20px;
-            font-weight: 900;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 30px;
+            font-weight: 800;
             margin-bottom: 16px;
             color: var(--dark);
             text-align: center;
@@ -461,8 +470,9 @@
         }
 
         .role-btn .role-name {
-            font-size: 13px;
-            font-weight: 800;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
             letter-spacing: 0.5px;
             margin-bottom: 2px;
         }
@@ -657,7 +667,8 @@
         </div>
 
         <div class="login-footer">
-            <p>Don't have an account? <a href="/register">Contact Administrator</a></p>
+            <p>Don't have an account? <a href="{{ route('register') }}">Sign up first</a></p>
+            <p><a href="#" style="font-style: italic; text-decoration: underline;">I forgot my password</a></p>
         </div>
     </div>
 

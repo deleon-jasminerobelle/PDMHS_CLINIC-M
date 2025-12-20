@@ -66,24 +66,6 @@
             background: var(--light);
         }
 
-        .btn-login {
-            background: var(--gradient);
-            color: white;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
-        }
-
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
-            color: white;
-        }
-
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
@@ -366,18 +348,13 @@
                         <a class="nav-link" href="#home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#features">Features</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="#about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#contact">Contact</a>
+                        <a class="nav-link" href="{{ route('register') }}">Sign Up</a>
                     </li>
-                    <li class="nav-item ms-3">
-                        <a href="{{ route('login') }}" class="btn-login">
-                            <i class="fas fa-sign-in-alt me-2"></i>Login
-                        </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">Login</a>
                     </li>
                 </ul>
             </div>
