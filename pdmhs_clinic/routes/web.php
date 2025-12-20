@@ -19,7 +19,7 @@ use App\Http\Controllers\DashboardController;
 
 // Public routes
 Route::get('/', function () {
-    return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
+    return view('landing');
 })->name('home');
 
 Route::get('/login', function () {
