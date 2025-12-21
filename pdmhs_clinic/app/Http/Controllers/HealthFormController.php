@@ -183,6 +183,8 @@ class HealthFormController extends Controller
             if (!Auth::user()->student_id) {
                 DB::table('users')->where('id', Auth::id())->update(['student_id' => $studentId]);
                 Log::info('Updated user student_id', ['user_id' => Auth::id(), 'student_id' => $studentId]);
+                // Refresh the authenticated user to reflect the updated student_id
+                Auth::setUser(\App\Models\User::find(Auth::id()));
             }
         }
 

@@ -28,6 +28,8 @@ class LoginController extends Controller
 
             // Try to authenticate with email (using username field as email)
             if (Auth::attempt(['email' => $request->username, 'password' => $request->password], $request->filled('remember'))) {
+                // Refresh the user object to get updated student_id
+                Auth::setUser(\App\Models\User::find(Auth::id()));
                 $user = Auth::user();
 
                 Log::info('User logged in successfully', [
@@ -39,7 +41,7 @@ class LoginController extends Controller
                 // Redirect based on role to specific dashboard
                 switch ($user->role) {
                     case 'student':
-                        if (session('student_profile')) {
+                        if ($user->student_id && \App\Models\Student::find($user->student_id)) {
                             $request->session()->regenerate();
                             return redirect()->route('student.dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
                         } else {
