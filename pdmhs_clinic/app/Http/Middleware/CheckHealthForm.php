@@ -26,12 +26,12 @@ class CheckHealthForm
                 if (!$user->student_id) {
                     return redirect()->route('student-health-form');
                 }
-                $student = \App\Models\Student::where('student_id', $user->student_id)->first();
+                $student = \App\Models\Student::find($user->student_id);
                 if (!$student) {
                     return redirect()->route('student-health-form');
                 }
-                // Store student_id in session for later use
-                $request->session()->put('student_id', $user->student_id);
+                // Store student_profile in session for later use
+                $request->session()->put('student_profile', true);
             }
         }
         return $next($request);

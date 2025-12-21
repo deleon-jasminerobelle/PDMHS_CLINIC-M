@@ -13,6 +13,7 @@ use App\Models\Adviser;
 use App\Models\MedicalVisit;
 use App\Models\Vitals;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -23,17 +24,17 @@ class DashboardController extends Controller
         $user = Auth::user();
         
         // Debug logging
-        \Log::info('Student Dashboard Access Attempt', [
+        Log::info('Student Dashboard Access Attempt', [
             'user_id' => $user ? $user->id : 'null',
             'user_role' => $user ? $user->role : 'null',
             'user_name' => $user ? $user->name : 'null'
         ]);
         
         // Ensure this is actually a student
-        if ($user->role !== 'student') {
-            \Log::warning('Non-student trying to access student dashboard', [
-                'user_role' => $user->role,
-                'user_id' => $user->id
+        if (!$user || !($user instanceof \App\Models\User) || $user->role !== 'student') {
+            Log::warning('Non-student trying to access student dashboard', [
+                'user_role' => $user ? $user->role : 'null',
+                'user_id' => $user ? $user->id : 'null'
             ]);
             return redirect()->route('login')->with('error', 'Access denied.');
         }
@@ -46,7 +47,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         
         // Ensure this is actually an adviser
-        if ($user->role !== 'adviser') {
+        if (!$user || !($user instanceof \App\Models\User) || $user->role !== 'adviser') {
             return redirect()->route('login')->with('error', 'Access denied.');
         }
         
@@ -59,15 +60,15 @@ class DashboardController extends Controller
             $user = Auth::user();
             
             // Debug logging
-            \Log::info('Clinic Staff Dashboard Access Attempt', [
+            Log::info('Clinic Staff Dashboard Access Attempt', [
                 'user_id' => $user ? $user->id : 'null',
                 'user_role' => $user ? $user->role : 'null',
                 'user_name' => $user ? $user->name : 'null'
             ]);
             
             // Ensure this is actually clinic staff
-            if (!$user || $user->role !== 'clinic_staff') {
-                \Log::warning('Non-clinic-staff trying to access clinic staff dashboard', [
+            if (!$user || !($user instanceof \App\Models\User) || $user->role !== 'clinic_staff') {
+                Log::warning('Non-clinic-staff trying to access clinic staff dashboard', [
                     'user_role' => $user ? $user->role : 'null',
                     'user_id' => $user ? $user->id : 'null'
                 ]);
@@ -80,7 +81,7 @@ class DashboardController extends Controller
             
             return $this->clinicStaffDashboardView($user);
         } catch (\Exception $e) {
-            \Log::error('Clinic Staff Dashboard Error: ' . $e->getMessage());
+            Log::error('Clinic Staff Dashboard Error: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'Session expired. Please log in again.');
         }
     }
@@ -95,16 +96,18 @@ class DashboardController extends Controller
             }
             
             // Redirect to appropriate dashboard based on role
-            switch ($user->role) {
-                case 'student':
-                    return redirect()->route('student.dashboard');
-                case 'adviser':
-                    return redirect()->route('adviser.dashboard');
-                case 'clinic_staff':
-                    return redirect()->route('clinic-staff.dashboard');
-                default:
-                    // For admin or other roles, show generic dashboard
-                    break;
+            if ($user instanceof \App\Models\User) {
+                switch ($user->role) {
+                    case 'student':
+                        return redirect()->route('student.dashboard');
+                    case 'adviser':
+                        return redirect()->route('adviser.dashboard');
+                    case 'clinic_staff':
+                        return redirect()->route('clinic-staff.dashboard');
+                    default:
+                        // For admin or other roles, show generic dashboard
+                        break;
+                }
             }
             
             // Get dashboard statistics for admin (use generic dashboard)
@@ -119,7 +122,7 @@ class DashboardController extends Controller
 
             return view('dashboard', compact('user', 'stats', 'recent_visits'));
         } catch (\Exception $e) {
-            \Log::error('Dashboard Index Error: ' . $e->getMessage());
+            Log::error('Dashboard Index Error: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'An error occurred. Please try logging in again.');
         }
     }
@@ -127,20 +130,28 @@ class DashboardController extends Controller
     private function studentDashboardView($user)
     {
         try {
-            // Get student record by matching name (temporary solution)
-            $nameParts = explode(' ', $user->name);
-            $firstName = $nameParts[0] ?? '';
-            $lastName = $nameParts[1] ?? '';
-            
-            $student = Student::where('first_name', $firstName)
-                             ->where('last_name', $lastName)
-                             ->first();
-            
+            // Get student record using the user's student_id
+            $student = null;
+            if ($user->student_id) {
+                $student = Student::where('student_id', $user->student_id)->first();
+            }
+
             if (!$student) {
-                // If exact match fails, try the first student for demo purposes
-                $student = Student::first();
+                // If no student found by student_id, try matching by name as fallback
+                $nameParts = explode(' ', $user->name);
+                $firstName = $nameParts[0] ?? '';
+                $lastName = $nameParts[1] ?? '';
+
+                $student = Student::where('first_name', $firstName)
+                                 ->where('last_name', $lastName)
+                                 ->first();
+
                 if (!$student) {
-                    return redirect()->route('login')->with('error', 'No student records found.');
+                    // If still no match, try the first student for demo purposes
+                    $student = Student::first();
+                    if (!$student) {
+                        return redirect()->route('login')->with('error', 'No student records found.');
+                    }
                 }
             }
 
@@ -160,7 +171,7 @@ class DashboardController extends Controller
                 try {
                     $age = \Carbon\Carbon::parse($student->date_of_birth)->age;
                 } catch (\Exception $e) {
-                    \Log::info('Age calculation failed: ' . $e->getMessage());
+                    Log::info('Age calculation failed: ' . $e->getMessage());
                     $age = 'N/A';
                 }
             }
@@ -176,7 +187,7 @@ class DashboardController extends Controller
                     $lastVisit = $clinicVisits->first();
                 }
             } catch (\Exception $e) {
-                \Log::info('Clinic visits not available: ' . $e->getMessage());
+                Log::info('Clinic visits not available: ' . $e->getMessage());
             }
 
             // Try to get allergies if the relationship exists
@@ -185,7 +196,7 @@ class DashboardController extends Controller
                     $allergies = $student->allergies ?? collect();
                 }
             } catch (\Exception $e) {
-                \Log::info('Allergies not available: ' . $e->getMessage());
+                Log::info('Allergies not available: ' . $e->getMessage());
             }
 
             // Try to get immunizations if the relationship exists
@@ -196,10 +207,10 @@ class DashboardController extends Controller
                         ->get();
                 }
             } catch (\Exception $e) {
-                \Log::info('Immunizations not available: ' . $e->getMessage());
+                Log::info('Immunizations not available: ' . $e->getMessage());
             }
 
-            \Log::info('Student Dashboard Data Prepared', [
+            Log::info('Student Dashboard Data Prepared', [
                 'student_id' => $student->id,
                 'age' => $age,
                 'total_visits' => $totalVisits,
@@ -221,8 +232,8 @@ class DashboardController extends Controller
             ));
 
         } catch (\Exception $e) {
-            \Log::error('Student Dashboard Error: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            Log::error('Student Dashboard Error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             
             // Return with minimal safe data
             return view('student-dashboard', [
@@ -292,22 +303,19 @@ class DashboardController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        
-        // Get student record by matching name (temporary solution)
-        $nameParts = explode(' ', $user->name);
-        $firstName = $nameParts[0] ?? '';
-        $lastName = $nameParts[1] ?? '';
-        
-        $student = Student::where('first_name', $firstName)
-                         ->where('last_name', $lastName)
-                         ->first();
-        
+
+        if (!$user || !($user instanceof \App\Models\User)) {
+            return redirect()->route('login')->with('error', 'Please log in to access this page.');
+        }
+
+        // Get student record using the user-student relationship
+        $student = null;
+        if ($user->student_id) {
+            $student = Student::where('student_id', $user->student_id)->first();
+        }
+
         if (!$student) {
-            // If exact match fails, try the first student for demo purposes
-            $student = Student::first();
-            if (!$student) {
-                return redirect()->route('login')->with('error', 'No student records found.');
-            }
+            return redirect()->route('student-health-form')->with('info', 'Please complete your health form first.');
         }
 
         return view('student-profile', compact('user', 'student'));
