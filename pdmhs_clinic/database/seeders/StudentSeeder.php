@@ -51,5 +51,20 @@ class StudentSeeder extends Seeder
             'emergency_contact_number' => null,
             'address' => null,
         ]);
+
+        // Add the specific student mentioned by user for testing
+        Student::create([
+            'student_id' => 'STU004',
+            'first_name' => 'JASMINE ROBELLE',
+            'last_name' => 'CABARGA DE LEON',
+            'date_of_birth' => '2005-06-15',
+            'grade_level' => '12',
+            'section' => 'A',
+            'contact_number' => '09123456789',
+            'emergency_contact_name' => 'Maria De Leon',
+            'emergency_contact_number' => '09123456788',
+            'address' => '123 Sample Street, Manila',
+            'sex' => 'F',
+        ]);
     }
 }

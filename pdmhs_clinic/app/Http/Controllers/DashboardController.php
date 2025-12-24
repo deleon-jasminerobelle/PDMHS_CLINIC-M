@@ -133,18 +133,12 @@ class DashboardController extends Controller
             // Get student record using the user's student_id
             $student = null;
             if ($user->student_id) {
-                $student = Student::where('student_id', $user->student_id)->first();
+                $student = Student::find($user->student_id);
             }
 
             if (!$student) {
                 // If no student found by student_id, try matching by name as fallback
-                $nameParts = explode(' ', $user->name);
-                $firstName = $nameParts[0] ?? '';
-                $lastName = $nameParts[1] ?? '';
-
-                $student = Student::where('first_name', $firstName)
-                                 ->where('last_name', $lastName)
-                                 ->first();
+                $student = $this->findStudentByName($user->name);
 
                 if (!$student) {
                     // If still no match, try the first student for demo purposes
@@ -359,5 +353,71 @@ class DashboardController extends Controller
         $student->update($validated);
 
         return redirect()->route('student.profile')->with('success', 'Profile updated successfully!');
+    }
+
+    /**
+     * Find student by name with flexible matching
+     */
+    private function findStudentByName($userName)
+    {
+        $nameParts = explode(' ', trim($userName));
+        if (count($nameParts) >= 2) {
+            $firstName = $nameParts[0];
+
+            // Try different combinations for last name (handle multiple last names)
+            $possibleLastNames = [];
+
+            // Try last part only
+            $possibleLastNames[] = end($nameParts);
+
+            // Try last two parts (for names like "DE LEON")
+            if (count($nameParts) >= 3) {
+                $possibleLastNames[] = $nameParts[count($nameParts) - 2] . ' ' . end($nameParts);
+            }
+
+            // Try last three parts (for names like "CABARGA DE LEON")
+            if (count($nameParts) >= 4) {
+                $possibleLastNames[] = $nameParts[count($nameParts) - 3] . ' ' . $nameParts[count($nameParts) - 2] . ' ' . end($nameParts);
+            }
+
+            // Try all combinations with case-insensitive matching
+            foreach ($possibleLastNames as $lastName) {
+                // Try exact match first
+                $student = Student::where('first_name', 'like', $firstName)
+                    ->where('last_name', 'like', $lastName)
+                    ->first();
+
+                if ($student) {
+                    return $student;
+                }
+
+                // Try case-insensitive match
+                $student = Student::whereRaw('LOWER(first_name) LIKE LOWER(?)', [$firstName])
+                    ->whereRaw('LOWER(last_name) LIKE LOWER(?)', [$lastName])
+                    ->first();
+
+                if ($student) {
+                    return $student;
+                }
+            }
+
+            // Try partial matching - search for any student containing the first name
+            $studentsWithFirstName = Student::where('first_name', 'like', '%' . $firstName . '%')
+                ->orWhere('last_name', 'like', '%' . $firstName . '%')
+                ->get();
+
+            foreach ($studentsWithFirstName as $student) {
+                // Check if any part of the user name matches the student name
+                $studentFullName = strtolower($student->first_name . ' ' . $student->last_name);
+                $userNameLower = strtolower($userName);
+
+                // Simple substring match
+                if (str_contains($studentFullName, $firstName) || str_contains($userNameLower, strtolower($student->first_name))) {
+                    return $student;
+                }
+            }
+        }
+
+        return null;
     }
 }

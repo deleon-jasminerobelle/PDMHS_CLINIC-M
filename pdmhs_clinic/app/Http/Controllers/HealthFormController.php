@@ -125,11 +125,25 @@ class HealthFormController extends Controller
             $student = Student::find(Auth::user()->student_id);
         }
 
+        // If no student found by user.student_id, try to find by LRN (student_id field)
+        if (!$student) {
+            $student = Student::where('student_id', $request->lrn)->first();
+            if ($student) {
+                Log::info('Found existing student by LRN', ['student_id' => $request->lrn, 'student_db_id' => $student->id]);
+                // Update user's student_id if not set
+                if (!Auth::user()->student_id) {
+                    DB::table('users')->where('id', Auth::id())->update(['student_id' => $student->id]);
+                    Log::info('Updated user student_id', ['user_id' => Auth::id(), 'student_id' => $student->id]);
+                    // Refresh the authenticated user
+                    Auth::setUser(\App\Models\User::find(Auth::id()));
+                }
+            }
+        }
+
         if (!$student) {
             // Create new student record if it doesn't exist
             Log::info('Creating new student record', ['student_id' => $request->lrn]);
             $student = new Student();
-            $student->id = Auth::user()->student_id ?: null; // Use existing ID if available
         }
 
         $updateData = [
@@ -185,6 +199,8 @@ class HealthFormController extends Controller
                 Log::info('Updated user student_id', ['user_id' => Auth::id(), 'student_id' => $studentId]);
                 // Refresh the authenticated user to reflect the updated student_id
                 Auth::setUser(\App\Models\User::find(Auth::id()));
+                // Regenerate session to ensure updated user data is reflected
+                $request->session()->regenerate();
             }
         }
 
@@ -196,6 +212,9 @@ class HealthFormController extends Controller
             DB::table('students')->where('id', $student->id)->update(['bmi' => $bmi]);
             Log::info('Updated BMI', ['student_id' => $student->id, 'bmi' => $bmi]);
         }
+
+        // Update session to indicate student profile is complete
+        $request->session()->put('student_profile', true);
 
         return redirect()->route('student.dashboard')
             ->with('success', 'Health form saved successfully');
