@@ -40,8 +40,8 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // Create student users
-        User::firstOrCreate(
+        // Create student users and link to students
+        $studentUser1 = User::firstOrCreate(
             ['email' => 'student@pdmhs.edu.ph'],
             [
                 'name' => 'Clarence Villas',
@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
             ]
         );
 
-        User::firstOrCreate(
+        $studentUser2 = User::firstOrCreate(
             ['email' => 'student2@pdmhs.edu.ph'],
             [
                 'name' => 'Student Two',
@@ -59,7 +59,7 @@ class UserSeeder extends Seeder
             ]
         );
 
-        User::firstOrCreate(
+        $studentUser3 = User::firstOrCreate(
             ['email' => 'student3@pdmhs.edu.ph'],
             [
                 'name' => 'Student Three',
@@ -67,5 +67,21 @@ class UserSeeder extends Seeder
                 'role' => 'student',
             ]
         );
+
+        // Link users to students (assuming students are already seeded)
+        $student1 = \App\Models\Student::where('student_id', 'STU001')->first();
+        if ($student1 && !$studentUser1->student_id) {
+            $studentUser1->update(['student_id' => $student1->id]);
+        }
+
+        $student2 = \App\Models\Student::where('student_id', 'STU002')->first();
+        if ($student2 && !$studentUser2->student_id) {
+            $studentUser2->update(['student_id' => $student2->id]);
+        }
+
+        $student3 = \App\Models\Student::where('student_id', 'STU003')->first();
+        if ($student3 && !$studentUser3->student_id) {
+            $studentUser3->update(['student_id' => $student3->id]);
+        }
     }
 }

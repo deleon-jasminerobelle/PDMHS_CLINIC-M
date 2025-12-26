@@ -341,6 +341,7 @@
             <a href="{{ route('home') }}" class="logo">PDMHS</a>
             <ul class="nav-links">
                 <li><a href="{{ route('home') }}">Home</a></li>
+                <li><a href="{{ route('scanner') }}">QR Scanner</a></li>
                 <li><a href="{{ route('students.index') }}">Students</a></li>
                 <li><a href="{{ route('clinic-visits.index') }}">Clinic Visits</a></li>
                 <li><a href="{{ route('immunizations.index') }}">Immunizations</a></li>

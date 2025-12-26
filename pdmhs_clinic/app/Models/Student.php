@@ -4,108 +4,99 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
 class Student extends Model
 {
     use HasFactory;
 
     protected $table = 'students';
-    protected $primaryKey = 'id';
+
+    public $incrementing = true;
+
+    public $timestamps = true;
 
     protected $fillable = [
         'student_id',
         'first_name',
-        'middle_name',
         'last_name',
         'date_of_birth',
-        'gender',
         'grade_level',
         'section',
-        'address',
-        'blood_type',
-        'emergency_contact',
-        'contact_number',
+        'school',
+        'sex',
+        'age',
         'emergency_contact_name',
         'emergency_contact_number',
-        'is_active'
+        'emergency_relation',
+        'emergency_address',
+        'parent_certification',
+        'vaccination_history',
+        'bmi',
+        'blood_type',
+        'height',
+        'weight',
+        'temperature',
+        'blood_pressure',
+        'adviser',
+        'has_allergies',
+        'allergies',
+        'has_medical_condition',
+        'medical_conditions',
+        'has_surgery',
+        'surgery_details',
+        'family_history',
+        'smoke_exposure',
+        'medication',
     ];
 
     protected $casts = [
-        'date_of_birth' => 'date',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'date_of_birth'          => 'date',
+        'parent_certification'   => 'array',
+        'vaccination_history'    => 'array',
+        'allergies'              => 'array',
+        'medical_conditions'     => 'array',
+        'family_history'         => 'array',
+        'medication'             => 'array',
     ];
 
     /**
-     * User relationship
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
-    }
-
-    /**
-     * Medical visits relationship
-     */
-    public function medicalVisits()
-    {
-        return $this->hasMany(MedicalVisit::class, 'student_id', 'id');
-    }
-
-    /**
-     * Clinic visits relationship
-     */
-    public function clinicVisits()
-    {
-        return $this->hasMany(ClinicVisit::class, 'student_id', 'id');
-    }
-
-    /**
-     * Immunizations relationship
-     */
-    public function immunizations()
-    {
-        return $this->hasMany(Immunization::class, 'student_id', 'id');
-    }
-
-    /**
-     * Allergies relationship
-     */
-    public function allergies()
-    {
-        return $this->hasMany(Allergy::class, 'student_id', 'id');
-    }
-
-    /**
-     * QR codes relationship
-     */
-    public function qrCodes()
-    {
-        return $this->hasMany(QrCode::class, 'student_id', 'id');
-    }
-
-    /**
-     * Parents relationship (many-to-many)
-     */
-    public function parents()
-    {
-        return $this->belongsToMany(ParentModel::class, 'student_parent', 'student_id', 'parent_id');
-    }
-
-    /**
-     * Advisers relationship (many-to-many)
+     * Get the advisers assigned to this student
      */
     public function advisers()
     {
         return $this->belongsToMany(Adviser::class, 'student_adviser', 'student_id', 'adviser_id')
-                    ->withPivot('assigned_date')
-                    ->withTimestamps();
+                    ->withPivot('assigned_date');
     }
 
     /**
-     * Get full name attribute
+     * Get the clinic visits for this student
      */
-    public function getFullNameAttribute()
+    public function clinicVisits()
     {
-        return trim($this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name);
+        return $this->hasMany(ClinicVisit::class);
+    }
+
+    /**
+     * Get the immunizations for this student
+     */
+    public function immunizations()
+    {
+        return $this->hasMany(Immunization::class);
+    }
+
+    /**
+     * Get the health incidents for this student
+     */
+    public function healthIncidents()
+    {
+        return $this->hasMany(HealthIncident::class);
+    }
+
+    /**
+     * Get the vitals for this student
+     */
+    public function vitals()
+    {
+        return $this->hasMany(Vitals::class);
     }
 }

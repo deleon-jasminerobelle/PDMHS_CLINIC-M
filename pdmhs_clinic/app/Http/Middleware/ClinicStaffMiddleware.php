@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ClinicStaffMiddleware
 {
@@ -31,7 +32,7 @@ class ClinicStaffMiddleware
 
             return $next($request);
         } catch (\Exception $e) {
-            \Log::error('Clinic Staff Middleware Error: ' . $e->getMessage());
+            Log::error('Clinic Staff Middleware Error: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'An error occurred. Please try logging in again.');
         }
     }

@@ -53,7 +53,7 @@ Route::get('/student-health-form', function () {
     return view('student-health-form');
 })->name('student-health-form');
 
-Route::post('/student-health-form', [HealthFormController::class, 'submitForm'])->name('student.health.store');
+Route::post('/student-health-form', [HealthFormController::class, 'store'])->name('student.health.store')->middleware('auth');
 
 // Main dashboard route (redirects based on role)
 Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -67,7 +67,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 */
 
 // Student routes
-Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->group(function () {
+Route::middleware(['auth', 'student', 'check.health.form'])->prefix('student')->name('student.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])->name('dashboard');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::put('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
@@ -98,10 +98,13 @@ Route::middleware(['auth', 'admin.staff'])->group(function () {
 
     Route::get('/health-form', [HealthFormController::class, 'index'])->name('health-form.index');
     Route::post('/health-form', [HealthFormController::class, 'store'])->name('health-form.store');
+    Route::put('/health-form/{id}', [HealthFormController::class, 'update'])->name('health-form.update');
 
     Route::get('/scanner', function () {
         return view('scanner');
     })->name('scanner');
+
+    Route::post('/qr-process', [StudentController::class, 'processQR'])->name('qr.process');
 
     Route::get('/architecture', function () {
         return view('architecture');
@@ -132,9 +135,9 @@ Route::get('/auth-debug', function () {
     $user = Auth::user();
     return response()->json([
         'authenticated' => Auth::check(),
-        'user' => $user ? $user->toArray() : 'Not logged in',
-        'role' => $user ? $user->role : 'No role',
-        'isStudent' => $user ? $user->isStudent() : false,
-        'isClinicStaff' => $user ? $user->isClinicStaff() : false,
+        'user' => ($user instanceof \App\Models\User) ? $user->toArray() : 'Not logged in',
+        'role' => ($user instanceof \App\Models\User) ? $user->role : 'No role',
+        'isStudent' => ($user instanceof \App\Models\User) ? $user->isStudent() : false,
+        'isClinicStaff' => ($user instanceof \App\Models\User) ? $user->isClinicStaff() : false,
     ]);
 })->middleware('auth');
