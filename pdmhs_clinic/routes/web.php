@@ -104,6 +104,8 @@ Route::middleware(['auth', 'admin.staff'])->group(function () {
         return view('scanner');
     })->name('scanner');
 
+    Route::post('/qr-process', [StudentController::class, 'processQR'])->name('qr.process');
+
     Route::get('/architecture', function () {
         return view('architecture');
     })->name('architecture');

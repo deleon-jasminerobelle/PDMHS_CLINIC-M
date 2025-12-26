@@ -50,6 +50,7 @@ class Student extends Model
     ];
 
     protected $casts = [
+        'date_of_birth'          => 'date',
         'parent_certification'   => 'array',
         'vaccination_history'    => 'array',
         'allergies'              => 'array',
@@ -57,4 +58,45 @@ class Student extends Model
         'family_history'         => 'array',
         'medication'             => 'array',
     ];
+
+    /**
+     * Get the advisers assigned to this student
+     */
+    public function advisers()
+    {
+        return $this->belongsToMany(Adviser::class, 'student_adviser', 'student_id', 'adviser_id')
+                    ->withPivot('assigned_date');
+    }
+
+    /**
+     * Get the clinic visits for this student
+     */
+    public function clinicVisits()
+    {
+        return $this->hasMany(ClinicVisit::class);
+    }
+
+    /**
+     * Get the immunizations for this student
+     */
+    public function immunizations()
+    {
+        return $this->hasMany(Immunization::class);
+    }
+
+    /**
+     * Get the health incidents for this student
+     */
+    public function healthIncidents()
+    {
+        return $this->hasMany(HealthIncident::class);
+    }
+
+    /**
+     * Get the vitals for this student
+     */
+    public function vitals()
+    {
+        return $this->hasMany(Vitals::class);
+    }
 }

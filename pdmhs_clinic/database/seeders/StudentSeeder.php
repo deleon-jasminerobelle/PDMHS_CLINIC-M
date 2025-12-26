@@ -18,12 +18,13 @@ class StudentSeeder extends Seeder
             'first_name' => 'Clarence',
             'last_name' => 'Villas',
             'date_of_birth' => null,
-            'grade_level' => null,
-            'section' => null,
+            'grade_level' => '10',
+            'section' => 'A',
             'contact_number' => null,
             'emergency_contact_name' => null,
             'emergency_contact_number' => null,
             'address' => null,
+            'allergies' => ['Peanuts', 'Shellfish'],
         ]);
 
         Student::create([
@@ -31,12 +32,13 @@ class StudentSeeder extends Seeder
             'first_name' => 'Student',
             'last_name' => 'Two',
             'date_of_birth' => null,
-            'grade_level' => null,
-            'section' => null,
+            'grade_level' => '10',
+            'section' => 'A',
             'contact_number' => null,
             'emergency_contact_name' => null,
             'emergency_contact_number' => null,
             'address' => null,
+            'allergies' => ['Dust'],
         ]);
 
         Student::create([
@@ -44,12 +46,13 @@ class StudentSeeder extends Seeder
             'first_name' => 'Student',
             'last_name' => 'Three',
             'date_of_birth' => null,
-            'grade_level' => null,
-            'section' => null,
+            'grade_level' => '10',
+            'section' => 'B',
             'contact_number' => null,
             'emergency_contact_name' => null,
             'emergency_contact_number' => null,
             'address' => null,
+            'allergies' => [],
         ]);
 
         // Add the specific student mentioned by user for testing
@@ -65,6 +68,7 @@ class StudentSeeder extends Seeder
             'emergency_contact_number' => '09123456788',
             'address' => '123 Sample Street, Manila',
             'sex' => 'F',
+            'allergies' => ['Milk', 'Eggs'],
         ]);
     }
 }

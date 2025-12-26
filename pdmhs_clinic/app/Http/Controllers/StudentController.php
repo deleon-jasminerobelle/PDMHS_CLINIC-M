@@ -113,4 +113,32 @@ class StudentController extends Controller
 
         return redirect()->route('students.index')->with('success', 'Student deleted successfully.');
     }
+
+    /**
+     * Process QR code scan and redirect to student details.
+     */
+    public function processQR(Request $request)
+    {
+        $request->validate([
+            'qr_data' => 'required|string'
+        ]);
+
+        $studentId = $request->input('qr_data');
+
+        // Find student by student_id
+        $student = Student::where('student_id', $studentId)->first();
+
+        if ($student) {
+            return response()->json([
+                'success' => true,
+                'redirect_url' => route('students.show', $student->id),
+                'message' => 'Student found successfully'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Student not found'
+            ], 404);
+        }
+    }
 }

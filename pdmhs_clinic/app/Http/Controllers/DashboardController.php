@@ -250,17 +250,19 @@ class DashboardController extends Controller
     {
         // Get adviser record
         $adviser = Adviser::where('user_id', $user->id)->first();
-        
+
         if (!$adviser) {
             return redirect()->route('login')->with('error', 'Adviser record not found.');
         }
 
-        // Get adviser's students
-        $students = $adviser->students()->get();
+        // Get adviser's students with their relationships
+        $students = $adviser->students()->with(['clinicVisits'])->get();
         $totalStudents = $students->count();
 
-        // Get students with allergies (placeholder - allergies table may not exist)
-        $studentsWithAllergies = 0;
+        // Count students with allergies
+        $studentsWithAllergies = $students->filter(function($student) {
+            return $student->allergies && is_array($student->allergies) && count($student->allergies) > 0;
+        })->count();
 
         // Get recent clinic visits for adviser's students (last 30 days)
         $studentIds = $students->pluck('id');
@@ -277,7 +279,7 @@ class DashboardController extends Controller
 
         return view('adviser-dashboard', compact(
             'user',
-            'adviser', 
+            'adviser',
             'students',
             'totalStudents',
             'studentsWithAllergies',

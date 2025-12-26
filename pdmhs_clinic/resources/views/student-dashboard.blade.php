@@ -4,9 +4,22 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome, {{ $user->name }}!</h1>
-        <p class="text-gray-600">Your Health Dashboard</p>
+    <div class="mb-8 flex justify-between items-start">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome, {{ $user->name }}!</h1>
+            <p class="text-gray-600">Your Health Dashboard</p>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="text-right">
+                <div class="text-sm text-gray-500">{{ ucfirst(str_replace('_', ' ', $user->role)) }}</div>
+            </div>
+            <form method="POST" action="{{ route('logout') }}" class="inline">
+                @csrf
+                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-200 text-sm font-medium">
+                    Logout
+                </button>
+            </form>
+        </div>
     </div>
 
     @if(session('success'))
@@ -202,6 +215,33 @@
                 </a>
             </div>
         </div>
+
+        <!-- QR Code Section -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Your QR Code</h3>
+            <p class="text-gray-600 mb-4">Show this QR code to clinic staff for quick check-in and access to your health records.</p>
+            <div class="flex flex-col items-center">
+                <div id="qrcode" class="mb-4"></div>
+                <p class="text-sm text-gray-500">Student ID: {{ $student->student_id ?? 'N/A' }}</p>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const studentId = '{{ $student->student_id ?? '' }}';
+                if (studentId) {
+                    new QRCode(document.getElementById("qrcode"), {
+                        text: studentId,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                }
+            });
+        </script>
     @else
         <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-6">
             <p>Student record not found. Please complete your health form.</p>
