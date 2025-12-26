@@ -346,6 +346,7 @@
                 <li><a href="{{ route('immunizations.index') }}">Immunizations</a></li>
                 <li><a href="{{ route('health-incidents.index') }}">Health Incidents</a></li>
                 <li><a href="{{ route('vitals.index') }}">Vitals</a></li>
+                <li><a href="{{ route('scanner') }}">📱 QR Scanner</a></li>
             </ul>
             <div class="user-menu">
                 <div class="user-info">
@@ -441,6 +442,7 @@
             <a href="{{ route('clinic-visits.create') }}" class="action-btn">🏥 New Clinic Visit</a>
             <a href="{{ route('immunizations.create') }}" class="action-btn">💉 Record Immunization</a>
             <a href="{{ route('health-incidents.create') }}" class="action-btn">🚨 Report Health Incident</a>
+            <a href="{{ route('scanner') }}" class="action-btn">📱 QR Scanner</a>
         </div>
     </div>
 </body>

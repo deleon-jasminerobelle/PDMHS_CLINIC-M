@@ -14,6 +14,10 @@ use App\Models\MedicalVisit;
 use App\Models\Vitals;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Writer;
 
 class DashboardController extends Controller
 {
@@ -217,6 +221,26 @@ class DashboardController extends Controller
                 'allergies_count' => $allergies->count()
             ]);
 
+            // Generate QR code for the student
+            $qrData = json_encode([
+                'student_id' => $student->student_id,
+                'name' => $student->first_name . ' ' . $student->last_name,
+                'grade_level' => $student->grade_level,
+                'section' => $student->section,
+                'school' => $student->school,
+                'blood_type' => $student->blood_type,
+                'emergency_contact' => $student->emergency_contact_name,
+                'emergency_phone' => $student->emergency_contact_number,
+                'timestamp' => now()->toISOString()
+            ]);
+
+            $renderer = new ImageRenderer(
+                new RendererStyle(300, 4),
+                new SvgImageBackEnd()
+            );
+            $writer = new Writer($renderer);
+            $qrCode = $writer->writeString($qrData);
+
             return view('student-dashboard', compact(
                 'user', 
                 'student', 
@@ -228,7 +252,8 @@ class DashboardController extends Controller
                 'immunizations', 
                 'age',
                 'recentVisits',
-                'totalVisits'
+                'totalVisits',
+                'qrCode'
             ));
 
         } catch (\Exception $e) {
@@ -359,5 +384,58 @@ class DashboardController extends Controller
         $student->update($validated);
 
         return redirect()->route('student.profile')->with('success', 'Profile updated successfully!');
+    }
+
+    public function generateQrCode()
+    {
+        $user = Auth::user();
+
+        if (!$user || !($user instanceof \App\Models\User) || $user->role !== 'student') {
+            return redirect()->route('login')->with('error', 'Access denied.');
+        }
+
+        // Get student record
+        $student = null;
+        if ($user->student_id) {
+            $student = Student::where('student_id', $user->student_id)->first();
+        }
+
+        if (!$student) {
+            // Fallback to name matching
+            $nameParts = explode(' ', $user->name);
+            $firstName = $nameParts[0] ?? '';
+            $lastName = $nameParts[1] ?? '';
+
+            $student = Student::where('first_name', $firstName)
+                             ->where('last_name', $lastName)
+                             ->first();
+        }
+
+        if (!$student) {
+            return response()->json(['error' => 'Student record not found'], 404);
+        }
+
+        // Create QR code data containing student information
+        $qrData = json_encode([
+            'student_id' => $student->student_id,
+            'name' => $student->first_name . ' ' . $student->last_name,
+            'grade_level' => $student->grade_level,
+            'section' => $student->section,
+            'school' => $student->school,
+            'blood_type' => $student->blood_type,
+            'emergency_contact' => $student->emergency_contact_name,
+            'emergency_phone' => $student->emergency_contact_number,
+            'timestamp' => now()->toISOString()
+        ]);
+
+        // Generate QR code
+        $renderer = new ImageRenderer(
+            new RendererStyle(400, 4),
+            new SvgImageBackEnd()
+        );
+        $writer = new Writer($renderer);
+        $qrCode = $writer->writeString($qrData);
+
+        return response($qrCode)->header('Content-Type', 'image/svg+xml');
     }
 }

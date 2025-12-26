@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 namespace App\Models;
 
@@ -57,4 +57,37 @@ class Student extends Model
         'family_history'         => 'array',
         'medication'             => 'array',
     ];
+
+    /**
+     * Get the clinic visits for the student
+     */
+    public function clinicVisits()
+    {
+        return $this->hasMany(ClinicVisit::class);
+    }
+
+    /**
+     * Get the allergies for the student
+     */
+    public function allergies()
+    {
+        return $this->hasMany(Allergy::class);
+    }
+
+    /**
+     * Get the immunizations for the student
+     */
+    public function immunizations()
+    {
+        return $this->hasMany(Immunization::class);
+    }
+
+    /**
+     * Get the advisers assigned to this student
+     */
+    public function advisers()
+    {
+        return $this->belongsToMany(Adviser::class, 'student_adviser', 'student_id', 'adviser_id')
+                    ->withPivot('assigned_date');
+    }
 }

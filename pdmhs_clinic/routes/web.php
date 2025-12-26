@@ -71,6 +71,7 @@ Route::middleware(['auth', 'student', 'check.health.form'])->prefix('student')->
     Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])->name('dashboard');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::put('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/qr-code', [DashboardController::class, 'generateQrCode'])->name('qr-code');
 });
 
 // Adviser routes

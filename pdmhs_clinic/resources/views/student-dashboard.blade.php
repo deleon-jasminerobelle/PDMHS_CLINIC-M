@@ -193,13 +193,29 @@
         <!-- Actions -->
         <div class="bg-white rounded-lg shadow-md p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-3">Actions</h3>
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4 mb-4">
                 <a href="{{ route('student.profile') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-200">
                     View Full Profile
                 </a>
                 <a href="{{ route('student-health-form') }}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition duration-200">
                     Update Health Form
                 </a>
+                <a href="{{ route('scanner') }}" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition duration-200">
+                    📱 QR Scanner
+                </a>
+            </div>
+
+            <!-- QR Code Display -->
+            <div class="border-t pt-4">
+                <h4 class="text-md font-semibold text-gray-800 mb-3">Your QR Code</h4>
+                <div class="flex flex-col items-center">
+                    <div class="bg-gray-50 p-4 rounded-lg border-2 border-dashed border-gray-300">
+                        {!! $qrCode !!}
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2 text-center">
+                        Show this QR code to clinic staff for quick access to your health information
+                    </p>
+                </div>
             </div>
         </div>
     @else
