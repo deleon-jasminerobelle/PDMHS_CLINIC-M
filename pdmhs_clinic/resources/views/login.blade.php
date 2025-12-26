@@ -163,6 +163,7 @@
             margin-top: 24px;
             padding-top: 24px;
             border-top: 1px solid var(--light);
+            display: none; /* Hidden by default */
         }
 
         .login-footer p {
@@ -455,7 +456,6 @@
     <div class="login-container">
         <div class="login-header">
             <h1>Welcome Back</h1>
-            <p style="font-family: 'Albert Sans', sans-serif; font-size: 20px; font-weight: 600; color: var(--gray); margin-top: 8px;">Access your health dashboard</p>
         </div>
 
         @if (session('success'))
@@ -628,6 +628,12 @@
                             submitBtn.innerHTML = buttonTexts[selectedRole + '-form'];
                             submitBtn.disabled = false;
                         }
+                    }
+                    
+                    // Show login footer when role is selected
+                    const loginFooter = document.querySelector('.login-footer');
+                    if (loginFooter) {
+                        loginFooter.style.display = 'block';
                     }
                 });
             });

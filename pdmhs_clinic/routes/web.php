@@ -79,8 +79,13 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 // Student routes
 Route::middleware(['auth'])->prefix('student')->name('student.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])->name('dashboard');
+    Route::get('/medical', [DashboardController::class, 'studentMedical'])->name('medical');
+    Route::get('/medical-history', [DashboardController::class, 'studentMedicalHistory'])->name('medical-history');
+    Route::get('/info', [DashboardController::class, 'studentInfo'])->name('info');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::put('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/password', [DashboardController::class, 'updatePassword'])->name('password.update');
+    Route::post('/upload-profile-picture', [DashboardController::class, 'uploadProfilePicture'])->name('upload-profile-picture');
 });
 
 // Adviser routes
@@ -217,6 +222,11 @@ Route::get('/test-clinic-staff-controller', function () {
         return 'Error in clinic staff dashboard: ' . $e->getMessage();
     }
 })->middleware('auth');
+
+// Test route for profile picture upload
+Route::get('/test-upload', function () {
+    return view('test-upload');
+});
 
 // Create clinic staff user for testing
 Route::get('/create-clinic-staff', function () {

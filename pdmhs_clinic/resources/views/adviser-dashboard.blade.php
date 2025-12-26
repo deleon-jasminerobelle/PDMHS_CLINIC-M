@@ -8,6 +8,18 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --secondary: #3b82f6;
+            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        
+        .navbar.bg-primary {
+            background: var(--gradient) !important;
+            padding: 1rem 0 !important;
+        }
+        
         body {
             background-color: #f8f9fa;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

@@ -3,11 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard - PDMHS Clinic</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Student Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --secondary: #3b82f6;
+            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        
+        .navbar.bg-primary {
+            background: var(--gradient) !important;
+            padding: 1rem 0 !important;
+        }
+        
         body {
             background-color: #f8f9fa;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -19,6 +34,7 @@
             margin-bottom: 1rem;
             color: white;
             font-weight: 500;
+            text-align: center;
         }
         .stat-card h2 {
             font-size: 2.5rem;
@@ -28,11 +44,14 @@
         .stat-card p {
             margin: 0;
             opacity: 0.9;
+            font-family: 'Roboto', sans-serif;
+            font-size: 25px;
+            font-weight: 700;
         }
-        .stat-card-blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .stat-card-orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .stat-card-yellow { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #333; }
-        .stat-card-purple { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
+        .stat-card-blue { background: var(--gradient); }
+        .stat-card-orange { background: var(--gradient); }
+        .stat-card-yellow { background: var(--gradient); }
+        .stat-card-purple { background: var(--gradient); }
         .stat-card-green { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); color: #333; }
         .stat-card-red { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #333; }
         
@@ -52,15 +71,69 @@
             justify-content: space-between;
             align-items: center;
         }
+        
+        .section-header h5 {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 25px;
+            margin-bottom: 0;
+        }
+        
+        .health-info-label {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 700 !important;
+            font-size: 15px !important;
+        }
+        
+        .empty-state-message {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-style: italic !important;
+            font-size: 23px !important;
+        }
         .section-content {
             padding: 2rem;
         }
         .navbar-brand {
             font-weight: 600;
         }
+        
+        .navbar-nav .nav-link {
+            font-family: 'Epilogue', sans-serif !important;
+            font-size: 20px !important;
+            font-weight: 600 !important;
+        }
         .welcome-header {
             font-family: 'Albert Sans', sans-serif;
-            font-weight: 500;
+            font-weight: 800;
+            font-size: 30px;
+        }
+        
+        .profile-picture-container {
+            position: relative;
+        }
+        
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .default-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -68,9 +141,15 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{{ route('student.dashboard') }}">
-                <i class="fas fa-heartbeat me-2"></i>
-                PDMHS Clinic
             </a>
+            <div class="navbar-nav me-auto">
+                <a class="nav-link active" href="{{ route('student.dashboard') }}">
+                    <i class="fas fa-home me-1"></i>Dashboard
+                </a>
+                <a class="nav-link" href="{{ route('student.medical') }}">
+                    <i class="fas fa-file-medical me-1"></i>My Medical
+                </a>
+            </div>
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -112,9 +191,30 @@
             </div>
         @endif
 
-        <!-- Header -->
-        <div class="mb-4">
-            <h1 class="h3 mb-1 welcome-header">Welcome back, {{ $user->name }}!</h1>
+        <!-- Header with Profile Picture -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-content">
+                        <div class="row align-items-center">
+                            <div class="col-md-2 text-center">
+                                <div class="profile-picture-container">
+                                    @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
+                                        <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-picture">
+                                    @else
+                                        <div class="default-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <h1 class="h3 mb-1 welcome-header">Welcome back, {{ $user->name }}!</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Health Statistics Cards -->
@@ -135,7 +235,7 @@
 
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-yellow d-flex flex-column justify-content-center" style="min-height: 120px;">
-                    <h2>{{ isset($allergies) && $allergies ? $allergies->count() : 0 }}</h2>
+                    <h2>{{ isset($allergies) && $allergies && $allergies->count() > 0 ? $allergies->count() : '' }}</h2>
                     <p>Allergies</p>
                 </div>
             </div>
@@ -159,25 +259,25 @@
                         <div class="row">
                             <div class="col-md-2 mb-3">
                                 <div class="text-center">
-                                    <h6 class="text-muted mb-1">Height</h6>
+                                    <h6 class="text-muted mb-1 health-info-label">Height</h6>
                                     <h4 class="mb-0">{{ isset($latestVitals->height) && $latestVitals->height ? $latestVitals->height . ' cm' : '' }}</h4>
                                 </div>
                             </div>
                             <div class="col-md-2 mb-3">
                                 <div class="text-center">
-                                    <h6 class="text-muted mb-1">Weight</h6>
+                                    <h6 class="text-muted mb-1 health-info-label">Weight</h6>
                                     <h4 class="mb-0">{{ isset($latestVitals->weight) && $latestVitals->weight ? $latestVitals->weight . ' kg' : '' }}</h4>
                                 </div>
                             </div>
                             <div class="col-md-2 mb-3">
                                 <div class="text-center">
-                                    <h6 class="text-muted mb-1">Age</h6>
+                                    <h6 class="text-muted mb-1 health-info-label">Age</h6>
                                     <h4 class="mb-0">{{ $age ?? '' }}</h4>
                                 </div>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <div class="text-center">
-                                    <h6 class="text-muted mb-1">BMI</h6>
+                                    <h6 class="text-muted mb-1 health-info-label">BMI</h6>
                                     <h4 class="mb-0">{{ $bmi ?? '' }}</h4>
                                     @if(isset($bmiCategory) && $bmiCategory)
                                         <small class="text-muted">({{ $bmiCategory }})</small>
@@ -186,7 +286,7 @@
                             </div>
                             <div class="col-md-3 mb-3">
                                 <div class="text-center">
-                                    <h6 class="text-muted mb-1">Blood Type</h6>
+                                    <h6 class="text-muted mb-1 health-info-label">Blood Type</h6>
                                     <h4 class="mb-0">{{ $bloodType ?? '' }}</h4>
                                 </div>
                             </div>
@@ -224,7 +324,7 @@
                         @else
                             <div class="text-center py-4">
                                 <i class="fas fa-check-circle text-success mb-2" style="font-size: 2rem;"></i>
-                                <p class="text-muted mb-0">No known allergies recorded</p>
+                                <p class="text-muted mb-0 empty-state-message">No known allergies recorded</p>
                             </div>
                         @endif
                     </div>
@@ -282,7 +382,7 @@
                                 </table>
                             </div>
                         @else
-                            <p class="text-muted text-center">No immunization records available</p>
+                            <p class="text-muted text-center empty-state-message">No immunization records available</p>
                         @endif
                     </div>
                 </div>

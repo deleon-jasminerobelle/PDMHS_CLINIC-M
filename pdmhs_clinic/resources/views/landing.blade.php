@@ -435,8 +435,8 @@
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="{{ route('home') }}" class="logo">
-                <i class="fas fa-heartbeat"></i>
-                PDMHS Clinic
+              
+              
             </a>
             <ul class="nav-links">
                 <li><a href="{{ route('home') }}">Home</a></li>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Student;
 use App\Models\ClinicVisit;
 use App\Models\Immunization;
@@ -71,6 +72,141 @@ class DashboardController extends Controller
             \Log::error('Student Dashboard Error: ' . $e->getMessage());
             \Log::error('Stack trace: ' . $e->getTraceAsString());
             return redirect()->route('login')->with('error', 'An error occurred. Please try logging in again.');
+        }
+    }
+
+    public function studentMedical()
+    {
+        try {
+            $user = Auth::user();
+            
+            if (!$user || $user->role !== 'student') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+            
+            // Get basic medical data (simplified for now)
+            $data = [
+                'user' => $user,
+                'totalVisits' => 2, // Placeholder data
+                'recentVisits' => 1, // Placeholder data
+                'allergies' => collect(['Peanuts', 'Shellfish']), // Placeholder data
+            ];
+            
+            return view('student-medical', $data);
+            
+        } catch (\Exception $e) {
+            \Log::error('Student Medical Page Error: ' . $e->getMessage());
+            return redirect()->route('student.dashboard')->with('error', 'An error occurred loading medical records.');
+        }
+    }
+
+    public function studentInfo()
+    {
+        try {
+            $user = Auth::user();
+            
+            if (!$user || $user->role !== 'student') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+            
+            // Get student record by matching name (simplified approach)
+            $nameParts = explode(' ', $user->name);
+            $firstName = $nameParts[0] ?? '';
+            $lastName = $nameParts[1] ?? '';
+            
+            $student = Student::where('first_name', $firstName)
+                             ->where('last_name', $lastName)
+                             ->first();
+            
+            if (!$student) {
+                // If exact match fails, try the first student for demo purposes
+                $student = Student::first();
+            }
+            
+            // Calculate age if birth date exists
+            $age = '';
+            if ($student && $student->date_of_birth) {
+                try {
+                    $age = \Carbon\Carbon::parse($student->date_of_birth)->age;
+                } catch (\Exception $e) {
+                    $age = '20'; // Default age
+                }
+            }
+            
+            $data = [
+                'user' => $user,
+                'student' => $student,
+                'age' => $age,
+                'adviser' => (object) ['name' => 'Ms. Rea Loloy'], // Placeholder adviser data
+            ];
+            
+            return view('student-info', $data);
+            
+        } catch (\Exception $e) {
+            \Log::error('Student Info Page Error: ' . $e->getMessage());
+            return redirect()->route('student.dashboard')->with('error', 'An error occurred loading student information.');
+        }
+    }
+
+    public function studentMedicalHistory()
+    {
+        try {
+            $user = Auth::user();
+            
+            if (!$user || $user->role !== 'student') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+            
+            // Sample medical visits data (replace with actual database queries later)
+            $visits = [
+                [
+                    'date' => 'December 15, 2024',
+                    'time' => '10:30 AM',
+                    'status' => 'Completed',
+                    'type' => 'Regular Checkup',
+                    'attendedBy' => 'Nurse Maria Santos',
+                    'temperature' => '36.5°C',
+                    'bloodPressure' => '120/80 mmHg',
+                    'weight' => '55 kg',
+                    'height' => '165 cm',
+                    'reason' => 'Annual health screening and general wellness check.'
+                ],
+                [
+                    'date' => 'November 28, 2024',
+                    'time' => '2:15 PM',
+                    'status' => 'Completed',
+                    'type' => 'Illness',
+                    'attendedBy' => 'Dr. Juan Dela Cruz',
+                    'temperature' => '38.2°C',
+                    'bloodPressure' => '125/85 mmHg',
+                    'weight' => '54 kg',
+                    'height' => '165 cm',
+                    'reason' => 'Student complained of fever, headache, and body aches. Diagnosed with viral infection. Prescribed rest and medication.'
+                ],
+                [
+                    'date' => 'October 10, 2024',
+                    'time' => '11:45 AM',
+                    'status' => 'Completed',
+                    'type' => 'Injury',
+                    'attendedBy' => 'Nurse Ana Rodriguez',
+                    'temperature' => '36.8°C',
+                    'bloodPressure' => '118/75 mmHg',
+                    'weight' => '54 kg',
+                    'height' => '165 cm',
+                    'reason' => 'Minor cut on left hand from PE class. Wound cleaned and bandaged. Tetanus shot administered.'
+                ]
+            ];
+            
+            $data = [
+                'user' => $user,
+                'visits' => $visits,
+            ];
+            
+            return view('student-medical-history', $data);
+            
+        } catch (\Exception $e) {
+            \Log::error('Student Medical History Page Error: ' . $e->getMessage());
+            return redirect()->route('student.medical')->with('error', 'An error occurred loading medical history.');
         }
     }
 
@@ -409,9 +545,6 @@ class DashboardController extends Controller
         if (!$student) {
             // If exact match fails, try the first student for demo purposes
             $student = Student::first();
-            if (!$student) {
-                return redirect()->route('login')->with('error', 'No student records found.');
-            }
         }
 
         return view('student-profile', compact('user', 'student'));
@@ -419,41 +552,151 @@ class DashboardController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $user = Auth::user();
-        
-        // Get student record by matching name (temporary solution)
-        $nameParts = explode(' ', $user->name);
-        $firstName = $nameParts[0] ?? '';
-        $lastName = $nameParts[1] ?? '';
-        
-        $student = Student::where('first_name', $firstName)
-                         ->where('last_name', $lastName)
-                         ->first();
-        
-        if (!$student) {
-            // If exact match fails, try the first student for demo purposes
-            $student = Student::first();
+        try {
+            $user = Auth::user();
+            
+            // Validate the request
+            $validated = $request->validate([
+                'first_name' => 'required|string|max:80',
+                'middle_name' => 'nullable|string|max:80',
+                'last_name' => 'required|string|max:80',
+                'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+                'phone_number' => 'nullable|string|max:20',
+                'birth_date' => 'nullable|date',
+                'gender' => 'nullable|in:M,F',
+                'grade_level' => 'nullable|string|max:20',
+                'section' => 'nullable|string|max:50',
+                'blood_type' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+                'address' => 'nullable|string',
+                'emergency_contact' => 'nullable|string|max:150',
+            ]);
+
+            // Update user email and name
+            $user->email = $validated['email'];
+            $user->name = $validated['first_name'] . ' ' . $validated['last_name'];
+            $user->save();
+
+            // Get or create student record
+            $nameParts = explode(' ', $user->name);
+            $firstName = $nameParts[0] ?? '';
+            $lastName = $nameParts[1] ?? '';
+            
+            $student = Student::where('first_name', $firstName)
+                             ->where('last_name', $lastName)
+                             ->first();
+            
             if (!$student) {
-                return redirect()->route('login')->with('error', 'No student records found.');
+                // Create new student record
+                $student = new Student();
             }
+
+            // Update student record with correct field names
+            $student->first_name = $validated['first_name'];
+            $student->middle_name = $validated['middle_name'];
+            $student->last_name = $validated['last_name'];
+            $student->date_of_birth = $validated['birth_date'];
+            $student->gender = $validated['gender'];
+            $student->grade_level = $validated['grade_level'];
+            $student->section = $validated['section'];
+            $student->blood_type = $validated['blood_type'];
+            $student->address = $validated['address'];
+            $student->emergency_contact = $validated['emergency_contact'];
+            $student->contact_number = $validated['phone_number']; // Use contact_number instead of phone_number
+            $student->save();
+
+            return redirect()->route('student.profile')->with('success', 'Profile updated successfully!');
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            \Log::error('Profile Update Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while updating your profile. Please try again.')->withInput();
         }
+    }
 
-        // Validate the request
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:80',
-            'middle_name' => 'nullable|string|max:80',
-            'last_name' => 'required|string|max:80',
-            'birth_date' => 'nullable|date',
-            'gender' => 'nullable|in:M,F,Other',
-            'grade_level' => 'nullable|string|max:20',
-            'section' => 'nullable|string|max:50',
-            'address' => 'nullable|string',
-            'emergency_contact' => 'nullable|string|max:150',
-        ]);
+    public function updatePassword(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Validate the request
+            $validated = $request->validate([
+                'current_password' => 'required',
+                'password' => 'required|min:8|confirmed',
+            ]);
 
-        // Update the student record
-        $student->update($validated);
+            // Check if current password is correct
+            if (!Hash::check($validated['current_password'], $user->password)) {
+                return redirect()->back()->with('error', 'Current password is incorrect.');
+            }
 
-        return redirect()->route('student.profile')->with('success', 'Profile updated successfully!');
+            // Update password
+            $user->password = Hash::make($validated['password']);
+            $user->save();
+
+            return redirect()->route('student.profile')->with('success', 'Password updated successfully!');
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors());
+        } catch (\Exception $e) {
+            \Log::error('Password Update Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while updating your password.');
+        }
+    }
+
+    public function uploadProfilePicture(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            if (!$user || $user->role !== 'student') {
+                return response()->json(['success' => false, 'message' => 'Unauthorized access.'], 403);
+            }
+            
+            $request->validate([
+                'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
+            ]);
+            
+            // Create uploads directory in public folder
+            $uploadPath = public_path('uploads/profile_pictures');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+            
+            // Delete old profile picture if exists
+            if ($user->profile_picture && file_exists(public_path($user->profile_picture))) {
+                unlink(public_path($user->profile_picture));
+            }
+            
+            // Store new profile picture
+            $file = $request->file('profile_picture');
+            $filename = 'profile_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            // Move file to public/uploads/profile_pictures
+            $file->move($uploadPath, $filename);
+            
+            // Update user record with relative path
+            $relativePath = 'uploads/profile_pictures/' . $filename;
+            $user->profile_picture = $relativePath;
+            $user->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile picture updated successfully!',
+                'profile_picture_url' => asset($relativePath)
+            ]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid file. Please upload a valid image (JPEG, PNG, JPG, GIF) under 5MB.'
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Profile picture upload error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while uploading the profile picture. Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
