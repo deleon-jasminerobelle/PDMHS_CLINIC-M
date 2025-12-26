@@ -7,7 +7,9 @@
     <title>Clinic Staff Dashboard - PDMHS Clinic</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #1e40af;
@@ -32,20 +34,91 @@
             margin-bottom: 1rem;
             color: white;
             font-weight: 500;
+            text-align: center;
         }
         .stat-card h2 {
-            font-size: 2.5rem;
-            font-weight: 300;
+            font-family: 'Roboto', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
         .stat-card p {
             margin: 0;
             opacity: 0.9;
+            font-family: 'Roboto', sans-serif;
+            font-size: 25px;
+            font-weight: 700;
         }
-        .stat-card-blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .stat-card-orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .stat-card-yellow { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #333; }
-        .stat-card-purple { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
+        .stat-card-blue { background: var(--gradient); }
+        .stat-card-orange { background: var(--gradient); }
+        .stat-card-yellow { background: var(--gradient); }
+        .stat-card-purple { background: var(--gradient); }
+        
+        .btn-action {
+            background: white;
+            border: 2px solid #e8ecf4;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-action:hover {
+            background: var(--gradient);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.2);
+        }
+        
+        .btn-action i {
+            font-size: 2rem;
+        }
+        
+        .visit-name {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+        }
+        
+        .visit-type {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+            color: #6c757d !important;
+        }
+        
+        .visit-date {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+        }
+        
+        .visit-status {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+        }
+        
+        .allergy-name {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+        }
+        
+        .allergy-list {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+            color: #6c757d !important;
+        }
         
         .section-card {
             background: white;
@@ -63,6 +136,13 @@
             justify-content: space-between;
             align-items: center;
         }
+        
+        .section-header h5 {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 30px;
+            margin-bottom: 0;
+        }
         .section-content {
             padding: 2rem;
             text-align: center;
@@ -71,9 +151,29 @@
         .navbar-brand {
             font-weight: 600;
         }
+        
+        .navbar-nav .nav-link {
+            font-family: 'Epilogue', sans-serif !important;
+            font-size: 25px !important;
+            font-weight: 600 !important;
+        }
+        
+        .dropdown-menu .dropdown-item {
+            font-family: 'Epilogue', sans-serif !important;
+            font-size: 20px !important;
+            font-weight: 500 !important;
+        }
         .welcome-header {
             font-family: 'Albert Sans', sans-serif;
-            font-weight: 500;
+            font-weight: 800;
+            font-size: 35px;
+        }
+        
+        .dashboard-subtitle {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 25px;
+            margin-bottom: 0;
         }
     </style>
 </head>
@@ -81,9 +181,21 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{{ route('clinic-staff.dashboard') }}">
-                <i class="fas fa-heartbeat me-2"></i>
-                PDMHS Clinic
             </a>
+            <div class="navbar-nav me-auto">
+                <a class="nav-link active" href="{{ route('clinic-staff.dashboard') }}">
+                    <i></i>Dashboard
+                </a>
+                <a class="nav-link" href="#" onclick="alert('Students page coming soon!')">
+                    <i ></i>Students
+                </a>
+                <a class="nav-link" href="#" onclick="alert('Visits page coming soon!')">
+                    <i ></i>Visits
+                </a>
+                <a class="nav-link" href="#" onclick="alert('Reports page coming soon!')">
+                    <i"></i>Reports
+                </a>
+            </div>
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -127,107 +239,141 @@
 
         <!-- Header -->
         <div class="mb-4">
-            <h1 class="h3 mb-1 welcome-header">Welcome, {{ $user->name }}!</h1>
-            <p class="text-muted">Clinic Staff Dashboard - Manage student health records and clinic visits</p>
+            <h1 class="h3 mb-1 welcome-header">Welcome, Maria Santos!</h1>
+            <p class="text-muted dashboard-subtitle">Clinic Staff Dashboard</p>
         </div>
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
             <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-blue">
-                    <h2>0</h2>
-                    <p>Fit for Activities</p>
+                <div class="stat-card stat-card-blue d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <h2>4</h2>
+                    <p>Total Students</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-orange">
-                    <h2>0</h2>
-                    <p>Pending Assessments</p>
+                <div class="stat-card stat-card-orange d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <h2>1</h2>
+                    <p>Today's Visits</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-yellow">
-                    <h2>0</h2>
-                    <p>Restricted Activities</p>
+                <div class="stat-card stat-card-yellow d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <h2>2</h2>
+                    <p>New Visits</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-purple">
+                <div class="stat-card stat-card-purple d-flex flex-column justify-content-center" style="min-height: 120px;">
                     <h2>0</h2>
-                    <p>Special Medical Needs</p>
+                    <p>Pending Visits</p>
                 </div>
             </div>
         </div>
 
-        <!-- Student Health Status -->
+        <!-- Quick Actions -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="section-card">
                     <div class="section-header">
-                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Student Health Status</h5>
-                        <div>
-                            <button class="btn btn-sm btn-primary me-2">
-                                <i class="fas fa-plus me-1"></i>Add Student
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="fas fa-download me-1"></i>Export
-                            </button>
-                        </div>
+                        <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
                     </div>
-                    <div class="section-content" style="text-align: left;">
-                        <!-- Search Bar -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                    <input type="text" class="form-control" placeholder="Search by name, LRN, or status..." id="studentSearch">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select" id="statusFilter">
-                                    <option value="">All Status</option>
-                                    <option value="fit">Fit for Activities</option>
-                                    <option value="pending">Pending Assessment</option>
-                                    <option value="restricted">Restricted Activities</option>
-                                    <option value="special">Special Medical Needs</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <button class="btn btn-outline-secondary" onclick="clearFilters()">
-                                    <i class="fas fa-times me-1"></i>Clear Filters
+                    <div class="section-content">
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <button class="btn btn-action w-100" onclick="alert('New Visit functionality coming soon!')">
+                                    <i class="fas fa-plus-circle mb-2"></i>
+                                    <div>New Visit</div>
                                 </button>
                             </div>
-                        </div>
-
-                        <!-- Student Table -->
-                        <div class="table-responsive">
-                            <table class="table table-hover" id="studentsTable">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Student Name</th>
-                                        <th>LRN</th>
-                                        <th>Status</th>
-                                        <th>Last Check-up</th>
-                                        <th>Notes</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="6" class="text-center text-muted" style="font-style: italic;">
-                                            No student records available.
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="col-md-3 mb-3">
+                                <button class="btn btn-action w-100" onclick="alert('Find Student functionality coming soon!')">
+                                    <i class="fas fa-search mb-2"></i>
+                                    <div>Find Student</div>
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <button class="btn btn-action w-100" onclick="alert('Generate Report functionality coming soon!')">
+                                    <i class="fas fa-file-alt mb-2"></i>
+                                    <div>Generate Report</div>
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <button class="btn btn-action w-100" onclick="alert('My Profile functionality coming soon!')">
+                                    <i class="fas fa-user-cog mb-2"></i>
+                                    <div>My Profile</div>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-    </div>
+        </div>
+
+        <!-- Recent Visits and Students with Allergies -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Visits</h5>
+                    </div>
+                    <div class="section-content" style="text-align: left; padding: 1rem;">
+                        <div class="visit-item mb-3 p-3" style="background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--primary);">
+                            <div class="d-flex align-items-center">
+                                <div class="visit-avatar me-3">
+                                    <i class="fas fa-user-circle" style="font-size: 2rem; color: var(--primary);"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 visit-name">Clarence Villas</h6>
+                                    <p class="mb-1 visit-type">Annual Checkup</p>
+                                    <small class="visit-date text-success">Dec 27, 2025 at 10:30 AM</small>
+                                </div>
+                                <span class="badge bg-success visit-status">Completed</span>
+                            </div>
+                        </div>
+                        
+                        <div class="visit-item mb-3 p-3" style="background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--primary);">
+                            <div class="d-flex align-items-center">
+                                <div class="visit-avatar me-3">
+                                    <i class="fas fa-user-circle" style="font-size: 2rem; color: var(--primary);"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 visit-name">Jasmine De Leon</h6>
+                                    <p class="mb-1 visit-type">Allergy Checkup</p>
+                                    <small class="visit-date text-warning">Dec 26, 2025 at 2:15 PM</small>
+                                </div>
+                                <span class="badge bg-warning visit-status">In Progress</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Students with Allergies</h5>
+                    </div>
+                    <div class="section-content" style="text-align: left; padding: 1rem;">
+                        <div class="allergy-item mb-3 p-3" style="background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                            <div class="d-flex align-items-center">
+                                <div class="allergy-avatar me-3">
+                                    <i class="fas fa-user-circle" style="font-size: 2rem; color: #ffc107;"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 allergy-name">Hannah Loraine Geronday</h6>
+                                    <p class="mb-0 allergy-list">Peanuts, Shellfish</p>
+                                </div>
+                                <i class="fas fa-exclamation-circle text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -357,6 +503,88 @@
                 checkbox.addEventListener('change', updateBulkActions);
             });
         });
+
+        // Session keep-alive mechanism
+        function keepSessionAlive() {
+            fetch('/keep-alive', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.warn('Session keep-alive failed:', response.status);
+                    // If session expired, redirect to login
+                    if (response.status === 401 || response.status === 419) {
+                        window.location.href = '/login';
+                    }
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Session keep-alive successful:', data);
+            })
+            .catch(error => {
+                console.error('Session keep-alive error:', error);
+            });
+        }
+
+        // Check session status on page load
+        function checkSessionStatus() {
+            fetch('/session-status', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.warn('Session check failed:', response.status);
+                    if (response.status === 401 || response.status === 419) {
+                        window.location.href = '/login';
+                    }
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data.authenticated) {
+                    console.warn('User not authenticated, redirecting to login');
+                    window.location.href = '/login';
+                } else {
+                    console.log('Session status OK:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Session status check error:', error);
+            });
+        }
+
+        // Check session status immediately on page load
+        checkSessionStatus();
+
+        // Keep session alive every 10 minutes (600,000 ms)
+        setInterval(keepSessionAlive, 600000);
+
+        // Also keep session alive on user activity
+        let activityTimer;
+        function resetActivityTimer() {
+            clearTimeout(activityTimer);
+            activityTimer = setTimeout(keepSessionAlive, 300000); // 5 minutes of inactivity
+        }
+
+        // Listen for user activity
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(event => {
+            document.addEventListener(event, resetActivityTimer, true);
+        });
+
+        // Initial activity timer
+        resetActivityTimer();
     </script>
 </body>
 </html>

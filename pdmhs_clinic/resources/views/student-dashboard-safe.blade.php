@@ -75,14 +75,14 @@
         .section-header h5 {
             font-family: 'Albert Sans', sans-serif;
             font-weight: 700;
-            font-size: 25px;
+            font-size: 30px;
             margin-bottom: 0;
         }
         
         .health-info-label {
             font-family: 'Albert Sans', sans-serif !important;
             font-weight: 700 !important;
-            font-size: 15px !important;
+            font-size: 20px !important;
         }
         
         .empty-state-message {
@@ -406,6 +406,88 @@
                 }, 5000);
             });
         });
+
+        // Session keep-alive mechanism
+        function keepSessionAlive() {
+            fetch('/keep-alive', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.warn('Session keep-alive failed:', response.status);
+                    // If session expired, redirect to login
+                    if (response.status === 401 || response.status === 419) {
+                        window.location.href = '/login';
+                    }
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Session keep-alive successful:', data);
+            })
+            .catch(error => {
+                console.error('Session keep-alive error:', error);
+            });
+        }
+
+        // Check session status on page load
+        function checkSessionStatus() {
+            fetch('/session-status', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.warn('Session check failed:', response.status);
+                    if (response.status === 401 || response.status === 419) {
+                        window.location.href = '/login';
+                    }
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data.authenticated) {
+                    console.warn('User not authenticated, redirecting to login');
+                    window.location.href = '/login';
+                } else {
+                    console.log('Session status OK:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Session status check error:', error);
+            });
+        }
+
+        // Check session status immediately on page load
+        checkSessionStatus();
+
+        // Keep session alive every 10 minutes (600,000 ms)
+        setInterval(keepSessionAlive, 600000);
+
+        // Also keep session alive on user activity
+        let activityTimer;
+        function resetActivityTimer() {
+            clearTimeout(activityTimer);
+            activityTimer = setTimeout(keepSessionAlive, 300000); // 5 minutes of inactivity
+        }
+
+        // Listen for user activity
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(event => {
+            document.addEventListener(event, resetActivityTimer, true);
+        });
+
+        // Initial activity timer
+        resetActivityTimer();
     </script>
 </body>
 </html>

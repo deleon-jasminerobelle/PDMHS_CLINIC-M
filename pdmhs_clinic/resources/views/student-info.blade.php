@@ -156,10 +156,10 @@
             </a>
             <div class="navbar-nav me-auto">
                 <a class="nav-link" href="{{ route('student.dashboard') }}">
-                    <i class="fas fa-home me-1"></i>Dashboard
+                    <i></i>Dashboard
                 </a>
                 <a class="nav-link" href="{{ route('student.medical') }}">
-                    <i class="fas fa-file-medical me-1"></i>My Medical
+                    <i></i>My Medical
                 </a>
             </div>
             <div class="navbar-nav ms-auto">

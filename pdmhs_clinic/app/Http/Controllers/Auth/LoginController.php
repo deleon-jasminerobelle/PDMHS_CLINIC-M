@@ -31,7 +31,8 @@ class LoginController extends Controller
                     \Log::info('User already logged in, redirecting to dashboard', [
                         'user_id' => $currentUser->id,
                         'email' => $currentUser->email,
-                        'role' => $currentUser->role
+                        'role' => $currentUser->role,
+                        'session_id' => session()->getId()
                     ]);
 
                     switch ($currentUser->role) {
@@ -46,6 +47,10 @@ class LoginController extends Controller
                     }
                 } else {
                     // Different user trying to login, logout current user first
+                    \Log::info('Different user logging in, clearing current session', [
+                        'current_user' => $currentUser->email,
+                        'new_user' => $request->username
+                    ]);
                     Auth::logout();
                     $request->session()->invalidate();
                     $request->session()->regenerateToken();
@@ -54,14 +59,23 @@ class LoginController extends Controller
 
             // Try to authenticate with email (using username field as email)
             if (Auth::attempt(['email' => $request->username, 'password' => $request->password], $request->filled('remember'))) {
-                // Only regenerate session for new logins, not for already authenticated users
+                // Regenerate session for security
                 $request->session()->regenerate();
                 $user = Auth::user();
 
                 \Log::info('User logged in successfully', [
                     'user_id' => $user->id,
                     'email' => $user->email,
-                    'role' => $user->role
+                    'role' => $user->role,
+                    'session_id' => session()->getId(),
+                    'remember' => $request->filled('remember')
+                ]);
+
+                // Store additional session data for debugging
+                session([
+                    'login_time' => now()->toDateTimeString(),
+                    'user_role' => $user->role,
+                    'user_name' => $user->name,
                 ]);
 
                 // Redirect based on role to specific dashboard
@@ -79,7 +93,8 @@ class LoginController extends Controller
 
             \Log::warning('Failed login attempt', [
                 'username' => $request->username,
-                'ip' => $request->ip()
+                'ip' => $request->ip(),
+                'user_agent' => $request->userAgent()
             ]);
 
             return back()->withErrors([
@@ -87,7 +102,10 @@ class LoginController extends Controller
             ])->withInput($request->only('username'));
 
         } catch (\Exception $e) {
-            \Log::error('Login Error: ' . $e->getMessage());
+            \Log::error('Login Error: ' . $e->getMessage(), [
+                'stack_trace' => $e->getTraceAsString(),
+                'session_id' => session()->getId()
+            ]);
             return back()->withErrors([
                 'username' => 'An error occurred during login. Please try again.',
             ])->withInput($request->only('username'));
