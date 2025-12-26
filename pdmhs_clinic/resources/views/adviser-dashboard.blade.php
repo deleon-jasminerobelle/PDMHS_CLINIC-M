@@ -42,6 +42,12 @@
                         <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.reload()">
                             <i class="fas fa-sync-alt"></i> Refresh
                         </button>
+                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

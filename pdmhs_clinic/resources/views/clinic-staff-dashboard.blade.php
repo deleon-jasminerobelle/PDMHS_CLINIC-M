@@ -115,7 +115,17 @@
 
         <!-- Header -->
         <div class="mb-4">
-            <h1 class="h3 mb-1 welcome-header">Welcome back, {{ $user->name }}!</h1>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-1 welcome-header">Welcome back, {{ $user->name }}!</h1>
+                </div>
+                <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
+            </div>
         </div>
 
         <!-- Statistics Cards -->

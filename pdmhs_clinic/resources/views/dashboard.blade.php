@@ -369,8 +369,18 @@
         @endif
 
         <div class="dashboard-header">
-            <h1>Dashboard</h1>
-            <p>Welcome back, {{ $user->name }}! Here's what's happening at the clinic today.</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Welcome back, {{ $user->name }}! Here's what's happening at the clinic today.</p>
+                </div>
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
+            </div>
         </div>
 
         <div class="stats-grid">
