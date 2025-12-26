@@ -39,7 +39,8 @@ class LoginController extends Controller
                 // Redirect based on role to specific dashboard
                 switch ($user->role) {
                     case 'student':
-                        if (session('student_profile')) {
+                        // Check if student has completed health form (has student_id and student record exists)
+                        if ($user->student_id && \App\Models\Student::find($user->student_id)) {
                             $request->session()->regenerate();
                             return redirect()->route('student.dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
                         } else {
