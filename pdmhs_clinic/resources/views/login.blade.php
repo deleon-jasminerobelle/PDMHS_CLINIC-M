@@ -632,12 +632,6 @@
                 });
             });
 
-            // Auto-select student role by default
-            const studentButton = document.querySelector('[data-role="student"]');
-            if (studentButton) {
-                studentButton.click();
-            }
-
             // Auto-dismiss alerts after 5 seconds
             const alerts = document.querySelectorAll('.alert');
             alerts.forEach(alert => {

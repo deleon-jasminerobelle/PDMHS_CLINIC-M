@@ -249,9 +249,84 @@
         }
 
         function clearFilters() {
-            document.getElementById('studentSearch').value = '';
+            document.getElementById('searchInput').value = '';
             document.getElementById('statusFilter').value = '';
             filterStudents();
+        }
+
+        function selectAll() {
+            const checkboxes = document.querySelectorAll('.student-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAll');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            
+            updateBulkActions();
+        }
+
+        function updateBulkActions() {
+            const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
+            const bulkActionsPanel = document.getElementById('bulkActionsPanel');
+            
+            if (checkedBoxes.length > 0) {
+                bulkActionsPanel.style.display = 'block';
+                document.getElementById('selectedCount').textContent = checkedBoxes.length;
+            } else {
+                bulkActionsPanel.style.display = 'none';
+            }
+        }
+
+        function markAsFit() {
+            const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
+            alert(`Marking ${checkedBoxes.length} students as Fit for Activities`);
+            // Add actual implementation here
+        }
+
+        function markAsPending() {
+            const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
+            alert(`Marking ${checkedBoxes.length} students as Pending Assessment`);
+            // Add actual implementation here
+        }
+
+        function markAsRestricted() {
+            const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
+            alert(`Marking ${checkedBoxes.length} students as Restricted Activities`);
+            // Add actual implementation here
+        }
+
+        function clearSelection() {
+            const checkboxes = document.querySelectorAll('.student-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.getElementById('selectAll').checked = false;
+            updateBulkActions();
+        }
+
+        function viewStudent(id) {
+            alert(`Viewing student with ID: ${id}`);
+            // Add actual implementation here
+        }
+
+        function editStudent(id) {
+            alert(`Editing student with ID: ${id}`);
+            // Add actual implementation here
+        }
+
+        function addVisit(id) {
+            alert(`Adding visit for student with ID: ${id}`);
+            // Add actual implementation here
+        }
+
+        function addStudent() {
+            alert('Adding new student');
+            // Add actual implementation here
+        }
+
+        function exportData() {
+            alert('Exporting student data');
+            // Add actual implementation here
         }
 
         // Auto-dismiss alerts after 5 seconds
@@ -262,6 +337,12 @@
                     const bsAlert = new bootstrap.Alert(alert);
                     bsAlert.close();
                 }, 5000);
+            });
+            
+            // Add event listeners for checkboxes
+            const checkboxes = document.querySelectorAll('.student-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateBulkActions);
             });
         });
     </script>
