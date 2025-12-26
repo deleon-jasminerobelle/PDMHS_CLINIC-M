@@ -281,7 +281,7 @@ class DashboardController extends Controller
     {
         // Get adviser record
         $adviser = Adviser::where('user_id', $user->id)->first();
-        
+
         if (!$adviser) {
             return redirect()->route('login')->with('error', 'Adviser record not found.');
         }
@@ -290,8 +290,13 @@ class DashboardController extends Controller
         $students = $adviser->students()->get();
         $totalStudents = $students->count();
 
-        // Get students with allergies (placeholder - allergies table may not exist)
+        // Get students with allergies - count students who have allergies
         $studentsWithAllergies = 0;
+        foreach ($students as $student) {
+            if ($student->has_allergies && (!empty($student->allergies) || !empty($student->allergy_details))) {
+                $studentsWithAllergies++;
+            }
+        }
 
         // Get recent clinic visits for adviser's students (last 30 days)
         $studentIds = $students->pluck('id');
@@ -308,7 +313,7 @@ class DashboardController extends Controller
 
         return view('adviser-dashboard', compact(
             'user',
-            'adviser', 
+            'adviser',
             'students',
             'totalStudents',
             'studentsWithAllergies',
@@ -437,5 +442,135 @@ class DashboardController extends Controller
         $qrCode = $writer->writeString($qrData);
 
         return response($qrCode)->header('Content-Type', 'image/svg+xml');
+    }
+
+    public function showStudent($studentId)
+    {
+        $user = Auth::user();
+
+        // Ensure this is actually an adviser
+        if (!$user || !($user instanceof \App\Models\User) || $user->role !== 'adviser') {
+            return redirect()->route('login')->with('error', 'Access denied.');
+        }
+
+        // Get adviser record
+        $adviser = Adviser::where('user_id', $user->id)->first();
+
+        if (!$adviser) {
+            return redirect()->route('login')->with('error', 'Adviser record not found.');
+        }
+
+        // Get the student and ensure they belong to this adviser
+        $student = Student::findOrFail($studentId);
+
+        // Check if this student belongs to the adviser
+        $isAdviserStudent = $adviser->students()->where('students.id', $studentId)->exists();
+
+        if (!$isAdviserStudent) {
+            return redirect()->route('adviser.dashboard')->with('error', 'You do not have permission to view this student.');
+        }
+
+        // Get student data similar to student dashboard but for adviser view
+        $latestVitals = (object) ['weight' => 'N/A', 'height' => 'N/A'];
+        $bmi = 'N/A';
+        $bmiCategory = 'N/A';
+        $allergies = collect();
+        $immunizations = collect();
+        $totalVisits = 0;
+        $recentVisits = collect();
+        $lastVisit = null;
+        $age = null;
+
+        // Calculate age if birth date exists
+        if ($student->date_of_birth) {
+            try {
+                $age = \Carbon\Carbon::parse($student->date_of_birth)->age;
+            } catch (\Exception $e) {
+                $age = 'N/A';
+            }
+        }
+
+        // Get clinic visits for this student
+        try {
+            if (method_exists($student, 'clinicVisits')) {
+                $clinicVisits = $student->clinicVisits()
+                    ->orderBy('visit_date', 'desc')
+                    ->get();
+                $totalVisits = $clinicVisits->count();
+                $recentVisits = $clinicVisits->take(10); // Show more for adviser
+                $lastVisit = $clinicVisits->first();
+            } else {
+                $recentVisits = collect();
+            }
+        } catch (\Exception $e) {
+            Log::info('Clinic visits not available: ' . $e->getMessage());
+            $recentVisits = collect();
+        }
+
+        // Get allergies
+        try {
+            if (method_exists($student, 'allergies')) {
+                $allergiesData = $student->allergies;
+                $allergies = is_array($allergiesData) ? collect($allergiesData) : ($allergiesData ?? collect());
+            }
+        } catch (\Exception $e) {
+            Log::info('Allergies not available: ' . $e->getMessage());
+        }
+
+        // Get immunizations
+        try {
+            if (method_exists($student, 'immunizations')) {
+                $immunizationsData = $student->immunizations()
+                    ->orderBy('date_administered', 'desc')
+                    ->get();
+                $immunizations = is_array($immunizationsData) ? collect($immunizationsData) : $immunizationsData;
+            }
+        } catch (\Exception $e) {
+            Log::info('Immunizations not available: ' . $e->getMessage());
+        }
+
+        return view('adviser.student-show', compact(
+            'user',
+            'adviser',
+            'student',
+            'lastVisit',
+            'latestVitals',
+            'bmi',
+            'bmiCategory',
+            'allergies',
+            'immunizations',
+            'age',
+            'recentVisits',
+            'totalVisits'
+        ));
+    }
+
+    public function showClinicVisit($visitId)
+    {
+        $user = Auth::user();
+
+        // Ensure this is actually an adviser
+        if (!$user || !($user instanceof \App\Models\User) || $user->role !== 'adviser') {
+            return redirect()->route('login')->with('error', 'Access denied.');
+        }
+
+        // Get adviser record
+        $adviser = Adviser::where('user_id', $user->id)->first();
+
+        if (!$adviser) {
+            return redirect()->route('login')->with('error', 'Adviser record not found.');
+        }
+
+        // Get the clinic visit
+        $visit = ClinicVisit::with(['student'])->findOrFail($visitId);
+
+        // Check if this visit belongs to one of the adviser's students
+        $isAdviserStudent = $adviser->students()->where('students.id', $visit->student_id)->exists();
+
+        if (!$isAdviserStudent) {
+            return redirect()->route('adviser.dashboard')->with('error', 'You do not have permission to view this visit.');
+        }
+
+        return view('adviser.clinic-visit-show', compact('user', 'adviser', 'visit'));
     }
 }

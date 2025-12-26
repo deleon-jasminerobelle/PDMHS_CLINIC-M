@@ -77,6 +77,8 @@ Route::middleware(['auth', 'student', 'check.health.form'])->prefix('student')->
 // Adviser routes
 Route::middleware(['auth', 'adviser'])->prefix('adviser')->name('adviser.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'adviserDashboard'])->name('dashboard');
+    Route::get('/students/{student}', [DashboardController::class, 'showStudent'])->name('students.show');
+    Route::get('/clinic-visits/{visit}', [DashboardController::class, 'showClinicVisit'])->name('clinic-visits.show');
 });
 
 // Clinic Staff routes
