@@ -59,7 +59,10 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
-        $student = Student::findOrFail($id);
+        $student = Student::with(['advisers', 'clinicVisits' => function($query) {
+            $query->orderBy('visit_date', 'desc')->limit(10);
+        }])->findOrFail($id);
+        
         return view('students.show', compact('student'));
     }
 
