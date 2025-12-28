@@ -670,4 +670,270 @@ class DashboardController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Show clinic staff students page
+     */
+    public function clinicStaffStudents(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            // Get all students - simplified query without relationships for now
+            $students = Student::orderBy('last_name')
+                ->orderBy('first_name')
+                ->get();
+
+            // Add computed properties for each student
+            $students->each(function ($student) {
+                // Format student number
+                $student->formatted_student_number = $student->student_id ?? 'N/A';
+                
+                // Format grade and section
+                $student->formatted_grade_section = $student->grade_level && $student->section 
+                    ? "Grade {$student->grade_level} - {$student->section}" 
+                    : 'N/A';
+                
+                // Get last visit date - simplified for now
+                $student->last_visit_date = 'No visits';
+                
+                // Check if student has allergies from JSON field
+                $studentAllergies = $student->getAttribute('allergies');
+                $student->has_allergies = !empty($studentAllergies) && is_array($studentAllergies) && count($studentAllergies) > 0;
+                $student->allergy_status = $student->has_allergies ? 'Yes' : 'None';
+            });
+
+            return view('clinic-staff-students', compact('user', 'students'));
+
+        } catch (\Exception $e) {
+            \Log::error('Clinic Staff Students Error: ' . $e->getMessage());
+            return redirect()->route('clinic-staff.dashboard')->with('error', 'An error occurred loading students.');
+        }
+    }
+
+    /**
+     * Show individual student profile for clinic staff
+     */
+    public function clinicStaffStudentProfile($id)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            $student = Student::with(['visits', 'allergies', 'vitals', 'immunizations'])
+                ->findOrFail($id);
+
+            return view('clinic-staff-student-profile', compact('user', 'student'));
+
+        } catch (\Exception $e) {
+            \Log::error('Clinic Staff Student Profile Error: ' . $e->getMessage());
+            return redirect()->route('clinic-staff.students')->with('error', 'Student not found.');
+        }
+    }
+
+    /**
+     * Add a new visit for a student
+     */
+    public function addStudentVisit(Request $request, $id)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            $student = Student::findOrFail($id);
+
+            // Create new visit (you can expand this based on your visit model)
+            $visit = new ClinicVisit([
+                'student_id' => $student->id,
+                'visit_date' => now(),
+                'visit_type' => $request->input('visit_type', 'General Checkup'),
+                'notes' => $request->input('notes'),
+                'staff_id' => $user->id
+            ]);
+            
+            $visit->save();
+
+            return redirect()->route('clinic-staff.student.profile', $id)
+                ->with('success', 'Visit added successfully.');
+
+        } catch (\Exception $e) {
+            \Log::error('Add Student Visit Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to add visit.');
+        }
+    }
+
+    /**
+     * Show clinic staff visits page
+     */
+    public function clinicStaffVisits(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            // Get all medical visits with student information
+            $visits = MedicalVisit::with(['student'])
+                ->orderBy('visit_datetime', 'desc')
+                ->get();
+
+            // Add computed properties for each visit
+            $visits->each(function ($visit) {
+                // Format datetime
+                $visit->formatted_datetime = $visit->visit_datetime->format('M d, Y h:i A');
+                
+                // Get primary diagnosis - simplified for now since tables might not exist
+                $visit->primary_diagnosis = 'Pending';
+            });
+
+            return view('clinic-staff-visits', compact('user', 'visits'));
+
+        } catch (\Exception $e) {
+            \Log::error('Clinic Staff Visits Error: ' . $e->getMessage());
+            return redirect()->route('clinic-staff.dashboard')->with('error', 'An error occurred loading visits.');
+        }
+    }
+
+    /**
+     * Get visit details for AJAX request
+     */
+    public function getVisitDetails($visitId)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return response()->json(['error' => 'Access denied'], 403);
+            }
+
+            $visit = MedicalVisit::with(['student'])->findOrFail($visitId);
+
+            // Format the data for the modal - simplified version
+            $visitData = [
+                'visit_id' => $visit->visit_id,
+                'visit_type' => $visit->visit_type,
+                'status' => $visit->status,
+                'chief_complaint' => $visit->chief_complaint,
+                'notes' => $visit->notes,
+                'formatted_datetime' => $visit->visit_datetime->format('M d, Y h:i A'),
+                'student' => [
+                    'full_name' => $visit->student->first_name . ' ' . $visit->student->last_name,
+                    'student_number' => $visit->student->student_id ?? 'N/A',
+                    'grade_section' => $visit->student->grade_level && $visit->student->section 
+                        ? "Grade {$visit->student->grade_level} - {$visit->student->section}" 
+                        : 'N/A',
+                    'age' => $visit->student->date_of_birth 
+                        ? \Carbon\Carbon::parse($visit->student->date_of_birth)->age 
+                        : 'N/A'
+                ],
+                'clinic_staff' => null, // Simplified for now
+                'diagnoses' => [], // Will be populated when tables exist
+                'medications' => [], // Will be populated when tables exist
+                'treatments' => [], // Will be populated when tables exist
+                'vitals' => [] // Will be populated when tables exist
+            ];
+
+            return response()->json($visitData);
+
+        } catch (\Exception $e) {
+            \Log::error('Get Visit Details Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Visit not found'], 404);
+        }
+    }
+
+    /**
+     * Store a new medical visit
+     */
+    public function storeVisit(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->back()->with('error', 'Access denied.');
+            }
+
+            // Validate the request
+            $validated = $request->validate([
+                'student_id' => 'required|exists:students,id',
+                'visit_datetime' => 'required|date',
+                'visit_type' => 'required|in:Routine,Emergency,Follow-up,Referral',
+                'chief_complaint' => 'required|string|max:255',
+                'notes' => 'nullable|string',
+            ]);
+
+            // Create the medical visit
+            $visit = MedicalVisit::create([
+                'student_id' => $validated['student_id'],
+                'clinic_staff_id' => null, // We'll set this properly later when we have clinic staff records
+                'visit_datetime' => $validated['visit_datetime'],
+                'visit_type' => $validated['visit_type'],
+                'chief_complaint' => $validated['chief_complaint'],
+                'notes' => $validated['notes'],
+                'status' => 'Open'
+            ]);
+
+            return redirect()->route('clinic-staff.visits')->with('success', 'Visit created successfully!');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            \Log::error('Store Visit Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while creating the visit: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Search students for visit creation
+     */
+    public function searchStudents(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return response()->json(['error' => 'Access denied'], 403);
+            }
+
+            $query = $request->get('q', '');
+            
+            if (strlen($query) < 2) {
+                return response()->json(['students' => []]);
+            }
+
+            // Search students by name or student ID
+            $students = Student::where(function($q) use ($query) {
+                $q->where('first_name', 'LIKE', "%{$query}%")
+                  ->orWhere('last_name', 'LIKE', "%{$query}%")
+                  ->orWhere('student_id', 'LIKE', "%{$query}%");
+            })
+            ->limit(10)
+            ->get(['id', 'first_name', 'last_name', 'student_id', 'grade_level', 'section']);
+
+            return response()->json(['students' => $students]);
+
+        } catch (\Exception $e) {
+            \Log::error('Search Students Error: ' . $e->getMessage());
+            return response()->json(['students' => []], 500);
+        }
+    }
 }

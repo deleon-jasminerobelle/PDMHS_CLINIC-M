@@ -99,4 +99,28 @@ class Student extends Model
     {
         return $this->hasMany(Vitals::class);
     }
+
+    /**
+     * Get the latest clinic visit for this student
+     */
+    public function latestVisit()
+    {
+        return $this->hasOne(ClinicVisit::class, 'student_id')->latest('visit_date');
+    }
+
+    /**
+     * Get all visits for this student
+     */
+    public function visits()
+    {
+        return $this->hasMany(ClinicVisit::class, 'student_id')->orderBy('visit_date', 'desc');
+    }
+
+    /**
+     * Get medical visits for this student
+     */
+    public function medicalVisits()
+    {
+        return $this->hasMany(MedicalVisit::class, 'student_id', 'student_id');
+    }
 }

@@ -76,6 +76,16 @@ Route::middleware(['auth'])->prefix('adviser')->name('adviser.')->group(function
 // Clinic Staff routes - using auth middleware only (role check is in controller)
 Route::middleware(['auth'])->prefix('clinic-staff')->name('clinic-staff.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'clinicStaffDashboard'])->name('dashboard');
+    Route::get('/students', [DashboardController::class, 'clinicStaffStudents'])->name('students');
+    Route::get('/students/{id}', [DashboardController::class, 'clinicStaffStudentProfile'])->name('student.profile');
+    Route::post('/students/{id}/visit', [DashboardController::class, 'addStudentVisit'])->name('student.visit');
+    Route::get('/visits', [DashboardController::class, 'clinicStaffVisits'])->name('visits');
+    Route::get('/visits/{visitId}/details', [DashboardController::class, 'getVisitDetails'])->name('visit.details');
+    Route::post('/visits', [DashboardController::class, 'storeVisit'])->name('visits.store');
+    Route::get('/students/search', [DashboardController::class, 'searchStudents'])->name('students.search');
+    Route::get('/reports', [\App\Http\Controllers\ReportsController::class, 'index'])->name('reports');
+    Route::post('/reports/export-pdf', [\App\Http\Controllers\ReportsController::class, 'exportPdf'])->name('reports.export-pdf');
+    Route::post('/reports/export-excel', [\App\Http\Controllers\ReportsController::class, 'exportExcel'])->name('reports.export-excel');
 });
 
 /*

@@ -186,14 +186,14 @@
                 <a class="nav-link active" href="{{ route('clinic-staff.dashboard') }}">
                     <i></i>Dashboard
                 </a>
-                <a class="nav-link" href="#" onclick="alert('Students page coming soon!')">
+                <a class="nav-link" href="{{ route('clinic-staff.students') }}">
                     <i ></i>Students
                 </a>
-                <a class="nav-link" href="#" onclick="alert('Visits page coming soon!')">
+                <a class="nav-link" href="{{ route('clinic-staff.visits') }}">
                     <i ></i>Visits
                 </a>
-                <a class="nav-link" href="#" onclick="alert('Reports page coming soon!')">
-                    <i"></i>Reports
+                <a class="nav-link" href="{{ route('clinic-staff.reports') }}">
+                    Reports
                 </a>
             </div>
             <div class="navbar-nav ms-auto">
