@@ -163,6 +163,7 @@
             margin-top: 24px;
             padding-top: 24px;
             border-top: 1px solid var(--light);
+            display: none; /* Hidden by default */
         }
 
         .login-footer p {
@@ -275,7 +276,9 @@
             font-size: 30px;
             font-weight: 800;
             margin-bottom: 16px;
-            color: var(--dark);
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-align: center;
             letter-spacing: -0.5px;
         }
@@ -453,7 +456,6 @@
     <div class="login-container">
         <div class="login-header">
             <h1>Welcome Back</h1>
-            <p>Sign in to access the PDMHS High School Clinic Management System</p>
         </div>
 
         @if (session('success'))
@@ -627,14 +629,14 @@
                             submitBtn.disabled = false;
                         }
                     }
+                    
+                    // Show login footer when role is selected
+                    const loginFooter = document.querySelector('.login-footer');
+                    if (loginFooter) {
+                        loginFooter.style.display = 'block';
+                    }
                 });
             });
-
-            // Auto-select student role by default
-            const studentButton = document.querySelector('[data-role="student"]');
-            if (studentButton) {
-                studentButton.click();
-            }
 
             // Auto-dismiss alerts after 5 seconds
             const alerts = document.querySelectorAll('.alert');
