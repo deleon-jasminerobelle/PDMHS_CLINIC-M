@@ -135,6 +135,12 @@
                     <h2>{{ $totalStudents ?? 0 }}</h2>
                     <p>Total Students</p>
                 </div>
+                <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i> Logout
+                    </button>
+                </form>
             </div>
 
             <div class="col-md-3 mb-3">
