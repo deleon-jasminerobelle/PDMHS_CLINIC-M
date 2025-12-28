@@ -575,7 +575,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script>
         function showPasswordModal() {
             const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
@@ -584,14 +585,42 @@
         
         function showQRModal() {
             const qrModal = new bootstrap.Modal(document.getElementById('qrModal'));
-            generateQRCode();
+            // Clear any previous content
+            document.getElementById('qrcode').innerHTML = '<p class="text-info">Generating QR Code...</p>';
             qrModal.show();
+
+            // Wait for QRCode library to be loaded before generating
+            if (typeof QRCode === 'undefined') {
+                console.log('QRCode library not loaded yet, waiting...');
+                let attempts = 0;
+                const checkLibrary = () => {
+                    attempts++;
+                    if (typeof QRCode !== 'undefined') {
+                        generateQRCode();
+                    } else if (attempts < 10) {
+                        setTimeout(checkLibrary, 200);
+                    } else {
+                        console.error('QRCode library failed to load after multiple attempts');
+                        document.getElementById('qrcode').innerHTML = '<p class="text-danger">QR Code library failed to load. Please refresh the page and try again.</p>';
+                    }
+                };
+                setTimeout(checkLibrary, 200);
+            } else {
+                generateQRCode();
+            }
         }
         
         function generateQRCode() {
             const qrContainer = document.getElementById('qrcode');
             qrContainer.innerHTML = ''; // Clear previous QR code
-            
+
+            // Check if QRCode library is loaded
+            if (typeof QRCode === 'undefined') {
+                console.error('QRCode library not loaded');
+                qrContainer.innerHTML = '<p class="text-danger">QR Code library not loaded. Please refresh the page.</p>';
+                return;
+            }
+
             const studentData = {
                 name: '{{ $user->name }}',
                 student_id: '{{ $student->student_id ?? "000001" }}',
@@ -599,17 +628,26 @@
                 section: '{{ $student->section ?? "STEM 1" }}',
                 email: '{{ $user->email }}'
             };
-            
+
+            console.log('Generating QR code for data:', studentData);
+
             const qrText = JSON.stringify(studentData);
-            
-            QRCode.toCanvas(qrText, { width: 200, height: 200 }, function (error, canvas) {
-                if (error) {
-                    console.error(error);
-                    qrContainer.innerHTML = '<p class="text-danger">Error generating QR code</p>';
-                } else {
-                    qrContainer.appendChild(canvas);
-                }
-            });
+
+            try {
+                // Use qrcodejs library API
+                new QRCode(qrContainer, {
+                    text: qrText,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                console.log('QR Code generated successfully');
+            } catch (e) {
+                console.error('Exception during QR code generation:', e);
+                qrContainer.innerHTML = '<p class="text-danger">Exception generating QR code: ' + e.message + '</p>';
+            }
         }
         
         function downloadQR() {
