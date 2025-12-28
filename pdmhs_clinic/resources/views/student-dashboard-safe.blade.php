@@ -99,8 +99,14 @@
         
         .navbar-nav .nav-link {
             font-family: 'Epilogue', sans-serif !important;
-            font-size: 20px !important;
+            font-size: 25px !important;
             font-weight: 600 !important;
+        }
+        
+        .dropdown-menu .dropdown-item {
+            font-family: 'Epilogue', sans-serif !important;
+            font-size: 20px !important;
+            font-weight: 500 !important;
         }
         .welcome-header {
             font-family: 'Albert Sans', sans-serif;
@@ -144,10 +150,10 @@
             </a>
             <div class="navbar-nav me-auto">
                 <a class="nav-link active" href="{{ route('student.dashboard') }}">
-                    <i class="fas fa-home me-1"></i>Dashboard
+                    <i></i>Dashboard
                 </a>
                 <a class="nav-link" href="{{ route('student.medical') }}">
-                    <i class="fas fa-file-medical me-1"></i>My Medical
+                    <i></i>My Medical
                 </a>
             </div>
             <div class="navbar-nav ms-auto">
@@ -157,7 +163,7 @@
                         {{ $user->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Edit Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -176,7 +182,7 @@
     <div class="container mt-4">
         <!-- Success/Error Messages -->
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert" style="font-family: 'Epilogue', sans-serif; font-size: 20px; font-weight: 500;">
                 <i class="fas fa-check-circle me-2"></i>
                 <strong>Success!</strong> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

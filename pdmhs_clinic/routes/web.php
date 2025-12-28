@@ -116,7 +116,14 @@ Route::get('/csrf-token', function () {
 
 // Keep alive route
 Route::post('/keep-alive', function () {
-    return response()->json(['status' => 'alive']);
+    if (!Auth::check()) {
+        return response()->json(['status' => 'unauthenticated'], 401);
+    }
+    return response()->json([
+        'status' => 'alive',
+        'user' => Auth::user()->only(['id', 'name', 'role']),
+        'timestamp' => now()->toISOString()
+    ]);
 })->middleware('auth');
 
 // Session status check route
@@ -125,9 +132,10 @@ Route::get('/session-status', function () {
         'authenticated' => Auth::check(),
         'user' => Auth::check() ? Auth::user()->only(['id', 'name', 'email', 'role']) : null,
         'session_id' => session()->getId(),
-        'csrf_token' => csrf_token()
+        'csrf_token' => csrf_token(),
+        'timestamp' => now()->toISOString()
     ]);
-})->middleware('auth');
+});
 
 /*
 |--------------------------------------------------------------------------

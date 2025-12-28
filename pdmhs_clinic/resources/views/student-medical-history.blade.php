@@ -11,6 +11,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --secondary: #3b82f6;
+            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        
+        .navbar.bg-primary {
+            background: var(--gradient) !important;
+            padding: 1rem 0 !important;
+        }
+        
         body {
             background-color: #f8f9fa;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -22,14 +34,41 @@
         
         .navbar-nav .nav-link {
             font-family: 'Epilogue', sans-serif !important;
-            font-size: 20px !important;
+            font-size: 25px !important;
             font-weight: 600 !important;
+        }
+        
+        .dropdown-menu .dropdown-item {
+            font-family: 'Epilogue', sans-serif !important;
+            font-size: 20px !important;
+            font-weight: 500 !important;
         }
         
         .page-container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
+        }
+        
+        .back-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.2s ease;
+        }
+        
+        .back-btn:hover {
+            opacity: 0.9;
+            color: white;
+            text-decoration: none;
         }
         
         .page-header {
@@ -239,10 +278,10 @@
             </a>
             <div class="navbar-nav me-auto">
                 <a class="nav-link" href="{{ route('student.dashboard') }}">
-                    <i class="fas fa-home me-1"></i>Dashboard
+                    <i></i>Dashboard
                 </a>
                 <a class="nav-link" href="{{ route('student.medical') }}">
-                    <i class="fas fa-file-medical me-1"></i>My Medical
+                    <i></i>My Medical
                 </a>
             </div>
             <div class="navbar-nav ms-auto">
@@ -252,7 +291,7 @@
                         {{ $user->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Edit Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -269,6 +308,14 @@
     </nav>
 
     <div class="page-container">
+        <!-- Back Button -->
+        <div class="mb-3">
+            <a href="{{ route('student.medical') }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Medical Records
+            </a>
+        </div>
+
         <!-- Page Header -->
         <div class="page-header">
             <h1 class="page-title">Medical Visits History</h1>

@@ -22,41 +22,17 @@ class DashboardController extends Controller
     public function studentDashboard()
     {
         try {
-            // Enhanced session debugging
-            \Log::info('Student Dashboard Access Attempt', [
-                'session_id' => session()->getId(),
-                'authenticated' => Auth::check(),
-                'user_id' => Auth::check() ? Auth::id() : null,
-                'session_data' => session()->all(),
-                'request_url' => request()->url(),
-                'user_agent' => request()->userAgent(),
-            ]);
+            // Check authentication first
+            if (!Auth::check()) {
+                return redirect()->route('login')->with('error', 'Please log in to continue.');
+            }
 
             $user = Auth::user();
             
-            if (!$user) {
-                \Log::warning('Student Dashboard - No authenticated user found', [
-                    'session_id' => session()->getId(),
-                    'session_data' => session()->all(),
-                ]);
-                return redirect()->route('login')->with('error', 'Please log in to continue.');
-            }
-            
             // Ensure this is actually a student
             if ($user->role !== 'student') {
-                \Log::warning('Student Dashboard - Wrong role', [
-                    'user_id' => $user->id,
-                    'user_role' => $user->role,
-                    'expected_role' => 'student'
-                ]);
                 return redirect()->route('login')->with('error', 'Access denied.');
             }
-            
-            \Log::info('Student Dashboard - Access granted', [
-                'user_id' => $user->id,
-                'user_name' => $user->name,
-                'user_role' => $user->role
-            ]);
             
             // Use simplified data to avoid any potential issues
             $data = [
@@ -78,11 +54,7 @@ class DashboardController extends Controller
             return view('student-dashboard-safe', $data);
             
         } catch (\Exception $e) {
-            \Log::error('Student Dashboard Error: ' . $e->getMessage(), [
-                'session_id' => session()->getId(),
-                'authenticated' => Auth::check(),
-                'stack_trace' => $e->getTraceAsString()
-            ]);
+            \Log::error('Student Dashboard Error: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'An error occurred. Please try logging in again.');
         }
     }
@@ -90,9 +62,14 @@ class DashboardController extends Controller
     public function studentMedical()
     {
         try {
+            // Check authentication first
+            if (!Auth::check()) {
+                return redirect()->route('login')->with('error', 'Please log in to continue.');
+            }
+
             $user = Auth::user();
             
-            if (!$user || $user->role !== 'student') {
+            if ($user->role !== 'student') {
                 return redirect()->route('login')->with('error', 'Access denied.');
             }
             
@@ -255,49 +232,21 @@ class DashboardController extends Controller
     public function clinicStaffDashboard()
     {
         try {
-            // Enhanced session debugging
-            \Log::info('Clinic Staff Dashboard Access Attempt', [
-                'session_id' => session()->getId(),
-                'authenticated' => Auth::check(),
-                'user_id' => Auth::check() ? Auth::id() : null,
-                'session_data' => session()->all(),
-                'request_url' => request()->url(),
-                'user_agent' => request()->userAgent(),
-            ]);
+            // Check authentication first
+            if (!Auth::check()) {
+                return redirect()->route('login')->with('error', 'Please log in to continue.');
+            }
 
             $user = Auth::user();
             
-            if (!$user) {
-                \Log::warning('Clinic Staff Dashboard - No authenticated user found', [
-                    'session_id' => session()->getId(),
-                    'session_data' => session()->all(),
-                ]);
-                return redirect()->route('login')->with('error', 'Please log in to continue.');
-            }
-            
             // Ensure this is actually clinic staff
             if ($user->role !== 'clinic_staff') {
-                \Log::warning('Clinic Staff Dashboard - Wrong role', [
-                    'user_id' => $user->id,
-                    'user_role' => $user->role,
-                    'expected_role' => 'clinic_staff'
-                ]);
                 return redirect()->route('login')->with('error', 'Access denied. Clinic staff role required.');
             }
             
-            \Log::info('Clinic Staff Dashboard - Access granted', [
-                'user_id' => $user->id,
-                'user_name' => $user->name,
-                'user_role' => $user->role
-            ]);
-            
             return view('clinic-staff-dashboard', ['user' => $user]);
         } catch (\Exception $e) {
-            \Log::error('Clinic Staff Dashboard Error: ' . $e->getMessage(), [
-                'session_id' => session()->getId(),
-                'authenticated' => Auth::check(),
-                'stack_trace' => $e->getTraceAsString()
-            ]);
+            \Log::error('Clinic Staff Dashboard Error: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'An error occurred. Please try logging in again.');
         }
     }

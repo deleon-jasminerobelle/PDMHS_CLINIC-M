@@ -9,8 +9,20 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --secondary: #3b82f6;
+            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        
+        .navbar.bg-primary {
+            background: var(--gradient) !important;
+            padding: 1rem 0 !important;
+        }
+        
         body {
             background-color: #f8f9fa;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -22,7 +34,7 @@
         
         .navbar-nav .nav-link {
             font-family: 'Epilogue', sans-serif !important;
-            font-size: 20px !important;
+            font-size: 25px !important;
             font-weight: 600 !important;
         }
         
@@ -32,7 +44,7 @@
         }
         
         .page-title {
-            font-family: 'Albert Sans', sans-serif;
+            font-family: 'Epilogue', sans-serif;
             font-weight: 800;
             font-size: 2.5rem;
             color: #2c3e50;
@@ -40,6 +52,8 @@
         }
         
         .page-subtitle {
+            font-family: 'Epilogue', sans-serif;
+            font-weight: 500;
             color: #6c757d;
             font-size: 1.1rem;
         }
@@ -83,22 +97,26 @@
         }
         
         .stat-number {
-            font-size: 2.5rem;
+            font-family: 'Roboto', sans-serif;
+            font-size: 25px;
             font-weight: 700;
             color: #2c3e50;
             margin-bottom: 0.5rem;
         }
         
         .stat-label {
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
             color: #2c3e50;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         
         .stat-sublabel {
-            font-size: 0.9rem;
+            font-family: 'Epilogue', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
             color: #6c757d;
             margin-top: 0.25rem;
         }
@@ -139,15 +157,18 @@
         }
         
         .info-card-title {
-            font-size: 1.2rem;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 25px;
             font-weight: 700;
             color: #2c3e50;
             margin-bottom: 0.25rem;
         }
         
         .info-card-description {
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
             color: #6c757d;
-            font-size: 0.95rem;
             margin: 0;
         }
         
@@ -164,10 +185,10 @@
             </a>
             <div class="navbar-nav me-auto">
                 <a class="nav-link" href="{{ route('student.dashboard') }}">
-                    <i class="fas fa-home me-1"></i>Dashboard
+                    Dashboard
                 </a>
                 <a class="nav-link active" href="{{ route('student.medical') }}">
-                    <i class="fas fa-file-medical me-1"></i>My Medical
+                    My Medical
                 </a>
             </div>
             <div class="navbar-nav ms-auto">
@@ -177,7 +198,7 @@
                         {{ $user->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Edit Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
