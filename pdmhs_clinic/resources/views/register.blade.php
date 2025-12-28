@@ -282,6 +282,7 @@
     <div class="register-container">
         <div class="register-header">
             <h1>Welcome! Create a Account</h1>
+            <p>Sign up to access the PDMHS High School Clinic</p>
         </div>
 
         <form method="POST" action="{{ route('register.post') }}">
