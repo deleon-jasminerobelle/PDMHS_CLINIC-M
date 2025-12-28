@@ -26,16 +26,61 @@ class LoginController extends Controller
                 'password' => 'required|string',
             ]);
 
+            // Check if user is already logged in with the same credentials
+            if (Auth::check()) {
+                $currentUser = Auth::user();
+                if ($currentUser->email === $request->username) {
+                    // User is already logged in with same credentials, redirect to appropriate dashboard
+                    \Log::info('User already logged in, redirecting to dashboard', [
+                        'user_id' => $currentUser->id,
+                        'email' => $currentUser->email,
+                        'role' => $currentUser->role,
+                        'session_id' => session()->getId()
+                    ]);
+
+                    switch ($currentUser->role) {
+                        case 'student':
+                            return redirect()->route('student.dashboard')->with('success', 'Welcome back, ' . $currentUser->name . '!');
+                        case 'adviser':
+                            return redirect()->route('adviser.dashboard')->with('success', 'Welcome back, ' . $currentUser->name . '!');
+                        case 'clinic_staff':
+                            return redirect()->route('clinic-staff.dashboard')->with('success', 'Welcome back, ' . $currentUser->name . '!');
+                        default:
+                            return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $currentUser->name . '!');
+                    }
+                } else {
+                    // Different user trying to login, logout current user first
+                    \Log::info('Different user logging in, clearing current session', [
+                        'current_user' => $currentUser->email,
+                        'new_user' => $request->username
+                    ]);
+                    Auth::logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+                }
+            }
+
             // Try to authenticate with email (using username field as email)
             if (Auth::attempt(['email' => $request->username, 'password' => $request->password], $request->filled('remember'))) {
                 // Refresh the user object to get updated student_id
                 Auth::setUser(\App\Models\User::find(Auth::id()));
+                // Regenerate session for security
+                $request->session()->regenerate();
                 $user = Auth::user();
 
                 Log::info('User logged in successfully', [
                     'user_id' => $user->id,
                     'email' => $user->email,
-                    'role' => $user->role
+                    'role' => $user->role,
+                    'session_id' => session()->getId(),
+                    'remember' => $request->filled('remember')
+                ]);
+
+                // Store additional session data for debugging
+                session([
+                    'login_time' => now()->toDateTimeString(),
+                    'user_role' => $user->role,
+                    'user_name' => $user->name,
                 ]);
 
                 // Redirect based on role to specific dashboard
@@ -73,7 +118,8 @@ class LoginController extends Controller
 
             Log::warning('Failed login attempt', [
                 'username' => $request->username,
-                'ip' => $request->ip()
+                'ip' => $request->ip(),
+                'user_agent' => $request->userAgent()
             ]);
 
             return back()->withErrors([
@@ -81,7 +127,10 @@ class LoginController extends Controller
             ])->withInput($request->only('username'));
 
         } catch (\Exception $e) {
-            Log::error('Login Error: ' . $e->getMessage());
+            \Log::error('Login Error: ' . $e->getMessage(), [
+                'stack_trace' => $e->getTraceAsString(),
+                'session_id' => session()->getId()
+            ]);
             return back()->withErrors([
                 'username' => 'An error occurred during login. Please try again.',
             ])->withInput($request->only('username'));
