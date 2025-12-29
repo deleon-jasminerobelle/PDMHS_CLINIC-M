@@ -18,13 +18,18 @@ class Student extends Model
     protected $fillable = [
         'student_id',
         'first_name',
+        'middle_name',
         'last_name',
         'date_of_birth',
+        'gender',
         'grade_level',
         'section',
         'school',
         'sex',
         'age',
+        'contact_number',
+        'address',
+        'emergency_contact',
         'emergency_contact_name',
         'emergency_contact_number',
         'emergency_relation',
@@ -98,5 +103,29 @@ class Student extends Model
     public function vitals()
     {
         return $this->hasMany(Vitals::class);
+    }
+
+    /**
+     * Get the latest clinic visit for this student
+     */
+    public function latestVisit()
+    {
+        return $this->hasOne(ClinicVisit::class, 'student_id')->latest('visit_date');
+    }
+
+    /**
+     * Get all visits for this student
+     */
+    public function visits()
+    {
+        return $this->hasMany(ClinicVisit::class, 'student_id')->orderBy('visit_date', 'desc');
+    }
+
+    /**
+     * Get medical visits for this student
+     */
+    public function medicalVisits()
+    {
+        return $this->hasMany(MedicalVisit::class, 'student_id', 'student_id');
     }
 }

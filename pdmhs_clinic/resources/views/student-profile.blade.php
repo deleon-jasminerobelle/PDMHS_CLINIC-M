@@ -3,184 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile - PDMHS Clinic</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Edit Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --secondary: #3b82f6;
+            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        
+        .navbar.bg-primary {
+            background: var(--gradient) !important;
+            padding: 1rem 0 !important;
+        }
+        
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background-color: #f8f9fa;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
-        .profile-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            margin: 2rem auto;
-            max-width: 900px;
-            overflow: hidden;
-        }
-        .profile-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-        }
-        .profile-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
-        }
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: 2.5rem;
-            position: relative;
-            z-index: 1;
-        }
-        .profile-content {
-            padding: 2.5rem;
-        }
-        .form-section {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        .section-title {
-            color: #667eea;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-        .section-title i {
-            margin-right: 0.5rem;
-            width: 20px;
-        }
-        .form-label {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 0.5rem;
-        }
-        .form-control, .form-select {
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 10px;
-            padding: 0.75rem 2rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-        .btn-secondary {
-            border-radius: 10px;
-            padding: 0.75rem 2rem;
-            font-weight: 600;
-            border: 2px solid #6c757d;
-            background: transparent;
-            color: #6c757d;
-            transition: all 0.3s ease;
-        }
-        .btn-secondary:hover {
-            background: #6c757d;
-            color: white;
-            transform: translateY(-2px);
-        }
+        
         .navbar-brand {
             font-weight: 600;
         }
-        .welcome-header {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 500;
+        
+        .navbar-nav .nav-link {
+            font-family: 'Epilogue', sans-serif !important;
+            font-size: 25px !important;
+            font-weight: 600 !important;
         }
-        .input-group-text {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-right: none;
-            border-radius: 10px 0 0 10px;
+        
+        .dropdown-menu .dropdown-item {
+            font-family: 'Epilogue', sans-serif !important;
+            font-size: 20px !important;
+            font-weight: 500 !important;
         }
-        .input-group .form-control {
-            border-left: none;
-            border-radius: 0 10px 10px 0;
+        
+        .page-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
-        .alert {
-            border-radius: 10px;
+        
+        .profile-section {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(30, 64, 175, 0.1);
+        }
+        
+        .form-container {
+            background: var(--gradient);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 35px rgba(30, 64, 175, 0.2);
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .profile-picture-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(30, 64, 175, 0.1);
+        }
+        
+        .profile-picture-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+        
+        .profile-picture {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .profile-picture:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(30, 64, 175, 0.3);
+        }
+        
+        .default-avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4.5rem;
+            border: 5px solid #fff;
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.2);
+            margin: 0 auto 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .default-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(30, 64, 175, 0.3);
+        }
+        
+        .upload-btn {
+            background: var(--gradient);
+            color: white;
             border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            margin-top: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+            transition: all 0.3s ease;
         }
-        .progress {
-            height: 8px;
-            border-radius: 10px;
-            background: #e9ecef;
-            margin-bottom: 1rem;
+        
+        .upload-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
         }
-        .progress-bar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
+        
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
-        .form-text {
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-label {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 700 !important;
+            font-size: 25px !important;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e8ecf4;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            background-color: #fafbfc;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(30, 64, 175, 0.15);
+            background-color: white;
+            transform: translateY(-1px);
+        }
+        
+        .form-control.is-invalid, .form-select.is-invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.15);
+        }
+        
+        .invalid-feedback {
+            display: block;
+            width: 100%;
+            margin-top: 0.25rem;
             font-size: 0.875rem;
-            color: #6c757d;
-        }
-        .required-field::after {
-            content: " *";
             color: #dc3545;
+        }
+        
+        .textarea-large {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn-edit {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+        }
+        
+        .btn-edit:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .btn-password {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+        }
+        
+        .btn-password:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .btn-qr {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+        }
+        
+        .btn-qr:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(10px);">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{{ route('student.dashboard') }}">
-                <i class="fas fa-heartbeat me-2"></i>
-                PDMHS Clinic
             </a>
+            <div class="navbar-nav me-auto">
+                <a class="nav-link" href="{{ route('student.dashboard') }}">
+                    Dashboard
+                </a>
+                <a class="nav-link" href="{{ route('student.medical') }}">
+                    My Medical
+                </a>
+            </div>
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user me-1"></i>
                         {{ $user->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('student.dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                        <li><a class="dropdown-item active" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Edit Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Edit Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
-                            <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                            <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
-                                <button type="submit" class="dropdown-item text-danger">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                </button>
                             </form>
                         </li>
                     </ul>
@@ -189,285 +301,467 @@
         </div>
     </nav>
 
-    <div class="container">
-        <div class="profile-container">
-            <!-- Profile Header -->
-            <div class="profile-header">
-                <div class="profile-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <h2 class="mb-1 welcome-header">Edit Your Profile</h2>
-                <p class="mb-0 opacity-75">Keep your information up to date</p>
+    <div class="page-container">
+        <!-- Success/Error Messages -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Success!</strong> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+        @endif
 
-            <!-- Success/Error Messages -->
-            @if(session('success'))
-                <div class="mx-4 mt-4">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Error!</strong> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        <!-- Profile Picture Section -->
+        <div class="profile-section">
+            <h2 class="mb-4" style="font-family: 'Albert Sans', sans-serif; font-weight: 700; font-size: 28px; color: #495057; text-align: center;">Profile Settings</h2>
+            <div class="profile-picture-section">
+                <div class="profile-picture-container">
+                    @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
+                        <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-picture" id="profileImage">
+                    @else
+                        <div class="default-avatar" id="profileImage">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    @endif
+                </div>
+                <div>
+                    <button type="button" class="upload-btn" onclick="document.getElementById('profilePictureInput').click()">
+                        <i class="fas fa-camera me-1"></i>Change Photo
+                    </button>
+                    <input type="file" id="profilePictureInput" accept="image/*" style="display: none;" onchange="uploadProfilePicture(this)">
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Edit Form -->
+        <div class="form-container">
+            <form method="POST" action="{{ route('student.profile.update') }}">
+                @csrf
+                @method('PUT')
+                
+                <!-- Personal Information Section -->
+                <div class="form-section">
+                    <!-- Name Fields -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', $student->first_name ?? 'Hannah Lorraine') }}" required>
+                            @error('first_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Middle Name</label>
+                            <input type="text" class="form-control @error('middle_name') is-invalid @enderror" name="middle_name" value="{{ old('middle_name', $student->middle_name ?? '') }}">
+                            @error('middle_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', $student->last_name ?? 'Geronday') }}" required>
+                            @error('last_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Student Number, Gender, Birthday -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Student Number</label>
+                            <input type="text" class="form-control" value="{{ $student->student_id ?? '000001' }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            <select class="form-select @error('gender') is-invalid @enderror" name="gender">
+                                <option value="">Select Gender</option>
+                                <option value="M" {{ old('gender', $student->gender ?? '') == 'M' ? 'selected' : '' }}>Male</option>
+                                <option value="F" {{ old('gender', $student->gender ?? 'F') == 'F' ? 'selected' : '' }}>Female</option>
+                            </select>
+                            @error('gender')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Birthday</label>
+                            <input type="date" class="form-control @error('birth_date') is-invalid @enderror" name="birth_date" value="{{ old('birth_date', $student->date_of_birth ?? '2005-04-01') }}">
+                            @error('birth_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                 </div>
-            @endif
 
-            @if($errors->any())
-                <div class="mx-4 mt-4">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong>Please fix the following errors:</strong>
-                        <ul class="mb-0 mt-2">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <!-- Academic Information Section -->
+                <div class="form-section">
+                    <!-- Grade Level, Section, Blood Type -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Grade Level</label>
+                            <input type="text" class="form-control @error('grade_level') is-invalid @enderror" name="grade_level" value="{{ old('grade_level', $student->grade_level ?? '12') }}">
+                            @error('grade_level')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Section</label>
+                            <input type="text" class="form-control @error('section') is-invalid @enderror" name="section" value="{{ old('section', $student->section ?? 'STEM 1') }}">
+                            @error('section')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Blood Type</label>
+                            <select class="form-select @error('blood_type') is-invalid @enderror" name="blood_type">
+                                <option value="">Select Blood Type</option>
+                                <option value="A+" {{ old('blood_type', $student->blood_type ?? 'O+') == 'A+' ? 'selected' : '' }}>A+</option>
+                                <option value="A-" {{ old('blood_type', $student->blood_type ?? '') == 'A-' ? 'selected' : '' }}>A-</option>
+                                <option value="B+" {{ old('blood_type', $student->blood_type ?? '') == 'B+' ? 'selected' : '' }}>B+</option>
+                                <option value="B-" {{ old('blood_type', $student->blood_type ?? '') == 'B-' ? 'selected' : '' }}>B-</option>
+                                <option value="AB+" {{ old('blood_type', $student->blood_type ?? '') == 'AB+' ? 'selected' : '' }}>AB+</option>
+                                <option value="AB-" {{ old('blood_type', $student->blood_type ?? '') == 'AB-' ? 'selected' : '' }}>AB-</option>
+                                <option value="O+" {{ old('blood_type', $student->blood_type ?? 'O+') == 'O+' ? 'selected' : '' }}>O+</option>
+                                <option value="O-" {{ old('blood_type', $student->blood_type ?? '') == 'O-' ? 'selected' : '' }}>O-</option>
+                            </select>
+                            @error('blood_type')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                 </div>
-            @endif
 
-            <!-- Profile Form -->
-            <div class="profile-content">
-                <form method="POST" action="{{ route('student.profile.update') }}" id="profileForm">
+                <!-- Contact Information Section -->
+                <div class="form-section">
+                    <!-- Email and Phone -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email ?? 'loraineh540@gmail.com') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" value="{{ old('phone_number', $student->contact_number ?? '09923603742') }}">
+                            @error('phone_number')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control textarea-large @error('address') is-invalid @enderror" name="address" rows="3">{{ old('address', $student->address ?? 'Test Address Update') }}</textarea>
+                            @error('address')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Emergency Contact -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Emergency Contact</label>
+                            <input type="text" class="form-control @error('emergency_contact') is-invalid @enderror" name="emergency_contact" value="{{ old('emergency_contact', $student->emergency_contact ?? 'Parent: 09123456789') }}">
+                            @error('emergency_contact')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button and Additional Actions -->
+                <div class="form-section">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button type="submit" class="btn btn-edit">
+                            <i class="fas fa-save me-1"></i>Edit Profile
+                        </button>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-password" onclick="showPasswordModal()">
+                                <i class="fas fa-key me-1"></i>Change Password
+                            </button>
+                            <button type="button" class="btn btn-qr" onclick="showQRModal()">
+                                <i class="fas fa-qrcode me-1"></i>View QR Code
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Password Modal -->
+    <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passwordModalLabel">
+                        <i class="fas fa-key me-2"></i>Change Password
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="passwordForm" method="POST" action="{{ route('student.password.update') }}">
                     @csrf
                     @method('PUT')
-                    
-                    <!-- Progress Bar -->
-                    <div class="progress mb-4">
-                        <div class="progress-bar" role="progressbar" style="width: 0%" id="formProgress"></div>
-                    </div>
-                    
-                    <!-- Personal Information Section -->
-                    <div class="form-section">
-                        <h5 class="section-title">
-                            <i class="fas fa-user"></i>
-                            Personal Information
-                        </h5>
-                        
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label for="first_name" class="form-label required-field">First Name</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                    <input type="text" class="form-control" id="first_name" name="first_name" 
-                                           value="{{ old('first_name', $student->first_name) }}" required>
-                                </div>
-                                @error('first_name')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="col-md-4 mb-3">
-                                <label for="middle_name" class="form-label">Middle Name</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                    <input type="text" class="form-control" id="middle_name" name="middle_name" 
-                                           value="{{ old('middle_name', $student->middle_name) }}">
-                                </div>
-                                @error('middle_name')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="col-md-4 mb-3">
-                                <label for="last_name" class="form-label required-field">Last Name</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                    <input type="text" class="form-control" id="last_name" name="last_name" 
-                                           value="{{ old('last_name', $student->last_name) }}" required>
-                                </div>
-                                @error('last_name')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="birth_date" class="form-label">Birth Date</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                                    <input type="date" class="form-control" id="birth_date" name="birth_date" 
-                                           value="{{ old('birth_date', $student->birth_date ? $student->birth_date->format('Y-m-d') : '') }}">
-                                </div>
-                                @error('birth_date')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="gender" class="form-label">Gender</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
-                                    <select class="form-select" id="gender" name="gender">
-                                        <option value="">Select Gender</option>
-                                        <option value="M" {{ old('gender', $student->gender) == 'M' ? 'selected' : '' }}>Male</option>
-                                        <option value="F" {{ old('gender', $student->gender) == 'F' ? 'selected' : '' }}>Female</option>
-                                        <option value="Other" {{ old('gender', $student->gender) == 'Other' ? 'selected' : '' }}>Other</option>
-                                    </select>
-                                </div>
-                                @error('gender')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Academic Information Section -->
-                    <div class="form-section">
-                        <h5 class="section-title">
-                            <i class="fas fa-graduation-cap"></i>
-                            Academic Information
-                        </h5>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="grade_level" class="form-label">Grade Level</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-layer-group"></i></span>
-                                    <select class="form-select" id="grade_level" name="grade_level">
-                                        <option value="">Select Grade Level</option>
-                                        <option value="Grade 7" {{ old('grade_level', $student->grade_level) == 'Grade 7' ? 'selected' : '' }}>Grade 7</option>
-                                        <option value="Grade 8" {{ old('grade_level', $student->grade_level) == 'Grade 8' ? 'selected' : '' }}>Grade 8</option>
-                                        <option value="Grade 9" {{ old('grade_level', $student->grade_level) == 'Grade 9' ? 'selected' : '' }}>Grade 9</option>
-                                        <option value="Grade 10" {{ old('grade_level', $student->grade_level) == 'Grade 10' ? 'selected' : '' }}>Grade 10</option>
-                                        <option value="Grade 11" {{ old('grade_level', $student->grade_level) == 'Grade 11' ? 'selected' : '' }}>Grade 11</option>
-                                        <option value="Grade 12" {{ old('grade_level', $student->grade_level) == 'Grade 12' ? 'selected' : '' }}>Grade 12</option>
-                                    </select>
-                                </div>
-                                @error('grade_level')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="section" class="form-label">Section</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-users"></i></span>
-                                    <input type="text" class="form-control" id="section" name="section" 
-                                           value="{{ old('section', $student->section) }}">
-                                </div>
-                                @error('section')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Contact Information Section -->
-                    <div class="form-section">
-                        <h5 class="section-title">
-                            <i class="fas fa-address-book"></i>
-                            Contact Information
-                        </h5>
-                        
+                    <div class="modal-body">
                         <div class="mb-3">
-                            <label for="address" class="form-label">Home Address</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-home"></i></span>
-                                <textarea class="form-control" id="address" name="address" rows="3">{{ old('address', $student->address) }}</textarea>
-                            </div>
-                            @error('address')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
+                            <label class="form-label">Current Password</label>
+                            <input type="password" class="form-control" name="current_password" required>
                         </div>
-
                         <div class="mb-3">
-                            <label for="emergency_contact" class="form-label">Emergency Contact</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                <input type="text" class="form-control" id="emergency_contact" name="emergency_contact" 
-                                       value="{{ old('emergency_contact', $student->emergency_contact) }}">
-                            </div>
-                            @error('emergency_contact')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" name="password_confirmation" required>
                         </div>
                     </div>
-
-                    <!-- Form Actions -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <a href="{{ route('student.dashboard') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
-                        </a>
-                        <div>
-                            <button type="button" class="btn btn-outline-primary me-2" onclick="resetForm()">
-                                <i class="fas fa-undo me-1"></i>Reset
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i>Update Profile
-                            </button>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save me-1"></i>Update Password
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    <!-- QR Code Modal -->
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrModalLabel">
+                        <i class="fas fa-qrcode me-2"></i>Your QR Code
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="mb-3">
+                        <p class="text-muted">Scan this QR code for quick access to your student information</p>
+                    </div>
+                    <div class="qr-code-container mb-3">
+                        <div id="qrcode" class="d-flex justify-content-center"></div>
+                    </div>
+                    <div class="student-info">
+                        <h6 class="fw-bold">{{ $user->name }}</h6>
+                        <p class="text-muted mb-1">Student ID: {{ $student->student_id ?? '000001' }}</p>
+                        <p class="text-muted">{{ $student->grade_level ?? '12' }} - {{ $student->section ?? 'STEM 1' }}</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-info" onclick="downloadQR()">
+                        <i class="fas fa-download me-1"></i>Download QR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script>
-        // Form progress tracking
-        function updateProgress() {
-            const form = document.getElementById('profileForm');
-            const inputs = form.querySelectorAll('input[required], select[required]');
-            const filled = Array.from(inputs).filter(input => input.value.trim() !== '').length;
-            const progress = (filled / inputs.length) * 100;
-            document.getElementById('formProgress').style.width = progress + '%';
+        function showPasswordModal() {
+            const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
+            passwordModal.show();
+        }
+        
+        function showQRModal() {
+            const qrModal = new bootstrap.Modal(document.getElementById('qrModal'));
+            // Clear any previous content
+            document.getElementById('qrcode').innerHTML = '<p class="text-info">Generating QR Code...</p>';
+            qrModal.show();
+
+            // Wait for QRCode library to be loaded before generating
+            if (typeof QRCode === 'undefined') {
+                console.log('QRCode library not loaded yet, waiting...');
+                let attempts = 0;
+                const checkLibrary = () => {
+                    attempts++;
+                    if (typeof QRCode !== 'undefined') {
+                        generateQRCode();
+                    } else if (attempts < 10) {
+                        setTimeout(checkLibrary, 200);
+                    } else {
+                        console.error('QRCode library failed to load after multiple attempts');
+                        document.getElementById('qrcode').innerHTML = '<p class="text-danger">QR Code library failed to load. Please refresh the page and try again.</p>';
+                    }
+                };
+                setTimeout(checkLibrary, 200);
+            } else {
+                generateQRCode();
+            }
+        }
+        
+        function generateQRCode() {
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = ''; // Clear previous QR code
+
+            // Check if QRCode library is loaded
+            if (typeof QRCode === 'undefined') {
+                console.error('QRCode library not loaded');
+                qrContainer.innerHTML = '<p class="text-danger">QR Code library not loaded. Please refresh the page.</p>';
+                return;
+            }
+
+            const studentData = {
+                name: '{{ $user->name }}',
+                student_id: '{{ $student->student_id ?? "000001" }}',
+                grade_level: '{{ $student->grade_level ?? "12" }}',
+                section: '{{ $student->section ?? "STEM 1" }}',
+                email: '{{ $user->email }}'
+            };
+
+            console.log('Generating QR code for data:', studentData);
+
+            const qrText = JSON.stringify(studentData);
+
+            try {
+                // Use qrcodejs library API
+                new QRCode(qrContainer, {
+                    text: qrText,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                console.log('QR Code generated successfully');
+            } catch (e) {
+                console.error('Exception during QR code generation:', e);
+                qrContainer.innerHTML = '<p class="text-danger">Exception generating QR code: ' + e.message + '</p>';
+            }
+        }
+        
+        function downloadQR() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'student-qr-code.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            }
         }
 
-        // Reset form function
-        function resetForm() {
-            if (confirm('Are you sure you want to reset all changes?')) {
-                document.getElementById('profileForm').reset();
-                updateProgress();
+        function uploadProfilePicture(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select a valid image file.');
+                    return;
+                }
+                
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB.');
+                    return;
+                }
+                
+                const formData = new FormData();
+                formData.append('profile_picture', file);
+                
+                // Get CSRF token
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                if (csrfToken) {
+                    formData.append('_token', csrfToken.getAttribute('content'));
+                } else {
+                    console.error('CSRF token not found');
+                    alert('Security token not found. Please refresh the page.');
+                    return;
+                }
+                
+                // Show loading state
+                const uploadBtn = document.querySelector('.upload-btn');
+                const originalText = uploadBtn.innerHTML;
+                uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Uploading...';
+                uploadBtn.disabled = true;
+                
+                console.log('Starting upload...');
+                
+                fetch('/student/upload-profile-picture', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Response data:', data);
+                    if (data.success) {
+                        // Update profile picture
+                        const profileImage = document.getElementById('profileImage');
+                        if (profileImage.tagName === 'IMG') {
+                            profileImage.src = data.profile_picture_url;
+                        } else {
+                            // Replace default avatar with image
+                            profileImage.outerHTML = `<img src="${data.profile_picture_url}" alt="Profile Picture" class="profile-picture" id="profileImage">`;
+                        }
+                        
+                        // Show success message
+                        showAlert('Profile picture updated successfully!', 'success');
+                    } else {
+                        showAlert(data.message || 'Failed to upload profile picture.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('An error occurred while uploading the profile picture.', 'error');
+                })
+                .finally(() => {
+                    // Reset button state
+                    uploadBtn.innerHTML = originalText;
+                    uploadBtn.disabled = false;
+                });
             }
         }
-
-        // Auto-calculate age from birth date
-        document.getElementById('birth_date').addEventListener('change', function() {
-            const birthDate = new Date(this.value);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
+        
+        function showAlert(message, type) {
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
             
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
+            const alertHtml = `
+                <div class="alert ${alertClass} alert-dismissible fade show mb-4" role="alert">
+                    <i class="fas ${iconClass} me-2"></i>
+                    <strong>${type === 'success' ? 'Success!' : 'Error!'}</strong> ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
             
-            if (age >= 0 && age <= 100) {
-                // You could display the calculated age somewhere if needed
-                console.log('Calculated age:', age);
-            }
-        });
-
-        // Form validation and progress tracking
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('input, select, textarea');
+            const container = document.querySelector('.page-container');
+            container.insertAdjacentHTML('afterbegin', alertHtml);
             
-            inputs.forEach(input => {
-                input.addEventListener('input', updateProgress);
-                input.addEventListener('change', updateProgress);
-            });
-            
-            // Initial progress calculation
-            updateProgress();
-            
-            // Form submission with loading state
-            document.getElementById('profileForm').addEventListener('submit', function() {
-                const submitBtn = this.querySelector('button[type="submit"]');
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Updating...';
-                submitBtn.disabled = true;
-            });
-        });
-
-        // Auto-dismiss alerts after 5 seconds
-        setTimeout(function() {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                const bsAlert = new bootstrap.Alert(alert);
-                bsAlert.close();
-            });
-        }, 5000);
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                const alert = container.querySelector('.alert');
+                if (alert) {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }
+            }, 5000);
+        }
     </script>
 </body>
 </html>
