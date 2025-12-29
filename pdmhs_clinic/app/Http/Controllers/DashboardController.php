@@ -1126,4 +1126,214 @@ class DashboardController extends Controller
             return response()->json(['students' => []], 500);
         }
     }
+
+    /**
+     * Show clinic staff profile page
+     */
+    public function clinicStaffProfile()
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            return view('clinic-staff-profile', compact('user'));
+
+        } catch (\Exception $e) {
+            \Log::error('Clinic Staff Profile Error: ' . $e->getMessage());
+            return redirect()->route('clinic-staff.dashboard')->with('error', 'An error occurred loading profile.');
+        }
+    }
+
+    /**
+     * Update clinic staff profile
+     */
+    public function updateClinicStaffProfile(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Debug logging
+            \Log::info('Profile update attempt', [
+                'user_id' => $user->id,
+                'user_role' => $user->role,
+                'request_data' => $request->all(),
+                'request_method' => $request->method(),
+                'request_url' => $request->url()
+            ]);
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                \Log::error('Access denied - not clinic staff', ['role' => $user->role]);
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            // Validate the request
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+                'phone_number' => 'nullable|string|max:20',
+                'staff_code' => 'nullable|string|max:50',
+                'position' => 'nullable|string|max:100',
+            ]);
+
+            \Log::info('Validation passed', ['validated_data' => $validated]);
+
+            // Store old values for comparison
+            $oldValues = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone_number' => $user->phone_number,
+                'staff_code' => $user->staff_code,
+                'position' => $user->position,
+            ];
+
+            // Update user record
+            $user->name = $validated['name'];
+            $user->email = $validated['email'];
+            $user->phone_number = $validated['phone_number'] ?? null;
+            $user->staff_code = $validated['staff_code'] ?? null;
+            $user->position = $validated['position'] ?? null;
+            
+            // Check if there are any changes
+            $changes = $user->getDirty();
+            
+            if (empty($changes)) {
+                \Log::info('No changes detected in profile update');
+                return redirect()->route('clinic-staff.profile')->with('info', 'No changes were made to your profile.');
+            }
+            
+            $saved = $user->save();
+
+            \Log::info('Profile update result', [
+                'saved' => $saved,
+                'old_values' => $oldValues,
+                'new_values' => [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone_number' => $user->phone_number,
+                    'staff_code' => $user->staff_code,
+                    'position' => $user->position,
+                ],
+                'user_dirty' => $user->getDirty(),
+                'user_changes' => $user->getChanges(),
+                'changes_made' => $changes
+            ]);
+
+            if ($saved) {
+                return redirect()->route('clinic-staff.profile')->with('success', 'Profile updated successfully!');
+            } else {
+                \Log::error('Failed to save user profile');
+                return redirect()->back()->with('error', 'Failed to update profile. Please try again.')->withInput();
+            }
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation error in profile update', ['errors' => $e->errors()]);
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            \Log::error('Clinic Staff Profile Update Error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect()->back()->with('error', 'An error occurred while updating your profile. Please try again: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    /**
+     * Update clinic staff password
+     */
+    public function updateClinicStaffPassword(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            // Validate the request
+            $validated = $request->validate([
+                'current_password' => 'required',
+                'password' => 'required|min:8|confirmed',
+            ]);
+
+            // Check if current password is correct
+            if (!Hash::check($validated['current_password'], $user->password)) {
+                return redirect()->back()->with('error', 'Current password is incorrect.');
+            }
+
+            // Update password
+            $user->password = Hash::make($validated['password']);
+            $user->save();
+
+            return redirect()->route('clinic-staff.profile')->with('success', 'Password updated successfully!');
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors());
+        } catch (\Exception $e) {
+            \Log::error('Clinic Staff Password Update Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while updating your password.');
+        }
+    }
+
+    /**
+     * Upload clinic staff profile picture
+     */
+    public function uploadClinicStaffProfilePicture(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            if (!$user || $user->role !== 'clinic_staff') {
+                return response()->json(['success' => false, 'message' => 'Unauthorized access.'], 403);
+            }
+            
+            $request->validate([
+                'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
+            ]);
+            
+            // Create uploads directory in public folder
+            $uploadPath = public_path('uploads/profile_pictures');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+            
+            // Delete old profile picture if exists
+            if ($user->profile_picture && file_exists(public_path($user->profile_picture))) {
+                unlink(public_path($user->profile_picture));
+            }
+            
+            // Store new profile picture
+            $file = $request->file('profile_picture');
+            $filename = 'profile_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            // Move file to public/uploads/profile_pictures
+            $file->move($uploadPath, $filename);
+            
+            // Update user record with relative path
+            $relativePath = 'uploads/profile_pictures/' . $filename;
+            $user->profile_picture = $relativePath;
+            $user->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile picture updated successfully!',
+                'profile_picture_url' => asset($relativePath)
+            ]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid file. Please upload a valid image (JPEG, PNG, JPG, GIF) under 5MB.'
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Profile picture upload error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while uploading the profile picture. Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

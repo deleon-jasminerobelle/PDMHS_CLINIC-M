@@ -194,7 +194,7 @@
                         {{ $user->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('clinic-staff.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -250,7 +250,7 @@
                     <option value="Grade 12">Grade 12</option>
                 </select>
                 <select class="form-select" id="allergyFilter" style="width: auto;">
-                    <option value="">All Students</option>
+                    <option value="">All Sections</option>
                     <option value="yes">Has Allergies</option>
                     <option value="no">No Allergies</option>
                 </select>

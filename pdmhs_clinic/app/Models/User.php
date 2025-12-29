@@ -20,6 +20,9 @@ class User extends Authenticatable
         'role',
         'student_id',
         'profile_picture',
+        'phone_number',
+        'staff_code',
+        'position',
     ];
 
     /**
