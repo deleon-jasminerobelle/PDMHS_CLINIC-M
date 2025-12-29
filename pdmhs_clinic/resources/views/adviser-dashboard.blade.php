@@ -25,6 +25,7 @@
             background-color: #f8f9fa;
             font-family: 'Poppins', sans-serif;
         }
+        
         .stat-card {
             border-radius: 12px;
             border: none;
@@ -34,12 +35,14 @@
             font-weight: 500;
             text-align: center;
         }
+        
         .stat-card h2 {
             font-family: 'Poppins', sans-serif;
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
+        
         .stat-card p {
             margin: 0;
             opacity: 0.9;
@@ -47,17 +50,11 @@
             font-size: 25px;
             font-weight: 700;
         }
-<<<<<<< HEAD
+        
         .stat-card-blue { background: var(--gradient); }
         .stat-card-orange { background: var(--gradient); }
         .stat-card-yellow { background: var(--gradient); }
         .stat-card-purple { background: var(--gradient); }
-=======
-        .stat-card-blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .stat-card-orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .stat-card-yellow { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #333; }
-        .stat-card-purple { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
->>>>>>> c506ef291a1b234ce48b4f42c7e0c9c74906c375
         
         .section-card {
             background: white;
@@ -66,12 +63,12 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
         }
+        
         .section-header {
             padding: 1.5rem;
             border-bottom: 1px solid #eee;
             font-weight: 600;
             color: #6c757d;
-<<<<<<< HEAD
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -83,11 +80,13 @@
             font-size: 30px;
             margin-bottom: 0;
         }
+        
         .section-content {
             padding: 2rem;
             text-align: center;
             color: #6c757d;
         }
+        
         .navbar-brand {
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
@@ -104,6 +103,7 @@
             font-size: 20px !important;
             font-weight: 500 !important;
         }
+        
         .welcome-header {
             font-family: 'Poppins', sans-serif;
             font-weight: 800;
@@ -127,10 +127,12 @@
             text-align: center;
             transition: transform 0.2s ease;
         }
+        
         .student-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
+        
         .student-avatar {
             width: 60px;
             height: 60px;
@@ -143,6 +145,7 @@
             color: white;
             font-size: 1.5rem;
         }
+        
         .student-name {
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
@@ -150,6 +153,7 @@
             color: #2c3e50;
             margin-bottom: 0.5rem;
         }
+        
         .student-info {
             font-family: 'Poppins', sans-serif;
             color: #6c757d;
@@ -157,6 +161,7 @@
             font-weight: 500;
             margin-bottom: 1rem;
         }
+        
         .btn-view-profile {
             background: var(--gradient);
             border: none;
@@ -168,11 +173,13 @@
             font-size: 16px;
             transition: all 0.2s ease;
         }
+        
         .btn-view-profile:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4);
             color: white;
         }
+        
         .activity-item {
             padding: 1rem;
             border-left: 4px solid var(--primary);
@@ -180,50 +187,42 @@
             border-radius: 0 8px 8px 0;
             margin-bottom: 1rem;
         }
+        
         .activity-item .activity-icon {
             color: var(--primary);
             margin-right: 0.5rem;
         }
+        
         .activity-name {
             font-family: 'Poppins', sans-serif;
-=======
-        }
-        .section-content {
-            padding: 2rem;
-            text-align: center;
-            color: #6c757d;
-        }
-        .navbar-brand {
->>>>>>> c506ef291a1b234ce48b4f42c7e0c9c74906c375
             font-weight: 600;
             font-size: 18px;
         }
-<<<<<<< HEAD
+        
         .activity-details {
             font-family: 'Poppins', sans-serif;
             font-weight: 500;
             font-size: 16px;
             color: #6c757d;
         }
+        
         .students-count {
             color: var(--primary);
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
             font-size: 18px;
         }
+        
         .text-muted {
             font-family: 'Poppins', sans-serif;
         }
+        
         .btn {
             font-family: 'Poppins', sans-serif;
         }
+        
         .alert {
             font-family: 'Poppins', sans-serif;
-=======
-        .welcome-header {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 500;
->>>>>>> c506ef291a1b234ce48b4f42c7e0c9c74906c375
         }
     </style>
 </head>
@@ -260,11 +259,7 @@
     <div class="container mt-4">
         <!-- Success/Error Messages -->
         @if(session('success'))
-<<<<<<< HEAD
             <div class="alert alert-success alert-dismissible fade show mb-4" role="alert" style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 500;">
-=======
-            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert" style="font-family: 'Epilogue', sans-serif; font-size: 20px; font-weight: 500;">
->>>>>>> c506ef291a1b234ce48b4f42c7e0c9c74906c375
                 <i class="fas fa-check-circle me-2"></i>
                 <strong>Success!</strong> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -281,36 +276,17 @@
 
         <!-- Header -->
         <div class="mb-4">
-<<<<<<< HEAD
             <h1 class="welcome-header">Welcome, {{ $user->name }}!</h1>
             <p class="text-muted dashboard-subtitle">Adviser Dashboard - Grade 12 STEM-1</p>
-=======
-            <h1 class="h3 mb-1 welcome-header">Welcome, {{ $user->name }}!</h1>
-            <p class="text-muted">Adviser Dashboard - Manage your students' health records</p>
->>>>>>> c506ef291a1b234ce48b4f42c7e0c9c74906c375
         </div>
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
-<<<<<<< HEAD
             <div class="col-md-4 mb-3">
                 <div class="stat-card stat-card-blue d-flex flex-column justify-content-center" style="min-height: 120px;">
                     <h2>{{ $totalStudents ?? 3 }}</h2>
                     <p>Total Students</p>
                 </div>
-=======
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-blue">
-                    <h2>{{ $totalStudents ?? 0 }}</h2>
-                    <p>Total Students</p>
-                </div>
-                <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                    @csrf
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-sign-out-alt me-1"></i> Logout
-                    </button>
-                </form>
->>>>>>> c506ef291a1b234ce48b4f42c7e0c9c74906c375
             </div>
 
             <div class="col-md-4 mb-3">
@@ -320,29 +296,14 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
             <div class="col-md-4 mb-3">
                 <div class="stat-card stat-card-yellow d-flex flex-column justify-content-center" style="min-height: 120px;">
                     <h2>{{ $studentsWithAllergies ?? 1 }}</h2>
                     <p>With Allergies</p>
-=======
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-yellow">
-                    <h2>{{ $pendingVisits ?? 0 }}</h2>
-                    <p>Pending Visits</p>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-purple">
-                    <h2>{{ isset($recentVisits) ? $recentVisits->count() : 0 }}</h2>
-                    <p>Recent Visits</p>
->>>>>>> c506ef291a1b234ce48b4f42c7e0c9c74906c375
                 </div>
             </div>
         </div>
 
-<<<<<<< HEAD
         <!-- Students Under Your Advisory -->
         <div class="section-card">
             <div class="section-header">
@@ -417,23 +378,10 @@
                             </div>
                         </div>
                     @endif
-=======
-        <!-- Students List -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="section-card">
-                    <div class="section-header">
-                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Advised Students</h5>
-                    </div>
-                    <div class="section-content">
-                        <p class="text-muted" style="font-style: italic;">No students assigned to you yet.</p>
-                    </div>
->>>>>>> c506ef291a1b234ce48b4f42c7e0c9c74906c375
                 </div>
             </div>
         </div>
 
-<<<<<<< HEAD
         <!-- Recent Clinic Activity -->
         <div class="section-card">
             <div class="section-header">
@@ -476,19 +424,6 @@
                         </div>
                     </div>
                 @endif
-=======
-        <!-- Recent Medical Visits -->
-        <div class="row">
-            <div class="col-12">
-                <div class="section-card">
-                    <div class="section-header">
-                        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Medical Visits</h5>
-                    </div>
-                    <div class="section-content">
-                        <p class="text-muted" style="font-style: italic;">No recent medical visits for your students.</p>
-                    </div>
-                </div>
->>>>>>> c506ef291a1b234ce48b4f42c7e0c9c74906c375
             </div>
         </div>
     </div>
@@ -507,8 +442,4 @@
         });
     </script>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> c506ef291a1b234ce48b4f42c7e0c9c74906c375
