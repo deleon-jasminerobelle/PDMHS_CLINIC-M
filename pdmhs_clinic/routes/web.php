@@ -68,6 +68,10 @@ Route::middleware(['auth'])->prefix('student')->name('student.')->group(function
 // Adviser routes - using auth middleware only (role check is in controller)
 Route::middleware(['auth'])->prefix('adviser')->name('adviser.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'adviserDashboard'])->name('dashboard');
+    Route::get('/profile', [DashboardController::class, 'adviserProfile'])->name('profile');
+    Route::put('/profile', [DashboardController::class, 'updateAdviserProfile'])->name('profile.update');
+    Route::put('/password', [DashboardController::class, 'updateAdviserPassword'])->name('password.update');
+    Route::post('/upload-profile-picture', [DashboardController::class, 'uploadAdviserProfilePicture'])->name('upload-profile-picture');
 });
 
 // Clinic Staff routes - using auth middleware only (role check is in controller)

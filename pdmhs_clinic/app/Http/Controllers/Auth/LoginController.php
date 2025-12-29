@@ -167,6 +167,13 @@ class LoginController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'last_name' => $request->last_name,
+            'birthday' => $request->birthday,
+            'gender' => $request->gender,
+            'address' => $request->address,
+            'contact_number' => $request->contact_number,
         ]);
 
         if ($request->role === 'student') {

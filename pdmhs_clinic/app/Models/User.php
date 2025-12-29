@@ -23,6 +23,15 @@ class User extends Authenticatable
         'phone_number',
         'staff_code',
         'position',
+        'employee_number',
+        'department',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'birthday',
+        'gender',
+        'address',
+        'contact_number',
     ];
 
     /**

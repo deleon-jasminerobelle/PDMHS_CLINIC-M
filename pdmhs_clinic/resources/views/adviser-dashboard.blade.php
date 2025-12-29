@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Adviser Dashboard - PDMHS Clinic</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #1e40af;
@@ -32,20 +34,91 @@
             margin-bottom: 1rem;
             color: white;
             font-weight: 500;
+            text-align: center;
         }
         .stat-card h2 {
-            font-size: 2.5rem;
-            font-weight: 300;
+            font-family: 'Roboto', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
         .stat-card p {
             margin: 0;
             opacity: 0.9;
+            font-family: 'Roboto', sans-serif;
+            font-size: 25px;
+            font-weight: 700;
         }
-        .stat-card-blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .stat-card-orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .stat-card-yellow { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #333; }
-        .stat-card-purple { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
+        .stat-card-blue { background: var(--gradient); }
+        .stat-card-orange { background: var(--gradient); }
+        .stat-card-yellow { background: var(--gradient); }
+        .stat-card-purple { background: var(--gradient); }
+        
+        .btn-action {
+            background: white;
+            border: 2px solid #e8ecf4;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-action:hover {
+            background: var(--gradient);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.2);
+        }
+        
+        .btn-action i {
+            font-size: 2rem;
+        }
+        
+        .student-name {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+        }
+        
+        .student-info {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+            color: #6c757d !important;
+        }
+        
+        .visit-name {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+        }
+        
+        .visit-type {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+            color: #6c757d !important;
+        }
+        
+        .visit-date {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+        }
+        
+        .visit-status {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 500 !important;
+            font-size: 20px !important;
+        }
         
         .section-card {
             background: white;
@@ -59,6 +132,16 @@
             border-bottom: 1px solid #eee;
             font-weight: 600;
             color: #6c757d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-header h5 {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 30px;
+            margin-bottom: 0;
         }
         .section-content {
             padding: 2rem;
@@ -68,9 +151,29 @@
         .navbar-brand {
             font-weight: 600;
         }
+        
+        .navbar-nav .nav-link {
+            font-family: 'Epilogue', sans-serif !important;
+            font-size: 25px !important;
+            font-weight: 600 !important;
+        }
+        
+        .dropdown-menu .dropdown-item {
+            font-family: 'Epilogue', sans-serif !important;
+            font-size: 20px !important;
+            font-weight: 500 !important;
+        }
         .welcome-header {
             font-family: 'Albert Sans', sans-serif;
-            font-weight: 500;
+            font-weight: 800;
+            font-size: 35px;
+        }
+        
+        .dashboard-subtitle {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 25px;
+            margin-bottom: 0;
         }
     </style>
 </head>
@@ -88,7 +191,7 @@
                         {{ $user->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-2"></i>Profile (Coming Soon)</a></li>
+                        <li><a class="dropdown-item" href="{{ route('adviser.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -125,7 +228,7 @@
         <!-- Header -->
         <div class="mb-4">
             <h1 class="h3 mb-1 welcome-header">Welcome, {{ $user->name }}!</h1>
-            <p class="text-muted">Adviser Dashboard - Manage your students' health records</p>
+            <p class="text-muted dashboard-subtitle">Adviser Dashboard</p>
         </div>
 
         <!-- Statistics Cards -->

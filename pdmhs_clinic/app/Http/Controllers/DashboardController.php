@@ -1336,4 +1336,248 @@ class DashboardController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Show adviser profile page
+     */
+    public function adviserProfile()
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is an adviser
+            if ($user->role !== 'adviser') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            // Get adviser record if it exists
+            $adviser = Adviser::where('user_id', $user->id)->first();
+
+            return view('adviser-profile', compact('user', 'adviser'));
+
+        } catch (\Exception $e) {
+            \Log::error('Adviser Profile Error: ' . $e->getMessage());
+            return redirect()->route('adviser.dashboard')->with('error', 'An error occurred loading profile.');
+        }
+    }
+
+    /**
+     * Update adviser profile
+     */
+    public function updateAdviserProfile(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Debug logging
+            \Log::info('Adviser profile update attempt', [
+                'user_id' => $user->id,
+                'user_role' => $user->role,
+                'request_data' => $request->all(),
+                'request_method' => $request->method(),
+                'request_url' => $request->url()
+            ]);
+            
+            // Ensure this is an adviser
+            if ($user->role !== 'adviser') {
+                \Log::error('Access denied - not adviser', ['role' => $user->role]);
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            // Validate the request
+            $validated = $request->validate([
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'middle_name' => 'nullable|string|max:255',
+                'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+                'contact_number' => 'nullable|string|max:20',
+                'birthday' => 'nullable|date',
+                'gender' => 'nullable|in:male,female',
+                'address' => 'nullable|string',
+                'employee_number' => 'nullable|string|max:50',
+                'position' => 'nullable|string|max:100',
+                'department' => 'nullable|string|max:100',
+            ]);
+
+            \Log::info('Validation passed', ['validated_data' => $validated]);
+
+            // Store old values for comparison
+            $oldValues = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'first_name' => $user->first_name,
+                'middle_name' => $user->middle_name,
+                'last_name' => $user->last_name,
+                'contact_number' => $user->contact_number,
+                'birthday' => $user->birthday,
+                'gender' => $user->gender,
+                'address' => $user->address,
+                'employee_number' => $user->employee_number,
+                'position' => $user->position,
+                'department' => $user->department,
+            ];
+
+            // Update user record with registration fields
+            $fullName = $validated['first_name'] . ' ' . 
+                       ($validated['middle_name'] ? $validated['middle_name'] . ' ' : '') . 
+                       $validated['last_name'];
+            
+            $user->name = $fullName;
+            $user->email = $validated['email'];
+            $user->first_name = $validated['first_name'];
+            $user->middle_name = $validated['middle_name'];
+            $user->last_name = $validated['last_name'];
+            $user->contact_number = $validated['contact_number'];
+            $user->birthday = $validated['birthday'];
+            $user->gender = $validated['gender'];
+            $user->address = $validated['address'];
+            $user->employee_number = $validated['employee_number'];
+            $user->position = $validated['position'];
+            $user->department = $validated['department'];
+            
+            // Check if there are any changes
+            $changes = $user->getDirty();
+            
+            if (empty($changes)) {
+                \Log::info('No changes detected in adviser profile update');
+                return redirect()->route('adviser.profile')->with('info', 'No changes were made to your profile.');
+            }
+            
+            $saved = $user->save();
+
+            \Log::info('Adviser profile update result', [
+                'saved' => $saved,
+                'old_values' => $oldValues,
+                'new_values' => [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'first_name' => $user->first_name,
+                    'middle_name' => $user->middle_name,
+                    'last_name' => $user->last_name,
+                    'contact_number' => $user->contact_number,
+                    'birthday' => $user->birthday,
+                    'gender' => $user->gender,
+                    'address' => $user->address,
+                    'employee_number' => $user->employee_number,
+                    'position' => $user->position,
+                    'department' => $user->department,
+                ],
+                'user_dirty' => $user->getDirty(),
+                'user_changes' => $user->getChanges(),
+                'changes_made' => $changes
+            ]);
+
+            if ($saved) {
+                return redirect()->route('adviser.profile')->with('success', 'Profile updated successfully!');
+            } else {
+                \Log::error('Failed to save adviser profile');
+                return redirect()->back()->with('error', 'Failed to update profile. Please try again.')->withInput();
+            }
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation error in adviser profile update', ['errors' => $e->errors()]);
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            \Log::error('Adviser Profile Update Error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect()->back()->with('error', 'An error occurred while updating your profile. Please try again: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    /**
+     * Update adviser password
+     */
+    public function updateAdviserPassword(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is an adviser
+            if ($user->role !== 'adviser') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            // Validate the request
+            $validated = $request->validate([
+                'current_password' => 'required',
+                'password' => 'required|min:8|confirmed',
+            ]);
+
+            // Check if current password is correct
+            if (!Hash::check($validated['current_password'], $user->password)) {
+                return redirect()->back()->with('error', 'Current password is incorrect.');
+            }
+
+            // Update password
+            $user->password = Hash::make($validated['password']);
+            $user->save();
+
+            return redirect()->route('adviser.profile')->with('success', 'Password updated successfully!');
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors());
+        } catch (\Exception $e) {
+            \Log::error('Adviser Password Update Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while updating your password.');
+        }
+    }
+
+    /**
+     * Upload adviser profile picture
+     */
+    public function uploadAdviserProfilePicture(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            if (!$user || $user->role !== 'adviser') {
+                return response()->json(['success' => false, 'message' => 'Unauthorized access.'], 403);
+            }
+            
+            $request->validate([
+                'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
+            ]);
+            
+            // Create uploads directory in public folder
+            $uploadPath = public_path('uploads/profile_pictures');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+            
+            // Delete old profile picture if exists
+            if ($user->profile_picture && file_exists(public_path($user->profile_picture))) {
+                unlink(public_path($user->profile_picture));
+            }
+            
+            // Store new profile picture
+            $file = $request->file('profile_picture');
+            $filename = 'profile_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            // Move file to public/uploads/profile_pictures
+            $file->move($uploadPath, $filename);
+            
+            // Update user record with relative path
+            $relativePath = 'uploads/profile_pictures/' . $filename;
+            $user->profile_picture = $relativePath;
+            $user->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile picture updated successfully!',
+                'profile_picture_url' => asset($relativePath)
+            ]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid file. Please upload a valid image (JPEG, PNG, JPG, GIF) under 5MB.'
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Adviser profile picture upload error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while uploading the profile picture. Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
