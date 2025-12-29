@@ -233,31 +233,24 @@
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="stat-card stat-card-blue">
                     <h2>{{ $totalStudents ?? 0 }}</h2>
                     <p>Total Students</p>
                 </div>
             </div>
 
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="stat-card stat-card-orange">
+                    <h2>{{ isset($recentVisits) ? $recentVisits->count() : 0 }}</h2>
+                    <p>Clinic Visits</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="stat-card stat-card-yellow">
                     <h2>{{ $studentsWithAllergies ?? 0 }}</h2>
                     <p>Students with Allergies</p>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-yellow">
-                    <h2>{{ $pendingVisits ?? 0 }}</h2>
-                    <p>Pending Visits</p>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-purple">
-                    <h2>{{ isset($recentVisits) ? $recentVisits->count() : 0 }}</h2>
-                    <p>Recent Visits</p>
                 </div>
             </div>
         </div>

@@ -404,10 +404,6 @@
                     </button>
                 </div>
             </form>
-                        <i class="fas fa-save me-2"></i>Update Profile
-                    </button>
-                </div>
-            </form>
         </div>
 
         <!-- Account Settings Section -->
