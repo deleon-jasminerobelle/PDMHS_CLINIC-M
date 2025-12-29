@@ -15,6 +15,7 @@ class Adviser extends Model
         'last_name',
         'employee_number',
         'contact_phone',
+        'email',
         'is_active',
     ];
 
