@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports & Analytics - PDMHS Clinic</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -101,6 +101,21 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 0.2rem rgba(30, 64, 175, 0.25);
         }
+        
+        .page-title {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 800;
+            font-size: 32px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-subtitle {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 500;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
@@ -127,10 +142,11 @@
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-1"></i>
                         {{ Auth::user()->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('clinic-staff.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -149,10 +165,8 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-12">
-                <h2 class="mb-4">
-                    <i class="fas fa-chart-bar me-2"></i>Reports & Analytics
-                </h2>
-                <p class="text-muted mb-4">Generate and export clinic reports</p>
+                <h1 class="page-title">Reports & Analytics</h1>
+                <p class="page-subtitle">Generate and export clinic reports</p>
             </div>
         </div>
 
@@ -268,7 +282,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Cases by Illness Chart
         @if($casesByIllness->count() > 0)

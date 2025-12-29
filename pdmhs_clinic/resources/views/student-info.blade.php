@@ -273,7 +273,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Name of Learner</label>
-                        <input type="text" class="form-control" value="{{ $user->name ?? 'Hannah Lorraine Geronday' }}" readonly>
+                        <input type="text" class="form-control" value="{{ $user->name }}" readonly>
                     </div>
                     <div class="form-group">
                         <label class="form-label">LRN</label>

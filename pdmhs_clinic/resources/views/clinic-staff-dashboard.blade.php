@@ -203,7 +203,7 @@
                         {{ $user->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('clinic-staff.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -239,7 +239,7 @@
 
         <!-- Header -->
         <div class="mb-4">
-            <h1 class="h3 mb-1 welcome-header">Welcome, Maria Santos!</h1>
+            <h1 class="h3 mb-1 welcome-header">Welcome, {{ $user->name }}!</h1>
             <p class="text-muted dashboard-subtitle">Clinic Staff Dashboard</p>
         </div>
 
@@ -302,10 +302,10 @@
                                 </button>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <button class="btn btn-action w-100" onclick="alert('My Profile functionality coming soon!')">
+                                <a href="{{ route('clinic-staff.profile') }}" class="btn btn-action w-100 text-decoration-none">
                                     <i class="fas fa-user-cog mb-2"></i>
                                     <div>My Profile</div>
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>

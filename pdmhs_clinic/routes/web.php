@@ -86,6 +86,10 @@ Route::middleware(['auth'])->prefix('clinic-staff')->name('clinic-staff.')->grou
     Route::get('/reports', [\App\Http\Controllers\ReportsController::class, 'index'])->name('reports');
     Route::post('/reports/export-pdf', [\App\Http\Controllers\ReportsController::class, 'exportPdf'])->name('reports.export-pdf');
     Route::post('/reports/export-excel', [\App\Http\Controllers\ReportsController::class, 'exportExcel'])->name('reports.export-excel');
+    Route::get('/profile', [DashboardController::class, 'clinicStaffProfile'])->name('profile');
+    Route::put('/profile', [DashboardController::class, 'updateClinicStaffProfile'])->name('profile.update');
+    Route::put('/password', [DashboardController::class, 'updateClinicStaffPassword'])->name('password.update');
+    Route::post('/upload-profile-picture', [DashboardController::class, 'uploadClinicStaffProfilePicture'])->name('upload-profile-picture');
 });
 
 /*
@@ -216,6 +220,22 @@ Route::get('/debug-auth', function () {
             'clinic_staff_dashboard' => route('clinic-staff.dashboard'),
             'adviser_dashboard' => route('adviser.dashboard'),
         ]
+    ]);
+})->middleware('auth');
+
+// Test profile update route
+Route::post('/test-profile-update', function (Request $request) {
+    $user = Auth::user();
+    \Log::info('Test profile update', [
+        'user' => $user ? $user->toArray() : null,
+        'request_data' => $request->all(),
+        'method' => $request->method()
+    ]);
+    
+    return response()->json([
+        'success' => true,
+        'user' => $user ? $user->toArray() : null,
+        'request_data' => $request->all()
     ]);
 })->middleware('auth');
 

@@ -298,12 +298,12 @@
             </div>
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        <i></i>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-1"></i>
                         {{ $user->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('clinic-staff.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -612,6 +612,32 @@
                                 <label class="form-label">Medications Given</label>
                                 <textarea class="form-control" name="medications_administered" rows="3" 
                                           placeholder="List medications given"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Status & Notification Section -->
+                        <div class="visit-form-section">
+                            <h6 class="section-title">
+                                <i class="fas fa-bell me-2"></i>Status & Notification
+                            </h6>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Visit Status <span class="text-danger">*</span></label>
+                                <select class="form-select" name="status" required>
+                                    <option value="">Select status</option>
+                                    <option value="Open" selected>Open</option>
+                                    <option value="Closed">Closed</option>
+                                    <option value="Referred">Referred</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="notify_parent" id="notifyParent" value="1">
+                                    <label class="form-check-label" for="notifyParent">
+                                        Notify Parent/Guardian via Email
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
