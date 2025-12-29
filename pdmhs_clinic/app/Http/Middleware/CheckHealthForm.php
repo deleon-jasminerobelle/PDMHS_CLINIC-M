@@ -54,6 +54,16 @@ class CheckHealthForm
                     }
                 }
 
+                // Check if student has complete health data
+                if (!$this->hasCompleteHealthData($student)) {
+                    \Illuminate\Support\Facades\Log::info('Student missing complete health data, redirecting to form', [
+                        'user_id' => $user->id,
+                        'student_id' => $student->id,
+                        'student_name' => $student->first_name . ' ' . $student->last_name
+                    ]);
+                    return redirect()->route('student-health-form');
+                }
+
                 // Store student_profile in session for later use
                 $request->session()->put('student_profile', true);
             }
@@ -125,5 +135,30 @@ class CheckHealthForm
         }
 
         return null;
+    }
+
+    /**
+     * Check if a student has complete health data required for dashboard display
+     */
+    private function hasCompleteHealthData($student)
+    {
+        // Check for essential health data fields that should be filled by the health form
+        $requiredFields = [
+            'blood_type',
+            'height',
+            'weight',
+            'emergency_contact_name',
+            'emergency_contact_number',
+            'emergency_relation',
+            'emergency_address'
+        ];
+
+        foreach ($requiredFields as $field) {
+            if (empty($student->$field)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\HealthIncidentController;
 use App\Http\Controllers\ImmunizationController;
 use App\Http\Controllers\VitalController;
 use App\Http\Controllers\HealthFormController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 
@@ -39,12 +40,6 @@ Route::get('/feature', function () {
     return view('feature');
 })->name('features');
 
-Route::get('/student-health-form', function () {
-    return view('student-health-form');
-})->name('student-health-form');
-
-Route::post('/student-health-form', [HealthFormController::class, 'submitForm'])->name('student.health.store');
-
 // Main dashboard route (redirects based on role)
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard')
@@ -58,7 +53,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 // Student routes - using auth middleware only (role check is in controller)
 Route::middleware(['auth'])->prefix('student')->name('student.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])
+        ->middleware('check.health.form')
+        ->name('dashboard');
     Route::get('/medical', [DashboardController::class, 'studentMedical'])->name('medical');
     Route::get('/medical-history', [DashboardController::class, 'studentMedicalHistory'])->name('medical-history');
     Route::get('/info', [DashboardController::class, 'studentInfo'])->name('info');
@@ -83,9 +80,9 @@ Route::middleware(['auth'])->prefix('clinic-staff')->name('clinic-staff.')->grou
     Route::get('/visits/{visitId}/details', [DashboardController::class, 'getVisitDetails'])->name('visit.details');
     Route::post('/visits', [DashboardController::class, 'storeVisit'])->name('visits.store');
     Route::get('/students/search', [DashboardController::class, 'searchStudents'])->name('students.search');
-    Route::get('/reports', [\App\Http\Controllers\ReportsController::class, 'index'])->name('reports');
-    Route::post('/reports/export-pdf', [\App\Http\Controllers\ReportsController::class, 'exportPdf'])->name('reports.export-pdf');
-    Route::post('/reports/export-excel', [\App\Http\Controllers\ReportsController::class, 'exportExcel'])->name('reports.export-excel');
+    Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
+    Route::post('/reports/export-pdf', [ReportsController::class, 'exportPdf'])->name('reports.export-pdf');
+    Route::post('/reports/export-excel', [ReportsController::class, 'exportExcel'])->name('reports.export-excel');
 });
 
 /*
@@ -103,6 +100,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/health-form', [HealthFormController::class, 'index'])->name('health-form.index');
     Route::post('/health-form', [HealthFormController::class, 'store'])->name('health-form.store');
+
+    // Student health form routes (moved from public to protected)
+    Route::get('/student-health-form', function () {
+        return view('student-health-form');
+    })->name('student-health-form');
+
+    Route::post('/student-health-form', [HealthFormController::class, 'store'])->name('student.health.store');
 
     Route::get('/scanner', function () {
         return view('scanner');

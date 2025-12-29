@@ -31,7 +31,7 @@ class LoginController extends Controller
                 $currentUser = Auth::user();
                 if ($currentUser->email === $request->username) {
                     // User is already logged in with same credentials, redirect to appropriate dashboard
-                    \Log::info('User already logged in, redirecting to dashboard', [
+                    Log::info('User already logged in, redirecting to dashboard', [
                         'user_id' => $currentUser->id,
                         'email' => $currentUser->email,
                         'role' => $currentUser->role,
@@ -50,7 +50,7 @@ class LoginController extends Controller
                     }
                 } else {
                     // Different user trying to login, logout current user first
-                    \Log::info('Different user logging in, clearing current session', [
+                    Log::info('Different user logging in, clearing current session', [
                         'current_user' => $currentUser->email,
                         'new_user' => $request->username
                     ]);
@@ -127,7 +127,7 @@ class LoginController extends Controller
             ])->withInput($request->only('username'));
 
         } catch (\Exception $e) {
-            \Log::error('Login Error: ' . $e->getMessage(), [
+            Log::error('Login Error: ' . $e->getMessage(), [
                 'stack_trace' => $e->getTraceAsString(),
                 'session_id' => session()->getId()
             ]);
@@ -290,7 +290,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Check if a student user has existing data in the students table
+     * Check if a student user has complete health data in the students table
      */
     private function studentHasData($user)
     {
@@ -307,7 +307,8 @@ class LoginController extends Controller
                     'student_id' => $student->id,
                     'student_name' => $student->first_name . ' ' . $student->last_name
                 ]);
-                return true;
+                // Check if this linked student has complete health data
+                return $this->hasCompleteHealthData($student);
             }
 
             return false;
@@ -326,13 +327,48 @@ class LoginController extends Controller
                     'student_id' => $student->id,
                     'student_name' => $student->first_name . ' ' . $student->last_name
                 ]);
-                return true;
+                // Check if this relinked student has complete health data
+                return $this->hasCompleteHealthData($student);
             }
 
             return false;
         }
 
-        \Illuminate\Support\Facades\Log::info('Student data found for user', ['user_id' => $user->id, 'student_id' => $user->student_id]);
+        // Check if the student has complete health data
+        return $this->hasCompleteHealthData($student);
+    }
+
+    /**
+     * Check if a student has complete health data required for dashboard display
+     */
+    private function hasCompleteHealthData($student)
+    {
+        // Check for essential health data fields that should be filled by the health form
+        $requiredFields = [
+            'blood_type',
+            'height',
+            'weight',
+            'emergency_contact_name',
+            'emergency_contact_number',
+            'emergency_relation',
+            'emergency_address'
+        ];
+
+        foreach ($requiredFields as $field) {
+            if (empty($student->$field)) {
+                \Illuminate\Support\Facades\Log::info('Student missing required health data', [
+                    'student_id' => $student->id,
+                    'missing_field' => $field,
+                    'student_name' => $student->first_name . ' ' . $student->last_name
+                ]);
+                return false;
+            }
+        }
+
+        \Illuminate\Support\Facades\Log::info('Student has complete health data', [
+            'student_id' => $student->id,
+            'student_name' => $student->first_name . ' ' . $student->last_name
+        ]);
         return true;
     }
 

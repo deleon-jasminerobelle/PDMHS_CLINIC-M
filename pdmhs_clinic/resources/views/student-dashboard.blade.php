@@ -1,252 +1,446 @@
-@extends('layouts.app')
-
-@section('title', 'Student Dashboard')
-
-@section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-8 flex justify-between items-start">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome, {{ $user->name }}!</h1>
-            <p class="text-gray-600">Your Health Dashboard</p>
-        </div>
-        <div class="flex items-center gap-4">
-            <div class="text-right">
-                <div class="text-sm text-gray-500">{{ ucfirst(str_replace('_', ' ', $user->role)) }}</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Student Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --secondary: #3b82f6;
+            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        
+        .navbar.bg-primary {
+            background: var(--gradient) !important;
+            padding: 1rem 0 !important;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .stat-card {
+            border-radius: 12px;
+            border: none;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+            font-weight: 500;
+            text-align: center;
+        }
+        .stat-card h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+        .stat-card p {
+            margin: 0;
+            opacity: 0.9;
+            font-family: 'Roboto', sans-serif;
+            font-size: 25px;
+            font-weight: 700;
+        }
+        .stat-card-blue { background: var(--gradient); }
+        .stat-card-orange { background: var(--gradient); }
+        .stat-card-yellow { background: var(--gradient); }
+        .stat-card-purple { background: var(--gradient); }
+        .stat-card-green { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); color: #333; }
+        .stat-card-red { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #333; }
+        
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        .section-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            color: #6c757d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-header h5 {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 30px;
+            margin-bottom: 0;
+        }
+        
+        .health-info-label {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-weight: 700 !important;
+            font-size: 20px !important;
+        }
+        
+        .empty-state-message {
+            font-family: 'Albert Sans', sans-serif !important;
+            font-style: italic !important;
+            font-size: 23px !important;
+        }
+        .section-content {
+            padding: 2rem;
+        }
+        .navbar-brand {
+            font-weight: 600;
+        }
+        
+        .navbar-nav .nav-link {
+            font-family: 'Epilogue', sans-serif !important;
+            font-size: 25px !important;
+            font-weight: 600 !important;
+        }
+        
+        .dropdown-menu .dropdown-item {
+            font-family: 'Epilogue', sans-serif !important;
+            font-size: 20px !important;
+            font-weight: 500 !important;
+        }
+        .welcome-header {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 800;
+            font-size: 30px;
+        }
+        
+        .profile-picture-container {
+            position: relative;
+        }
+        
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .default-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('student.dashboard') }}">
+            </a>
+            <div class="navbar-nav me-auto">
+                <a class="nav-link active" href="{{ route('student.dashboard') }}">
+                    <i></i>Dashboard
+                </a>
+                <a class="nav-link" href="{{ route('student.medical') }}">
+                    <i></i>My Medical
+                </a>
             </div>
-            <form method="POST" action="{{ route('logout') }}" class="inline">
-                @csrf
-                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-200 text-sm font-medium">
-                    Logout
-                </button>
-            </form>
-        </div>
-    </div>
-
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if($student)
-        <!-- Student Information Card -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Student Information</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div>
-                    <span class="font-medium text-gray-600">Student ID:</span>
-                    <p class="text-gray-800">{{ $student->student_id ?? 'N/A' }}</p>
-                </div>
-                <div>
-                    <span class="font-medium text-gray-600">Name:</span>
-                    <p class="text-gray-800">{{ $student->first_name ?? '' }} {{ $student->last_name ?? '' }}</p>
-                </div>
-                <div>
-                    <span class="font-medium text-gray-600">Age:</span>
-                    <p class="text-gray-800">{{ $age ?? 'N/A' }}</p>
-                </div>
-                <div>
-                    <span class="font-medium text-gray-600">Grade & Section:</span>
-                    <p class="text-gray-800">{{ $student->grade_level ?? '' }} {{ $student->section ?? '' }}</p>
-                </div>
-                <div>
-                    <span class="font-medium text-gray-600">School:</span>
-                    <p class="text-gray-800">{{ $student->school ?? 'N/A' }}</p>
-                </div>
-                <div>
-                    <span class="font-medium text-gray-600">Blood Type:</span>
-                    <p class="text-gray-800">{{ $student->blood_type ?? 'N/A' }}</p>
+            <div class="navbar-nav ms-auto">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-1"></i>
+                        {{ $user->name }}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
+    </nav>
 
-        <!-- Health Vitals Card -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Health Vitals</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="text-center">
-                    <div class="bg-blue-100 rounded-lg p-4">
-                        <div class="text-2xl font-bold text-blue-600">{{ $student->height ?? 'N/A' }}</div>
-                        <div class="text-sm text-gray-600">Height (cm)</div>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <div class="bg-green-100 rounded-lg p-4">
-                        <div class="text-2xl font-bold text-green-600">{{ $student->weight ?? 'N/A' }}</div>
-                        <div class="text-sm text-gray-600">Weight (kg)</div>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <div class="bg-yellow-100 rounded-lg p-4">
-                        <div class="text-2xl font-bold text-yellow-600">{{ $student->temperature ?? 'N/A' }}</div>
-                        <div class="text-sm text-gray-600">Temperature (°C)</div>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <div class="bg-purple-100 rounded-lg p-4">
-                        <div class="text-2xl font-bold text-purple-600">{{ $student->blood_pressure ?? 'N/A' }}</div>
-                        <div class="text-sm text-gray-600">Blood Pressure</div>
-                    </div>
-                </div>
+    <div class="container mt-4">
+        <!-- Success/Error Messages -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert" style="font-family: 'Epilogue', sans-serif; font-size: 20px; font-weight: 500;">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Success!</strong> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            @if($student->height && $student->weight && $student->height > 0)
-                <div class="mt-4 text-center">
-                    <span class="font-medium text-gray-600">BMI:</span>
-                    <span class="text-lg font-bold text-blue-600">{{ number_format($student->bmi ?? 0, 1) }}</span>
-                    <span class="text-sm text-gray-500">
-                        @if($student->bmi)
-                            @if($student->bmi < 18.5) (Underweight)
-                            @elseif($student->bmi < 25) (Normal)
-                            @elseif($student->bmi < 30) (Overweight)
-                            @else (Obese)
-                            @endif
-                        @endif
-                    </span>
-                </div>
-            @endif
-        </div>
+        @endif
 
-        <!-- Medical Information Cards -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <!-- Allergies -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Allergies</h3>
-                @if($student->allergies && is_array($student->allergies) && count($student->allergies) > 0)
-                    <div class="flex flex-wrap gap-2">
-                        @foreach($student->allergies as $allergy)
-                            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">{{ $allergy }}</span>
-                        @endforeach
-                    </div>
-                @else
-                    <p class="text-gray-500">No allergies recorded</p>
-                @endif
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Error!</strong> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+        @endif
 
-            <!-- Medical Conditions -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Medical Conditions</h3>
-                @if($student->medical_conditions && is_array($student->medical_conditions) && count($student->medical_conditions) > 0)
-                    <div class="flex flex-wrap gap-2">
-                        @foreach($student->medical_conditions as $condition)
-                            <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">{{ $condition }}</span>
-                        @endforeach
-                    </div>
-                @else
-                    <p class="text-gray-500">No medical conditions recorded</p>
-                @endif
-            </div>
-        </div>
-
-        <!-- Family History -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Family Medical History</h3>
-            @if($student->family_history && is_array($student->family_history) && count($student->family_history) > 0)
-                <div class="flex flex-wrap gap-2">
-                    @foreach($student->family_history as $condition)
-                        <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm">{{ $condition }}</span>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-gray-500">No family medical history recorded</p>
-            @endif
-        </div>
-
-        <!-- Emergency Contact -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Emergency Contact</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <span class="font-medium text-gray-600">Name:</span>
-                    <p class="text-gray-800">{{ $student->emergency_contact_name ?? 'N/A' }}</p>
-                </div>
-                <div>
-                    <span class="font-medium text-gray-600">Relationship:</span>
-                    <p class="text-gray-800">{{ $student->emergency_relation ?? 'N/A' }}</p>
-                </div>
-                <div>
-                    <span class="font-medium text-gray-600">Phone:</span>
-                    <p class="text-gray-800">{{ $student->emergency_contact_number ?? 'N/A' }}</p>
-                </div>
-                <div>
-                    <span class="font-medium text-gray-600">Address:</span>
-                    <p class="text-gray-800">{{ $student->emergency_address ?? 'N/A' }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Clinic Visits -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Recent Clinic Visits</h3>
-            @if($recentVisits && $recentVisits->count() > 0)
-                <div class="space-y-3">
-                    @foreach($recentVisits as $visit)
-                        <div class="border-l-4 border-blue-500 pl-4 py-2">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <p class="font-medium text-gray-800">{{ $visit->visit_date ? \Carbon\Carbon::parse($visit->visit_date)->format('M d, Y') : 'N/A' }}</p>
-                                    <p class="text-sm text-gray-600">{{ $visit->reason ?? 'N/A' }}</p>
+        <!-- Header with Profile Picture -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-content">
+                        <div class="row align-items-center">
+                            <div class="col-md-2 text-center">
+                                <div class="profile-picture-container">
+                                    @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
+                                        <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-picture">
+                                    @else
+                                        <div class="default-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    @endif
                                 </div>
-                                <span class="px-2 py-1 text-xs rounded-full
-                                    @if($visit->status == 'completed') bg-green-100 text-green-800
-                                    @elseif($visit->status == 'pending') bg-yellow-100 text-yellow-800
-                                    @else bg-gray-100 text-gray-800
-                                    @endif">
-                                    {{ ucfirst($visit->status ?? 'unknown') }}
-                                </span>
+                            </div>
+                            <div class="col-md-10">
+                                <h1 class="h3 mb-1 welcome-header">Welcome back, {{ $user->name }}!</h1>
                             </div>
                         </div>
-                    @endforeach
+                    </div>
                 </div>
-                <p class="text-sm text-gray-500 mt-3">Total visits: {{ $totalVisits }}</p>
-            @else
-                <p class="text-gray-500">No clinic visits recorded</p>
-            @endif
-        </div>
-
-        <!-- Actions -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Actions</h3>
-            <div class="flex flex-wrap gap-4">
-                <a href="{{ route('student.profile') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-200">
-                    View Full Profile
-                </a>
-                <a href="{{ route('student-health-form') }}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition duration-200">
-                    Update Health Form
-                </a>
             </div>
         </div>
 
-        <!-- QR Code Section -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Your QR Code</h3>
-            <p class="text-gray-600 mb-4">Show this QR code to clinic staff for quick check-in and access to your health records.</p>
-            <div class="flex flex-col items-center">
-                <div id="qrcode" class="mb-4"></div>
-                <p class="text-sm text-gray-500">Student ID: {{ $student->student_id ?? 'N/A' }}</p>
+        <!-- Health Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="stat-card stat-card-blue d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <h2>{{ $bmi ?? '' }}</h2>
+                    <p>BMI</p>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="stat-card stat-card-orange d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <h2>{{ $bloodType ?? '' }}</h2>
+                    <p>Blood Type</p>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="stat-card stat-card-yellow d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <h2>{{ isset($allergies) && $allergies && $allergies->count() > 0 ? $allergies->count() : '' }}</h2>
+                    <p>Allergies</p>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="stat-card stat-card-purple d-flex flex-column justify-content-center" style="min-height: 120px;">
+                    <h2>{{ isset($lastVisit) && $lastVisit ? $lastVisit->visit_date->format('M j') : '' }}</h2>
+                    <p>Last Visit</p>
+                </div>
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const studentId = '{{ $student->student_id ?? '' }}';
-                if (studentId) {
-                    new QRCode(document.getElementById("qrcode"), {
-                        text: studentId,
-                        width: 200,
-                        height: 200,
-                        colorDark: "#000000",
-                        colorLight: "#ffffff",
-                        correctLevel: QRCode.CorrectLevel.H
-                    });
-                }
+        <!-- Health Information Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h5 class="mb-0"><i class="fas fa-heartbeat me-2"></i>Health Information</h5>
+                    </div>
+                    <div class="section-content">
+                        <div class="row">
+                            <div class="col-md-2 mb-3">
+                                <div class="text-center">
+                                    <h6 class="text-muted mb-1 health-info-label">Height</h6>
+                                    <h4 class="mb-0">{{ isset($latestVitals->height) && $latestVitals->height ? $latestVitals->height . ' cm' : '' }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <div class="text-center">
+                                    <h6 class="text-muted mb-1 health-info-label">Weight</h6>
+                                    <h4 class="mb-0">{{ isset($latestVitals->weight) && $latestVitals->weight ? $latestVitals->weight . ' kg' : '' }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <div class="text-center">
+                                    <h6 class="text-muted mb-1 health-info-label">Age</h6>
+                                    <h4 class="mb-0">{{ $age ?? '' }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="text-center">
+                                    <h6 class="text-muted mb-1 health-info-label">BMI</h6>
+                                    <h4 class="mb-0">{{ $bmi ?? '' }}</h4>
+                                    @if(isset($bmiCategory) && $bmiCategory)
+                                        <small class="text-muted">({{ $bmiCategory }})</small>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="text-center">
+                                    <h6 class="text-muted mb-1 health-info-label">Blood Type</h6>
+                                    <h4 class="mb-0">{{ $bloodType ?? '' }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Known Allergies -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Known Allergies</h5>
+                        <button class="btn btn-sm btn-outline-primary" onclick="editAllergies()">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </button>
+                    </div>
+                    <div class="section-content">
+                        @if(isset($allergies) && $allergies && $allergies->count() > 0)
+                            <div class="row">
+                                @foreach($allergies as $allergy)
+                                    <div class="col-md-4 col-sm-6 mb-3">
+                                        <div class="alert alert-info mb-0 d-flex align-items-center" style="padding: 12px; border-radius: 8px;">
+                                            <i class="fas fa-exclamation-circle me-2"></i>
+                                            <div>
+                                                <strong>{{ $allergy->allergy_name ?? 'Unknown' }}</strong>
+                                                <br><small>Severity: {{ $allergy->severity ?? 'Unknown' }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-4">
+                                <i class="fas fa-check-circle text-success mb-2" style="font-size: 2rem;"></i>
+                                <p class="text-muted mb-0 empty-state-message">No known allergies recorded</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Immunization Records -->
+        <div class="row mb-4">
+            <div class="col-12">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function editAllergies() {
+            alert('Edit allergies functionality will be implemented soon.');
+        }
+
+        // Auto-dismiss alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
             });
-        </script>
-    @else
-        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-6">
-            <p>Student record not found. Please complete your health form.</p>
-            <a href="{{ route('student-health-form') }}" class="underline text-yellow-800">Go to Health Form</a>
-        </div>
-    @endif
-</div>
-@endsection
+        });
+
+        // Session keep-alive mechanism
+        function keepSessionAlive() {
+            fetch('/keep-alive', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.warn('Session keep-alive failed:', response.status);
+                    // If session expired, redirect to login
+                    if (response.status === 401 || response.status === 419) {
+                        window.location.href = '/login';
+                    }
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Session keep-alive successful:', data);
+            })
+            .catch(error => {
+                console.error('Session keep-alive error:', error);
+            });
+        }
+
+        // Check session status on page load
+        function checkSessionStatus() {
+            fetch('/session-status', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.warn('Session check failed:', response.status);
+                    if (response.status === 401 || response.status === 419) {
+                        window.location.href = '/login';
+                    }
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data.authenticated) {
+                    console.warn('User not authenticated, redirecting to login');
+                    window.location.href = '/login';
+                } else {
+                    console.log('Session status OK:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Session status check error:', error);
+            });
+        }
+
+        // Check session status immediately on page load
+        checkSessionStatus();
+
+        // Keep session alive every 10 minutes (600,000 ms)
+        setInterval(keepSessionAlive, 600000);
+
+        // Also keep session alive on user activity
+        let activityTimer;
+        function resetActivityTimer() {
+            clearTimeout(activityTimer);
+            activityTimer = setTimeout(keepSessionAlive, 300000); // 5 minutes of inactivity
+        }
+
+        // Listen for user activity
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(event => {
+            document.addEventListener(event, resetActivityTimer, true);
+        });
+
+        // Initial activity timer
+        resetActivityTimer();
+    </script>
+</body>
+</html>

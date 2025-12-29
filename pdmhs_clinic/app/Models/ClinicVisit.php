@@ -12,6 +12,7 @@ class ClinicVisit extends Model
     protected $fillable = [
         'student_id',
         'visit_date',
+        'visit_type',
         'reason_for_visit',
         'symptoms',
         'status',
@@ -21,6 +22,7 @@ class ClinicVisit extends Model
         'follow_up_required',
         'follow_up_date',
         'notes',
+        'staff_id',
     ];
 
     protected $casts = [
