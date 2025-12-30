@@ -175,18 +175,124 @@
             font-size: 25px;
             margin-bottom: 0;
         }
+        
+        .secondary-nav {
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            padding: 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .secondary-nav .nav-tabs {
+            border-bottom: none;
+            padding: 0 2rem;
+        }
+        
+        .secondary-nav .nav-tabs .nav-link {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            color: #6c757d;
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 1rem 2rem;
+            margin-right: 1rem;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .secondary-nav .nav-tabs .nav-link:hover {
+            color: var(--primary);
+            border-bottom-color: rgba(30, 64, 175, 0.3);
+            background: rgba(30, 64, 175, 0.05);
+        }
+        
+        .secondary-nav .nav-tabs .nav-link.active {
+            color: var(--primary) !important;
+            border-bottom-color: var(--primary) !important;
+            background: rgba(30, 64, 175, 0.05) !important;
+            font-weight: 700 !important;
+        }
+        
+        /* Fix for top navigation tabs */
+        .nav-tabs .nav-link {
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #6c757d;
+            border: none;
+            border-bottom: 2px solid transparent;
+            background: transparent;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: #1e40af;
+            border-bottom-color: rgba(30, 64, 175, 0.3);
+            background: rgba(30, 64, 175, 0.05);
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #1e40af !important;
+            border-bottom-color: #1e40af !important;
+            background: rgba(30, 64, 175, 0.05) !important;
+            font-weight: 700 !important;
+        }
+        
+        .tab-content {
+            padding: 0 2rem;
+        }
+        
+        /* Navbar Tab Styling */
+        .navbar .nav-pills .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            border-radius: 8px;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar .nav-pills .nav-link:hover {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .navbar .nav-pills .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid white;
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg" style="background: white; border-bottom: 1px solid #e9ecef; padding: 0.5rem 0;">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('adviser.dashboard') }}">
-                <i class="fas fa-heartbeat me-2"></i>
-                PDMHS Clinic
-            </a>
+            <!-- Navigation Tabs -->
+            <ul class="nav nav-tabs border-0" id="dashboardTabs" role="tablist" style="margin-bottom: 0;">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="true" style="font-family: 'Albert Sans', sans-serif; font-size: 16px; font-weight: 600; color: #1e40af; border: none; border-bottom: 2px solid #1e40af; background: transparent; padding: 0.75rem 1.5rem;">
+                        Dashboard
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="alerts-tab" data-bs-toggle="tab" data-bs-target="#alerts" type="button" role="tab" aria-controls="alerts" aria-selected="false" style="font-family: 'Albert Sans', sans-serif; font-size: 16px; font-weight: 600; color: #6c757d; border: none; border-bottom: 2px solid transparent; background: transparent; padding: 0.75rem 1.5rem;">
+                        Alerts
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="health-status-tab" data-bs-toggle="tab" data-bs-target="#health-status" type="button" role="tab" aria-controls="health-status" aria-selected="false" style="font-family: 'Albert Sans', sans-serif; font-size: 16px; font-weight: 600; color: #6c757d; border: none; border-bottom: 2px solid transparent; background: transparent; padding: 0.75rem 1.5rem;">
+                        Health Status
+                    </button>
+                </li>
+            </ul>
+            
+            <!-- User Profile Dropdown -->
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #6c757d;">
                         <i class="fas fa-user me-1"></i>
                         {{ $user->name }}
                     </a>
@@ -207,6 +313,8 @@
         </div>
     </nav>
 
+
+
     <div class="container mt-4">
         <!-- Success/Error Messages -->
         @if(session('success'))
@@ -225,59 +333,407 @@
             </div>
         @endif
 
-        <!-- Header -->
-        <div class="mb-4">
-            <h1 class="h3 mb-1 welcome-header">Welcome, {{ $user->name }}!</h1>
-            <p class="text-muted dashboard-subtitle">Adviser Dashboard</p>
-        </div>
-
-        <!-- Statistics Cards -->
-        <div class="row mb-4">
-            <div class="col-md-4 mb-3">
-                <div class="stat-card stat-card-blue">
-                    <h2>{{ $totalStudents ?? 0 }}</h2>
-                    <p>Total Students</p>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="stat-card stat-card-orange">
-                    <h2>{{ isset($recentVisits) ? $recentVisits->count() : 0 }}</h2>
-                    <p>Clinic Visits</p>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="stat-card stat-card-yellow">
-                    <h2>{{ $studentsWithAllergies ?? 0 }}</h2>
-                    <p>Students with Allergies</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Students List -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="section-card">
-                    <div class="section-header">
-                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Advised Students</h5>
-                    </div>
-                    <div class="section-content">
-                        <p class="text-muted" style="font-style: italic;">No students assigned to you yet.</p>
+        <!-- Tab Content -->
+        <div class="tab-content" id="dashboardTabsContent">
+            <!-- Dashboard Tab (Main Content) -->
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                <!-- Header -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h1 class="h3 mb-1 welcome-header">Welcome, {{ $user->name }}!</h1>
+                            <p class="text-muted dashboard-subtitle">Adviser Class - Grade 12 - STEM</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Recent Medical Visits -->
-        <div class="row">
-            <div class="col-12">
-                <div class="section-card">
-                    <div class="section-header">
-                        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Medical Visits</h5>
+                <!-- Statistics Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card stat-card-blue">
+                            <h2>{{ $totalStudents ?? 3 }}</h2>
+                            <p>Total Students</p>
+                        </div>
                     </div>
-                    <div class="section-content">
-                        <p class="text-muted" style="font-style: italic;">No recent medical visits for your students.</p>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card stat-card-orange">
+                            <h2>{{ isset($recentVisits) ? $recentVisits->count() : 1 }}</h2>
+                            <p>Clinic Visits (This Month)</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card stat-card-yellow">
+                            <h2>{{ $studentsWithAllergies ?? 1 }}</h2>
+                            <p>With Allergies</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Students Under Your Advisory -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h5 class="mb-0"><i class="fas fa-users me-2"></i>Students Under Your Advisory</h5>
+                                <small class="text-muted">3 students</small>
+                            </div>
+                            <div class="section-content">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="student-card text-center">
+                                            <div class="student-avatar mb-2">
+                                                <i class="fas fa-user-circle" style="font-size: 3rem; color: #6c757d;"></i>
+                                            </div>
+                                            <h6 class="student-name">Irish Galieza</h6>
+                                            <p class="student-info text-muted small">STEM<br>Grade 12 - STEM A</p>
+                                            <button class="btn btn-sm btn-primary">View Profile</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="student-card text-center">
+                                            <div class="student-avatar mb-2">
+                                                <i class="fas fa-user-circle" style="font-size: 3rem; color: #6c757d;"></i>
+                                            </div>
+                                            <h6 class="student-name">Hannah Loraine Geronday</h6>
+                                            <p class="student-info text-muted small">STEM<br>Grade 12 - STEM A</p>
+                                            <button class="btn btn-sm btn-primary">View Profile</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="student-card text-center">
+                                            <div class="student-avatar mb-2">
+                                                <i class="fas fa-user-circle" style="font-size: 3rem; color: #6c757d;"></i>
+                                            </div>
+                                            <h6 class="student-name">Clarence Villas</h6>
+                                            <p class="student-info text-muted small">STEM<br>Grade 12 - STEM A</p>
+                                            <button class="btn btn-sm btn-primary">View Profile</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Clinic Activity -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Clinic Activity</h5>
+                            </div>
+                            <div class="section-content">
+                                <div class="clinic-activity-item d-flex align-items-center p-3 border-bottom">
+                                    <div class="activity-icon me-3">
+                                        <i class="fas fa-user-injured text-primary"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <p class="mb-1"><strong>Hannah Loraine Geronday</strong> visited the clinic - may sakit ka na naman</p>
+                                        <small class="text-muted">Today, 2:30 PM</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts Tab -->
+            <div class="tab-pane fade" id="alerts" role="tabpanel" aria-labelledby="alerts-tab">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h5 class="mb-0"><i class="fas fa-bell me-2"></i>Alerts & Notifications</h5>
+                                <small class="text-muted">Messages from Clinic Staff regarding your students</small>
+                            </div>
+                            <div class="section-content">
+                                @if(isset($notifications) && $notifications->count() > 0)
+                                    <div class="notifications-list">
+                                        @foreach($notifications as $notification)
+                                            <div class="notification-item d-flex align-items-start p-3 border-bottom {{ !$notification->is_read ? 'bg-light' : '' }}">
+                                                <div class="notification-icon me-3">
+                                                    @if($notification->type == 'clinic_visit')
+                                                        <i class="fas fa-user-injured text-primary"></i>
+                                                    @elseif($notification->type == 'health_alert')
+                                                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                                                    @else
+                                                        <i class="fas fa-info-circle text-info"></i>
+                                                    @endif
+                                                </div>
+                                                <div class="notification-content flex-grow-1">
+                                                    <h6 class="notification-title mb-1">{{ $notification->title }}</h6>
+                                                    <p class="notification-message mb-1">{{ $notification->message }}</p>
+                                                    <small class="text-muted">{{ $notification->time_ago }}</small>
+                                                    @if(!$notification->is_read)
+                                                        <span class="badge bg-primary ms-2">New</span>
+                                                    @endif
+                                                </div>
+                                                <div class="notification-actions">
+                                                    @if(!$notification->is_read)
+                                                        <button class="btn btn-sm btn-outline-primary" onclick="markAsRead({{ $notification->id }})">
+                                                            Mark as Read
+                                                        </button>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="text-center py-5">
+                                        <i class="fas fa-bell-slash text-muted" style="font-size: 3rem;"></i>
+                                        <h5 class="text-muted mt-3">No Alerts Yet</h5>
+                                        <p class="text-muted" style="font-style: italic;">You will receive notifications here when clinic staff sends updates about your students' health visits.</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Status Tab -->
+            <div class="tab-pane fade" id="health-status" role="tabpanel" aria-labelledby="health-status-tab">
+                <!-- Health Status Overview -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h5 class="mb-0"><i class="fas fa-heartbeat me-2"></i>Health Status Overview</h5>
+                                <small class="text-muted">Summary of health status for students under your advisory</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); color: white; text-align: center;">
+                            <h2>{{ $totalStudents ?? 3 }}</h2>
+                            <p>Total Students</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; text-align: center;">
+                            <h2>{{ isset($recentVisits) ? $recentVisits->count() : 1 }}</h2>
+                            <p>With Clinic Visits</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; text-align: center;">
+                            <h2>{{ $studentsWithAllergies ?? 1 }}</h2>
+                            <p>With Allergies</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Health Cards -->
+                <div class="row">
+                    <!-- Student 1: Irish Galieza -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card h-100" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <div class="card-body p-4">
+                                <!-- Student Header -->
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="student-avatar me-3">
+                                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="student-name mb-1">Irish Galieza</h6>
+                                        <p class="student-info text-muted small mb-0">Grade 12 - STEM A</p>
+                                    </div>
+                                </div>
+
+                                <!-- Basic Info -->
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-heartbeat text-danger mb-1"></i>
+                                            <div class="small text-muted">Blood Type</div>
+                                            <div class="fw-bold">N/A</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-user text-primary mb-1"></i>
+                                            <div class="small text-muted">Gender</div>
+                                            <div class="fw-bold">Female</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-calendar text-info mb-1"></i>
+                                            <div class="small text-muted">Age</div>
+                                            <div class="fw-bold">18</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-phone text-success mb-1"></i>
+                                            <div class="small text-muted">Contact</div>
+                                            <div class="fw-bold">09123456789</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last Clinic Visit -->
+                                <div class="mb-3">
+                                    <h6 class="visit-name mb-2">Last Clinic Visit</h6>
+                                    <div class="visit-info p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                        <div class="visit-type text-muted small">No clinic visits recorded</div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Button -->
+                                <button class="btn btn-primary w-100" style="border-radius: 8px;">
+                                    View Full Record
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student 2: Hannah Loraine Geronday -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card h-100" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <div class="card-body p-4">
+                                <!-- Student Header -->
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="student-avatar me-3">
+                                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="student-name mb-1">Hannah Loraine Geronday</h6>
+                                        <p class="student-info text-muted small mb-0">Grade 12 - STEM A</p>
+                                    </div>
+                                </div>
+
+                                <!-- Basic Info -->
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-heartbeat text-danger mb-1"></i>
+                                            <div class="small text-muted">Blood Type</div>
+                                            <div class="fw-bold">O+</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-user text-primary mb-1"></i>
+                                            <div class="small text-muted">Gender</div>
+                                            <div class="fw-bold">Female</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-calendar text-info mb-1"></i>
+                                            <div class="small text-muted">Age</div>
+                                            <div class="fw-bold">17</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-phone text-success mb-1"></i>
+                                            <div class="small text-muted">Contact</div>
+                                            <div class="fw-bold">09234567890</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last Clinic Visit -->
+                                <div class="mb-3">
+                                    <h6 class="visit-name mb-2">Last Clinic Visit</h6>
+                                    <div class="visit-info p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                        <div class="visit-date fw-bold">Dec 21, 2024</div>
+                                        <div class="visit-type text-muted small">TEMP 38.5°C 2:30 PM</div>
+                                        <div class="visit-status">
+                                            <span class="badge bg-warning text-dark">Allergic Reaction</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Button -->
+                                <button class="btn btn-primary w-100" style="border-radius: 8px;">
+                                    View Full Record
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student 3: Clarence Villas -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card h-100" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <div class="card-body p-4">
+                                <!-- Student Header -->
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="student-avatar me-3">
+                                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="student-name mb-1">Clarence Villas</h6>
+                                        <p class="student-info text-muted small mb-0">Grade 12 - STEM A</p>
+                                    </div>
+                                </div>
+
+                                <!-- Basic Info -->
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-heartbeat text-danger mb-1"></i>
+                                            <div class="small text-muted">Blood Type</div>
+                                            <div class="fw-bold">N/A</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-user text-primary mb-1"></i>
+                                            <div class="small text-muted">Gender</div>
+                                            <div class="fw-bold">Male</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-calendar text-info mb-1"></i>
+                                            <div class="small text-muted">Age</div>
+                                            <div class="fw-bold">18</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                            <i class="fas fa-phone text-success mb-1"></i>
+                                            <div class="small text-muted">Contact</div>
+                                            <div class="fw-bold">09123456789</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last Clinic Visit -->
+                                <div class="mb-3">
+                                    <h6 class="visit-name mb-2">Last Clinic Visit</h6>
+                                    <div class="visit-info p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                        <div class="visit-type text-muted small">No clinic visits recorded</div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Button -->
+                                <button class="btn btn-primary w-100" style="border-radius: 8px;">
+                                    View Full Record
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -92,4 +92,20 @@ class User extends Authenticatable
     {
         return $this->hasOne(Adviser::class, 'user_id', 'id');
     }
+
+    /**
+     * Get notifications for this user
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Get unread notifications count
+     */
+    public function getUnreadNotificationsCountAttribute()
+    {
+        return $this->notifications()->unread()->count();
+    }
 }
