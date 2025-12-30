@@ -395,6 +395,17 @@ class DashboardController extends Controller
                 return redirect()->route('login')->with('error', 'Access denied.');
             }
             
+            // Get notifications for this adviser
+            $notifications = \App\Models\Notification::where('user_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->limit(10)
+                ->get();
+            
+            // Get unread notifications count
+            $unreadNotifications = \App\Models\Notification::where('user_id', $user->id)
+                ->where('is_read', false)
+                ->count();
+            
             // Return with basic data
             return view('adviser-dashboard', [
                 'user' => $user,
@@ -403,7 +414,9 @@ class DashboardController extends Controller
                 'totalStudents' => 0,
                 'studentsWithAllergies' => 0,
                 'recentVisits' => collect(),
-                'pendingVisits' => 0
+                'pendingVisits' => 0,
+                'notifications' => $notifications,
+                'unreadNotifications' => $unreadNotifications
             ]);
         } catch (\Exception $e) {
             Log::error('Adviser Dashboard Error: ' . $e->getMessage());

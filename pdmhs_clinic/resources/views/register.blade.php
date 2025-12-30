@@ -293,59 +293,102 @@
             <p>Sign up to access the PDMHS High School Clinic</p>
         </div>
 
+        <!-- Error Messages -->
+        @if ($errors->any())
+            <div style="background: #fee2e2; border: 1px solid #fca5a5; color: #dc2626; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+                <h4 style="margin: 0 0 8px 0; font-weight: 600;">Please fix the following errors:</h4>
+                <ul style="margin: 0; padding-left: 20px;">
+                    @foreach ($errors->all() as $error)
+                        <li style="margin-bottom: 4px;">{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <!-- Success Messages -->
+        @if (session('success'))
+            <div style="background: #d1fae5; border: 1px solid #6ee7b7; color: #065f46; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+                <strong>Success!</strong> {{ session('success') }}
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('register.post') }}">
             @csrf
             <div class="form-group">
                 <label for="first_name">First Name</label>
-                <input type="text" id="first_name" name="first_name" placeholder="Enter your first name" required>
+                <input type="text" id="first_name" name="first_name" placeholder="Enter your first name" value="{{ old('first_name') }}" required>
+                @error('first_name')
+                    <div style="color: #dc2626; font-size: 14px; margin-top: 4px;">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="middle_name">Middle Name</label>
-                    <input type="text" id="middle_name" name="middle_name" placeholder="Enter your middle name">
+                    <input type="text" id="middle_name" name="middle_name" placeholder="Enter your middle name" value="{{ old('middle_name') }}">
                     <div style="margin-top: 8px;">
                         <input type="checkbox" id="no_middle_name" style="width: auto; display: inline-block; margin-right: 8px;">
                         <label for="no_middle_name" style="display: inline; font-weight: normal; font-size: 14px;">I don't have middle name</label>
                     </div>
+                    @error('middle_name')
+                        <div style="color: #dc2626; font-size: 14px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-group">
                     <label for="last_name">Last Name</label>
-                    <input type="text" id="last_name" name="last_name" placeholder="Enter your last name" required>
+                    <input type="text" id="last_name" name="last_name" placeholder="Enter your last name" value="{{ old('last_name') }}" required>
+                    @error('last_name')
+                        <div style="color: #dc2626; font-size: 14px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="birthday">Birthday</label>
-                    <input type="date" id="birthday" name="birthday" required style="color: var(--gray);" onfocus="this.style.color='var(--dark)'" onblur="if(!this.value) this.style.color='var(--gray)'">
+                    <input type="date" id="birthday" name="birthday" value="{{ old('birthday') }}" required style="color: var(--gray);" onfocus="this.style.color='var(--dark)'" onblur="if(!this.value) this.style.color='var(--gray)'">
+                    @error('birthday')
+                        <div style="color: #dc2626; font-size: 14px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-group">
                     <label for="gender">Gender</label>
                     <select id="gender" name="gender" required>
                         <option value="">Select your gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
+                        <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                        <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
                     </select>
+                    @error('gender')
+                        <div style="color: #dc2626; font-size: 14px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="address">Address</label>
-                <input type="text" id="address" name="address" placeholder="Enter your complete address" required>
+                <input type="text" id="address" name="address" placeholder="Enter your complete address" value="{{ old('address') }}" required>
+                @error('address')
+                    <div style="color: #dc2626; font-size: 14px; margin-top: 4px;">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="contact_number">Contact Number</label>
-                    <input type="tel" id="contact_number" name="contact_number" placeholder="Enter your contact number" required>
+                    <input type="tel" id="contact_number" name="contact_number" placeholder="Enter your contact number" value="{{ old('contact_number') }}" required>
+                    @error('contact_number')
+                        <div style="color: #dc2626; font-size: 14px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" value="{{ old('email') }}" required>
+                    @error('email')
+                        <div style="color: #dc2626; font-size: 14px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
@@ -353,11 +396,17 @@
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    @error('password')
+                        <div style="color: #dc2626; font-size: 14px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-group">
                     <label for="password_confirmation">Confirm Password</label>
                     <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm your password" required>
+                    @error('password_confirmation')
+                        <div style="color: #dc2626; font-size: 14px; margin-top: 4px;">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
@@ -365,16 +414,23 @@
                 <label for="role">Role</label>
                 <select id="role" name="role" required>
                     <option value="">Select your role</option>
-                    <option value="clinic_staff">Clinic Staff</option>
-                    <option value="adviser">Adviser</option>
-                    <option value="student">Student</option>
+                    <option value="clinic_staff" {{ old('role') == 'clinic_staff' ? 'selected' : '' }}>Clinic Staff</option>
+                    <option value="adviser" {{ old('role') == 'adviser' ? 'selected' : '' }}>Adviser</option>
+                    <option value="student" {{ old('role') == 'student' ? 'selected' : '' }}>Student</option>
                 </select>
+                @error('role')
+                    <div style="color: #dc2626; font-size: 14px; margin-top: 4px;">{{ $message }}</div>
+                @enderror
             </div>
 
             <button type="submit" class="btn btn-primary">
                 Create Account
             </button>
         </form>
+
+        <div class="register-footer">
+            <p>Already have an account? <a href="{{ route('login') }}">Sign in here</a></p>
+        </div>
     </div>
 
     <script>
