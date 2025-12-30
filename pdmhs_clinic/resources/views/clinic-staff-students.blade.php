@@ -183,6 +183,9 @@
                 <a class="nav-link" href="{{ route('clinic-staff.visits') }}">
                     <i></i>Visits
                 </a>
+                <a class="nav-link" href="{{ route('scanner') }}">
+                    Scanner
+                </a>
                 <a class="nav-link" href="{{ route('clinic-staff.reports') }}">
                     Reports
                 </a>

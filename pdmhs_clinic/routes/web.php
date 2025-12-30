@@ -118,6 +118,10 @@ Route::middleware(['auth'])->group(function () {
         return view('scanner');
     })->name('scanner');
 
+    Route::post('/qr-process', [DashboardController::class, 'processQRCode'])->name('qr-process');
+    Route::get('/clinic-visit/{studentId}', [DashboardController::class, 'createClinicVisit'])->name('clinic-visit.create');
+    Route::post('/clinic-visit/{studentId}', [DashboardController::class, 'storeClinicVisit'])->name('clinic-visit.store');
+
     Route::get('/architecture', function () {
         return view('architecture');
     })->name('architecture');

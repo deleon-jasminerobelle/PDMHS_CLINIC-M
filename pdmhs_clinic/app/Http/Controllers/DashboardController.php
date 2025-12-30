@@ -402,13 +402,51 @@ class DashboardController extends Controller
             }
 
             $user = Auth::user();
-            
+
             // Ensure this is actually clinic staff
             if ($user->role !== 'clinic_staff') {
                 return redirect()->route('login')->with('error', 'Access denied. Clinic staff role required.');
             }
-            
-            return view('clinic-staff-dashboard', ['user' => $user]);
+
+            // Get dashboard statistics
+            $totalStudents = Student::count();
+
+            // Today's visits - visits created today
+            $todayVisits = ClinicVisit::whereDate('visit_date', today())->count();
+
+            // New visits - visits from the last 7 days
+            $newVisits = ClinicVisit::where('visit_date', '>=', now()->subDays(7))->count();
+
+            // Pending visits - visits with status 'pending' or similar
+            $pendingVisits = ClinicVisit::where('status', 'pending')->count();
+
+            // Recent visits - last 5 visits with student info
+            $recentVisits = ClinicVisit::with('student')
+                ->orderBy('visit_date', 'desc')
+                ->limit(5)
+                ->get();
+
+            // Students with allergies - students who have allergies array populated
+            $studentsWithAllergies = Student::whereNotNull('allergies')
+                ->where('allergies', '!=', '[]')
+                ->where('allergies', '!=', '')
+                ->with(['clinicVisits' => function($query) {
+                    $query->orderBy('visit_date', 'desc')->limit(1);
+                }])
+                ->limit(5)
+                ->get();
+
+            $data = [
+                'user' => $user,
+                'totalStudents' => $totalStudents,
+                'todayVisits' => $todayVisits,
+                'newVisits' => $newVisits,
+                'pendingVisits' => $pendingVisits,
+                'recentVisits' => $recentVisits,
+                'studentsWithAllergies' => $studentsWithAllergies,
+            ];
+
+            return view('clinic-staff-dashboard', $data);
         } catch (\Exception $e) {
             Log::error('Clinic Staff Dashboard Error: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'An error occurred. Please try logging in again.');
@@ -1289,14 +1327,14 @@ class DashboardController extends Controller
     {
         try {
             $user = Auth::user();
-            
+
             // Ensure this is clinic staff
             if ($user->role !== 'clinic_staff') {
                 return response()->json(['success' => false, 'message' => 'Access denied'], 403);
             }
 
             $qrData = $request->input('qr_data');
-            
+
             Log::info('QR Code scanned', [
                 'qr_data' => $qrData,
                 'scanned_by' => $user->id
@@ -1304,15 +1342,15 @@ class DashboardController extends Controller
 
             // Try to find student by different possible QR data formats
             $student = null;
-            
+
             // Try to find by student ID first
             $student = Student::where('student_id', $qrData)->first();
-            
+
             // If not found, try to find by ID
             if (!$student && is_numeric($qrData)) {
                 $student = Student::find($qrData);
             }
-            
+
             // If not found, try to parse JSON (in case QR contains JSON data)
             if (!$student) {
                 try {
@@ -1338,7 +1376,7 @@ class DashboardController extends Controller
                         'grade_level' => $student->grade_level,
                         'section' => $student->section
                     ],
-                    'redirect_url' => route('clinic-staff.student.profile', $student->id)
+                    'redirect_url' => route('clinic-visit.create', $student->id)
                 ]);
             } else {
                 return response()->json([
@@ -1353,6 +1391,64 @@ class DashboardController extends Controller
                 'success' => false,
                 'message' => 'Error processing QR code: ' . $e->getMessage()
             ]);
+        }
+    }
+
+    /**
+     * Create a new clinic visit for a student (after QR scan)
+     */
+    public function createClinicVisit($studentId)
+    {
+        try {
+            $user = Auth::user();
+
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            // Get student information
+            $student = Student::findOrFail($studentId);
+
+            // Get student's latest vitals from the student table
+            $latestVitals = (object) [
+                'weight' => $student->weight ?? '',
+                'height' => $student->height ?? '',
+                'temperature' => $student->temperature ?? '',
+                'blood_pressure' => $student->blood_pressure ?? '',
+            ];
+
+            // Calculate age if birth date exists
+            $age = '';
+            if ($student->date_of_birth) {
+                try {
+                    $age = Carbon::parse($student->date_of_birth)->age;
+                } catch (\Exception $e) {
+                    $age = '';
+                }
+            }
+
+            // Get allergies
+            $allergies = $this->getAllergiesForStudent($student);
+
+            // Get recent visits
+            $recentVisits = $this->getClinicVisitsForStudent($student)['recent'];
+
+            $data = [
+                'user' => $user,
+                'student' => $student,
+                'latestVitals' => $latestVitals,
+                'age' => $age,
+                'allergies' => $allergies,
+                'recentVisits' => $recentVisits,
+                'currentDateTime' => now()->format('Y-m-d\TH:i'),
+            ];
+
+            return view('clinic-visit-create', $data);
+
+        } catch (\Exception $e) {
+            Log::error('Create Clinic Visit Error: ' . $e->getMessage());
+            return redirect()->route('clinic-staff.dashboard')->with('error', 'Student not found.');
         }
     }
 
@@ -1913,6 +2009,68 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             Log::info('Error fetching clinic visits: ' . $e->getMessage());
             return ['recent' => collect(), 'total' => 0, 'last' => null];
+        }
+    }
+
+    /**
+     * Store a new clinic visit
+     */
+    public function storeClinicVisit(Request $request, $studentId)
+    {
+        try {
+            $user = Auth::user();
+
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->back()->with('error', 'Access denied.');
+            }
+
+            $student = Student::findOrFail($studentId);
+
+            // Validate the request
+            $validated = $request->validate([
+                'visit_datetime' => 'required|date',
+                'visit_type' => 'required|in:Routine Checkup,Emergency,Follow-up,Illness,Injury,Vaccination,Other',
+                'chief_complaint' => 'required|string|max:1000',
+                'weight' => 'nullable|numeric|min:0|max:500',
+                'height' => 'nullable|numeric|min:0|max:300',
+                'temperature' => 'nullable|numeric|min:30|max:50',
+                'blood_pressure' => 'nullable|string|max:20',
+                'notes' => 'nullable|string|max:2000',
+                'requires_followup' => 'nullable|boolean'
+            ]);
+
+            // Create the clinic visit
+            $visit = new ClinicVisit([
+                'student_id' => $student->id,
+                'visit_date' => $validated['visit_datetime'],
+                'visit_type' => $validated['visit_type'],
+                'chief_complaint' => $validated['chief_complaint'],
+                'notes' => $validated['notes'],
+                'status' => 'completed',
+                'staff_id' => $user->id,
+                'requires_followup' => $validated['requires_followup'] ?? false
+            ]);
+
+            $visit->save();
+
+            // Update student vitals if provided
+            if ($validated['weight'] || $validated['height'] || $validated['temperature'] || $validated['blood_pressure']) {
+                $student->update([
+                    'weight' => $validated['weight'] ?: $student->weight,
+                    'height' => $validated['height'] ?: $student->height,
+                    'temperature' => $validated['temperature'] ?: $student->temperature,
+                    'blood_pressure' => $validated['blood_pressure'] ?: $student->blood_pressure,
+                ]);
+            }
+
+            return redirect()->route('clinic-staff.visits')->with('success', 'Clinic visit recorded successfully!');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Store Clinic Visit Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while saving the visit: ' . $e->getMessage())->withInput();
         }
     }
 }
