@@ -49,7 +49,7 @@
             box-shadow: 0 32px 64px rgba(30, 64, 175, 0.15);
             border: 1px solid rgba(30, 64, 175, 0.1);
             width: 731px;
-            height: 400px;
+            height: 480px;
             position: relative;
             overflow: hidden;
             transition: all 0.4s ease;
