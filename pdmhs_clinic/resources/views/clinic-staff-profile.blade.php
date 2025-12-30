@@ -322,7 +322,7 @@
                     <div class="col-md-6">
                         <label for="name" class="form-label">Full Name</label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                               id="name" name="name" value="{{ old('name', $user->name) }}" required>
+                               id="name" name="name" value="{{ old('name', $user->name) }}" required readonly>
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -332,7 +332,7 @@
                         <label for="position" class="form-label">Position</label>
                         <input type="text" class="form-control @error('position') is-invalid @enderror" 
                                id="position" name="position" value="{{ old('position', $user->position ?? '') }}" 
-                               placeholder="e.g., Nurse, Doctor, Medical Assistant">
+                               placeholder="e.g., Nurse, Doctor, Medical Assistant" readonly>
                         @error('position')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -343,7 +343,7 @@
                     <div class="col-md-6">
                         <label for="email" class="form-label">Email Address</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                               id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                               id="email" name="email" value="{{ old('email', $user->email) }}" required readonly>
                         @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -353,7 +353,7 @@
                         <label for="phone_number" class="form-label">Phone Number</label>
                         <input type="tel" class="form-control @error('phone_number') is-invalid @enderror" 
                                id="phone_number" name="phone_number" value="{{ old('phone_number', $user->phone_number ?? '') }}" 
-                               placeholder="e.g., +63 912 345 6789">
+                               placeholder="e.g., +63 912 345 6789" readonly>
                         @error('phone_number')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -365,7 +365,7 @@
                         <label for="staff_code" class="form-label">Staff Code</label>
                         <input type="text" class="form-control @error('staff_code') is-invalid @enderror" 
                                id="staff_code" name="staff_code" value="{{ old('staff_code', $user->staff_code ?? '') }}" 
-                               placeholder="e.g., SC001">
+                               placeholder="e.g., SC001" readonly>
                         @error('staff_code')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -373,8 +373,14 @@
                 </div>
 
                 <div class="mt-4">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Edit Profile
+                    <button type="button" class="btn btn-primary" id="editBtn">
+                        <i class="fas fa-edit me-2"></i>Edit Profile
+                    </button>
+                    <button type="submit" class="btn btn-primary d-none" id="saveBtn">
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
+                    <button type="button" class="btn btn-secondary d-none" id="cancelBtn">
+                        <i class="fas fa-times me-2"></i>Cancel
                     </button>
                 </div>
             </form>
@@ -443,6 +449,42 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Edit mode functionality
+        let originalValues = {};
+        
+        document.getElementById('editBtn').addEventListener('click', function() {
+            // Store original values
+            const inputs = document.querySelectorAll('#profileForm input[type="text"], #profileForm input[type="email"], #profileForm input[type="tel"]');
+            inputs.forEach(input => {
+                originalValues[input.id] = input.value;
+                input.removeAttribute('readonly');
+                input.classList.add('border-primary');
+            });
+            
+            // Toggle buttons
+            document.getElementById('editBtn').classList.add('d-none');
+            document.getElementById('saveBtn').classList.remove('d-none');
+            document.getElementById('cancelBtn').classList.remove('d-none');
+        });
+        
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            // Restore original values
+            const inputs = document.querySelectorAll('#profileForm input[type="text"], #profileForm input[type="email"], #profileForm input[type="tel"]');
+            inputs.forEach(input => {
+                input.value = originalValues[input.id];
+                input.setAttribute('readonly', true);
+                input.classList.remove('border-primary');
+            });
+            
+            // Toggle buttons
+            document.getElementById('editBtn').classList.remove('d-none');
+            document.getElementById('saveBtn').classList.add('d-none');
+            document.getElementById('cancelBtn').classList.add('d-none');
+            
+            // Clear original values
+            originalValues = {};
+        });
+
         // Profile picture upload functionality
         document.getElementById('profilePictureInput').addEventListener('change', function(e) {
             const file = e.target.files[0];

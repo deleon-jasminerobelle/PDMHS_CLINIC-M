@@ -49,9 +49,14 @@
             box-shadow: 0 32px 64px rgba(30, 64, 175, 0.15);
             border: 1px solid rgba(30, 64, 175, 0.1);
             width: 731px;
-            height: 1024px;
+            height: 400px;
             position: relative;
             overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .login-container.expanded {
+            height: 1024px;
         }
 
         .login-container::before {
@@ -284,16 +289,17 @@
         }
 
         .role-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
             margin-bottom: 16px;
+            flex-wrap: wrap;
         }
 
         .role-btn {
             padding: 16px 12px;
             border: 2px solid var(--light);
-            border-radius: 16px;
+            border-radius: 12px;
             background: var(--white);
             color: var(--gray);
             font-size: 14px;
@@ -307,6 +313,8 @@
             gap: 6px;
             position: relative;
             overflow: hidden;
+            min-width: 120px;
+            flex: 0 0 auto;
         }
 
         .role-btn::before {
@@ -340,6 +348,28 @@
             margin-bottom: 8px;
             filter: grayscale(0.3);
             transition: all 0.3s ease;
+            display: block;
+            text-align: center;
+        }
+
+        .role-btn .role-icon svg {
+            width: 32px;
+            height: 32px;
+            transition: all 0.3s ease;
+        }
+
+        /* Same blue color for all role icons */
+        .role-btn[data-role="clinic_staff"] .role-icon svg,
+        .role-btn[data-role="student"] .role-icon svg,
+        .role-btn[data-role="adviser"] .role-icon svg {
+            color: #1e40af;
+        }
+
+        .role-btn .role-icon i {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
         }
 
         .role-btn:hover .role-icon {
@@ -347,64 +377,39 @@
             transform: scale(1.1);
         }
 
+        /* Same hover color for all roles */
+        .role-btn[data-role="clinic_staff"]:hover .role-icon svg,
+        .role-btn[data-role="student"]:hover .role-icon svg,
+        .role-btn[data-role="adviser"]:hover .role-icon svg {
+            color: #1e3a8a;
+        }
+
         .role-btn.active .role-icon {
             filter: grayscale(0);
             transform: scale(1.15);
         }
 
-        /* Role-specific styling */
-        .role-btn[data-role="admin"]:hover,
-        .role-btn[data-role="admin"].active {
-            border-color: #dc2626;
-            background: linear-gradient(135deg, #fee2e2, #fecaca);
-            color: #dc2626;
+        .role-btn.active .role-icon svg {
+            color: #1e3a8a;
         }
 
-        .role-btn[data-role="clinic_staff"]:hover,
-        .role-btn[data-role="clinic_staff"].active {
-            border-color: #059669;
-            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-            color: #059669;
+        /* Consistent blue styling for all roles */
+        .role-btn:hover,
+        .role-btn.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: var(--primary);
         }
 
-        .role-btn[data-role="adviser"]:hover,
-        .role-btn[data-role="adviser"].active {
-            border-color: #7c3aed;
-            background: linear-gradient(135deg, #ede9fe, #ddd6fe);
-            color: #7c3aed;
-        }
-
-        .role-btn[data-role="student"]:hover,
-        .role-btn[data-role="student"].active {
-            border-color: #ea580c;
-            background: linear-gradient(135deg, #fed7aa, #fdba74);
-            color: #ea580c;
-        }
-
-        /* Top border colors */
-        .role-btn[data-role="admin"]:hover::before,
-        .role-btn[data-role="admin"].active::before {
-            background: #dc2626;
-        }
-
-        .role-btn[data-role="clinic_staff"]:hover::before,
-        .role-btn[data-role="clinic_staff"].active::before {
-            background: #059669;
-        }
-
-        .role-btn[data-role="adviser"]:hover::before,
-        .role-btn[data-role="adviser"].active::before {
-            background: #7c3aed;
-        }
-
-        .role-btn[data-role="student"]:hover::before,
-        .role-btn[data-role="student"].active::before {
-            background: #ea580c;
+        /* Top border colors - consistent blue */
+        .role-btn:hover::before,
+        .role-btn.active::before {
+            background: var(--primary);
         }
 
         .role-btn .role-name {
             font-family: 'Albert Sans', sans-serif;
-            font-size: 20px;
+            font-size: 23px;
             font-weight: 500;
             letter-spacing: 0.5px;
             margin-bottom: 2px;
@@ -477,48 +482,35 @@
         <div class="role-selection">
             <h3>Select Your Role</h3>
             <div class="role-buttons">
-                <div class="role-btn" data-role="admin">
-                    <div class="role-icon">🛡️</div>
-                    <div class="role-name">Admin</div>
-                </div>
                 <div class="role-btn" data-role="clinic_staff">
-                    <div class="role-icon">🩺</div>
+                    <div class="role-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20.84 4.61C19.32 3.04 17.06 3.04 15.54 4.61L12 8.69L8.46 4.61C6.94 3.04 4.68 3.04 3.16 4.61C1.64 6.18 1.64 8.82 3.16 10.39L12 20.18L20.84 10.39C22.36 8.82 22.36 6.18 20.84 4.61Z" fill="currentColor"/>
+                            <path d="M3 12H6L8 16L10 8L12 12H15" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
                     <div class="role-name">Clinic Staff</div>
                 </div>
-                <div class="role-btn" data-role="adviser">
-                    <div class="role-icon">📚</div>
-                    <div class="role-name">Adviser</div>
-                </div>
                 <div class="role-btn" data-role="student">
-                    <div class="role-icon">🎓</div>
+                    <div class="role-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" fill="currentColor"/>
+                        </svg>
+                    </div>
                     <div class="role-name">Student</div>
+                </div>
+                <div class="role-btn" data-role="adviser">
+                    <div class="role-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="role-name">Adviser</div>
                 </div>
             </div>
         </div>
 
         <!-- Login Forms for each role -->
-        <div id="admin-form" class="login-form">
-            <form method="POST" action="{{ route('login.post') }}">
-                @csrf
-                <div class="form-group">
-                    <label for="admin-email">Email Address</label>
-                    <input type="email" id="admin-email" name="username" placeholder="Enter admin email" 
-                           value="{{ old('username') }}" required>
-                    @error('username')
-                        <span class="error-text">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label for="admin-password">Password</label>
-                    <input type="password" id="admin-password" name="password" placeholder="Enter admin password" required>
-                    @error('password')
-                        <span class="error-text">{{ $message }}</span>
-                    @enderror
-                </div>
-                <button type="submit" class="btn btn-primary">Sign In as Admin</button>
-            </form>
-        </div>
-
         <div id="clinic_staff-form" class="login-form">
             <form method="POST" action="{{ route('login.post') }}">
                 @csrf
@@ -598,7 +590,6 @@
 
             // Store original button texts
             const buttonTexts = {
-                'admin-form': 'Sign In as Admin',
                 'clinic_staff-form': 'Sign In as Clinic Staff', 
                 'adviser-form': 'Sign In as Adviser',
                 'student-form': 'Sign In as Student'
@@ -607,6 +598,10 @@
             roleButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const selectedRole = this.dataset.role;
+                    
+                    // Expand the login container
+                    const loginContainer = document.querySelector('.login-container');
+                    loginContainer.classList.add('expanded');
                     
                     // Remove active class from all buttons
                     roleButtons.forEach(btn => btn.classList.remove('active'));

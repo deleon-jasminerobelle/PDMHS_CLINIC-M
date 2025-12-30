@@ -91,6 +91,7 @@ Route::middleware(['auth'])->prefix('clinic-staff')->name('clinic-staff.')->grou
     Route::put('/profile', [DashboardController::class, 'updateClinicStaffProfile'])->name('profile.update');
     Route::put('/password', [DashboardController::class, 'updateClinicStaffPassword'])->name('password.update');
     Route::post('/upload-profile-picture', [DashboardController::class, 'uploadClinicStaffProfilePicture'])->name('upload-profile-picture');
+    Route::post('/qr-process', [DashboardController::class, 'processQRCode'])->name('qr-process');
 });
 
 /*
@@ -115,10 +116,6 @@ Route::middleware(['auth'])->group(function () {
     })->name('student-health-form');
 
     Route::post('/student-health-form', [HealthFormController::class, 'store'])->name('student.health.store');
-
-    Route::get('/scanner', function () {
-        return view('scanner');
-    })->name('scanner');
 
     Route::get('/architecture', function () {
         return view('architecture');
@@ -246,6 +243,33 @@ Route::post('/test-profile-update', function (Request $request) {
         'request_data' => $request->all()
     ]);
 })->middleware('auth');
+
+// Reset clinic staff password
+Route::get('/reset-clinic-staff-password', function () {
+    try {
+        $user = \App\Models\User::where('email', 'staffcfv@pdmhs.edu.ph')->first();
+        if ($user) {
+            $user->password = \Hash::make('staff123');
+            $user->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Password reset successfully!',
+                'email' => 'staffcfv@pdmhs.edu.ph',
+                'new_password' => 'staff123'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ]);
+        }
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+});
 
 // Session debug route (no auth required)
 Route::get('/debug-session', function () {

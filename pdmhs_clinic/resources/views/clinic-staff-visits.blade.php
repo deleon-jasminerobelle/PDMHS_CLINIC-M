@@ -7,7 +7,7 @@
     <title>Medical Visits - PDMHS Clinic</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -24,11 +24,12 @@
         
         body {
             background-color: #f8f9fa;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Albert Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 600;
         }
 
         .navbar-nav .nav-link {
-            font-family: 'Epilogue', sans-serif !important;
+            font-family: 'Albert Sans', sans-serif !important;
             font-size: 25px !important;
             font-weight: 600 !important;
         }
@@ -48,202 +49,124 @@
         
         .page-title {
             font-family: 'Albert Sans', sans-serif;
-            font-weight: 800;
+            font-weight: 600;
             font-size: 32px;
             margin-bottom: 0.5rem;
         }
         
         .page-subtitle {
             font-family: 'Albert Sans', sans-serif;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 16px;
             color: #6c757d;
             margin-bottom: 0;
         }
-        
-        .search-filters {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+        /* QR Scanner Modal Styles */
+        .scanner-container {
+            max-width: 500px;
+            margin: 0 auto;
         }
-        
-        .visits-table {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .table th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: #495057;
-            padding: 1rem;
-        }
-        
-        .table td {
-            padding: 1rem;
-            vertical-align: middle;
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 14px;
-        }
-        
-        .student-info {
-            display: flex;
-            align-items: center;
-        }
-        
-        .student-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: var(--gradient);
+
+        .scanner-video {
+            width: 100%;
+            height: 350px;
+            background: #000;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: 600;
-            margin-right: 10px;
-            font-size: 14px;
-        }
-        
-        .student-name {
-            font-weight: 600;
-            color: #212529;
-            margin-bottom: 2px;
-        }
-        
-        .student-number {
-            font-size: 12px;
-            color: #6c757d;
-        }
-        
-        .visit-type-badge {
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
-        .type-routine {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .type-emergency {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .type-follow-up {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
-        
-        .type-referral {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
-        .status-open {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        
-        .status-closed {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
-        
-        .status-referred {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .btn-action {
-            padding: 6px 12px;
-            font-size: 12px;
-            border-radius: 6px;
-            margin: 0 2px;
-        }
-        
-        .btn-view {
-            background-color: #007bff;
-            border-color: #007bff;
-            color: white;
-        }
-        
-        .btn-edit {
-            background-color: #28a745;
-            border-color: #28a745;
-            color: white;
-        }
-        
-        .btn-print {
-            background-color: #6c757d;
-            border-color: #6c757d;
-            color: white;
-        }
-        
-        .filter-controls {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .search-input {
-            flex: 1;
-            min-width: 300px;
-        }
-        
-        .complaint {
-            max-width: 200px;
+            position: relative;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        .visit-datetime {
-            font-size: 13px;
-            color: #495057;
-        }
-        
-        .visit-date {
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-        
-        .visit-time {
-            color: #6c757d;
         }
 
-        /* New Visit Modal Styles */
+        .scanner-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .scanner-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 3px solid var(--primary);
+            border-radius: 15px;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+        }
+
+        .scanner-placeholder {
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 600;
+        }
+
+        .scanner-placeholder::before {
+            content: "📱";
+            font-size: 40px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .scanner-status {
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: 'Albert Sans', sans-serif;
+        }
+
+        .scanner-status.success {
+            background: rgba(30, 64, 175, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(30, 64, 175, 0.2);
+        }
+
+        .scanner-status.error {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .instructions h6 {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .instructions ol {
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 14px;
+            color: #495057;
+            margin-bottom: 0;
+        }
+
         .visit-form-section {
             background: #f8f9fa;
             border-radius: 8px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            border-left: 4px solid #007bff;
+            border-left: 4px solid var(--primary);
         }
 
         .section-title {
-            color: #007bff;
+            color: var(--primary);
             font-weight: 600;
             margin-bottom: 1rem;
             font-size: 1.1rem;
+            font-family: 'Albert Sans', sans-serif;
         }
 
         .student-result-item {
@@ -257,22 +180,21 @@
 
         .student-result-item:hover {
             background-color: #f8f9fa;
-            border-color: #007bff;
-        }
-
-        .student-result-item.selected {
-            background-color: #e3f2fd;
-            border-color: #007bff;
+            border-color: var(--primary);
         }
 
         .student-name {
             font-weight: 600;
             color: #212529;
+            margin-bottom: 2px;
+            font-family: 'Albert Sans', sans-serif;
         }
 
         .student-details {
-            font-size: 0.875rem;
+            font-size: 12px;
             color: #6c757d;
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -280,17 +202,16 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{{ route('clinic-staff.dashboard') }}">
-              
             </a>
             <div class="navbar-nav me-auto">
                 <a class="nav-link" href="{{ route('clinic-staff.dashboard') }}">
                     Dashboard
                 </a>
                 <a class="nav-link" href="{{ route('clinic-staff.students') }}">
-                    <i></i>Students
+                    Students
                 </a>
                 <a class="nav-link active" href="{{ route('clinic-staff.visits') }}">
-                    <i></i>Visits
+                    Visits
                 </a>
                 <a class="nav-link" href="{{ route('clinic-staff.reports') }}">
                     Reports
@@ -320,6 +241,23 @@
     </nav>
 
     <div class="container mt-4">
+        <!-- Success/Error Messages -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Success!</strong> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Error!</strong> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <!-- Page Header -->
         <div class="page-header">
             <div class="d-flex justify-content-between align-items-center">
@@ -333,128 +271,31 @@
             </div>
         </div>
 
-        <!-- Search and Filters -->
-        <div class="search-filters">
-            <div class="filter-controls">
-                <div class="search-input">
-                    <input type="text" class="form-control" id="searchInput" placeholder="Search by student name or complaint">
-                </div>
-                <input type="date" class="form-control" id="dateFilter" style="width: auto;">
-                <select class="form-select" id="statusFilter" style="width: auto;">
-                    <option value="">All Status</option>
-                    <option value="Open">Open</option>
-                    <option value="Closed">Closed</option>
-                    <option value="Referred">Referred</option>
-                </select>
-                <select class="form-select" id="typeFilter" style="width: auto;">
-                    <option value="">All Types</option>
-                    <option value="Routine">Routine</option>
-                    <option value="Emergency">Emergency</option>
-                    <option value="Follow-up">Follow-up</option>
-                    <option value="Referral">Referral</option>
-                </select>
-            </div>
-        </div>
-
         <!-- Visits Table -->
-        <div class="visits-table">
-            <div class="table-responsive">
-                <table class="table" id="visitsTable">
-                    <thead>
-                        <tr>
-                            <th>Student</th>
-                            <th>Date & Time</th>
-                            <th>Type</th>
-                            <th>Chief Complaint</th>
-                            <th>Diagnosis</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($visits as $visit)
-                        <tr>
-                            <td>
-                                <div class="student-info">
-                                    <div class="student-avatar">
-                                        {{ strtoupper(substr($visit->student->first_name, 0, 1)) }}
-                                    </div>
-                                    <div>
-                                        <div class="student-name">
-                                            {{ $visit->student->first_name }} {{ $visit->student->last_name }}
-                                        </div>
-                                        <div class="student-number">
-                                            {{ $visit->student->formatted_student_number }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="visit-datetime">
-                                    <div class="visit-date">{{ $visit->visit_datetime->format('M d, Y') }}</div>
-                                    <div class="visit-time">{{ $visit->visit_datetime->format('h:i A') }}</div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="visit-type-badge type-{{ strtolower(str_replace(' ', '-', $visit->visit_type)) }}">
-                                    {{ $visit->visit_type }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="chief-complaint" title="{{ $visit->chief_complaint }}">
-                                    {{ $visit->chief_complaint ?: 'Not specified' }}
-                                </div>
-                            </td>
-                            <td>
-                                @if($visit->diagnoses->count() > 0)
-                                    {{ $visit->diagnoses->first()->diagnosis_name }}
-                                    @if($visit->diagnoses->count() > 1)
-                                        <small class="text-muted">(+{{ $visit->diagnoses->count() - 1 }} more)</small>
-                                    @endif
-                                @else
-                                    <span class="text-muted">Pending</span>
-                                @endif
-                            </td>
-                            <td>
-                                <span class="status-badge status-{{ strtolower($visit->status) }}">
-                                    {{ $visit->status }}
-                                </span>
-                            </td>
-                            <td>
-                                <button class="btn btn-action btn-view" onclick="showVisitDetails({{ $visit->visit_id }})">
-                                    <i class="fas fa-eye me-1"></i>View
-                                </button>
-                                @if($visit->status === 'Open')
-                                <button class="btn btn-action btn-edit" onclick="editVisit({{ $visit->visit_id }})">
-                                    <i class="fas fa-edit me-1"></i>Edit
-                                </button>
-                                @endif
-                                <button class="btn btn-action btn-print" onclick="printVisit({{ $visit->visit_id }})">
-                                    <i class="fas fa-print me-1"></i>Print
-                                </button>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="7" class="text-center py-4">
-                                <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
-                                <p class="text-muted">No visits found</p>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Complaint</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">No visits recorded yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-
-        <!-- Visit count info -->
-        <div class="mt-3">
-            <small class="text-muted">Showing {{ $visits->count() }} visits</small>
         </div>
     </div>
-
-    <!-- Include Visit Details Modal -->
-    @include('visit-details-modal')
 
     <!-- New Visit Modal -->
     <div class="modal fade" id="newVisitModal" tabindex="-1" aria-labelledby="newVisitModalLabel" aria-hidden="true">
@@ -469,13 +310,6 @@
                 <form id="newVisitForm" method="POST" action="{{ route('clinic-staff.visits.store') }}">
                     @csrf
                     <div class="modal-body">
-                        <!-- Back to Visits Link -->
-                        <div class="mb-3">
-                            <a href="#" class="text-primary" data-bs-dismiss="modal">
-                                <i class="fas fa-arrow-left me-1"></i>Back to Visits
-                            </a>
-                        </div>
-
                         <!-- Student Information Section -->
                         <div class="visit-form-section">
                             <h6 class="section-title">
@@ -484,7 +318,7 @@
                             
                             <!-- QR Code Scanner Button -->
                             <div class="text-center mb-3">
-                                <button type="button" class="btn btn-success btn-lg" onclick="openQRScanner()">
+                                <button type="button" class="btn btn-primary btn-lg" onclick="openQRScanner()">
                                     <i class="fas fa-qrcode me-2"></i>Scan Student QR Code
                                 </button>
                                 <p class="text-muted mt-2">or search manually</p>
@@ -581,6 +415,21 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Weight (kg)</label>
+                                        <input type="number" step="0.1" class="form-control" name="weight" placeholder="50.0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Height (cm)</label>
+                                        <input type="number" class="form-control" name="height" placeholder="160">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Assessment & Treatment Section -->
@@ -654,99 +503,142 @@
         </div>
     </div>
 
+    <!-- QR Scanner Modal -->
+    <div class="modal fade" id="qrScannerModal" tabindex="-1" aria-labelledby="qrScannerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="qrScannerModalLabel">
+                        <i class="fas fa-qrcode me-2"></i>Scan Student QR Code
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="scanner-container mb-3">
+                        <div class="scanner-video" id="modal-scanner-video">
+                            <div class="scanner-placeholder">
+                                <div>Camera Access Required</div>
+                                <div style="font-size: 14px; margin-top: 8px;">Click "Start Scanner" to begin</div>
+                            </div>
+                            <div class="scanner-overlay"></div>
+                        </div>
+
+                        <div class="scanner-controls mt-3">
+                            <button class="btn btn-primary" id="modal-start-btn">
+                                <i class="fas fa-camera me-1"></i> Start Scanner
+                            </button>
+                            <button class="btn btn-secondary" id="modal-stop-btn" disabled>
+                                <i class="fas fa-stop me-1"></i> Stop Scanner
+                            </button>
+                        </div>
+
+                        <div class="scanner-status mt-3" id="modal-scanner-status" style="display: none;"></div>
+                    </div>
+
+                    <div class="instructions mt-4">
+                        <h6><i class="fas fa-info-circle me-2"></i>Instructions</h6>
+                        <ol class="text-start">
+                            <li>Click "Start Scanner" to activate the camera</li>
+                            <li>Position the student's QR code within the highlighted frame</li>
+                            <li>Wait for automatic detection and student selection</li>
+                            <li>The modal will close automatically once a student is found</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/@zxing/library@latest"></script>
     <script>
-        // Search and filter functionality
-        document.getElementById('searchInput').addEventListener('input', filterVisits);
-        document.getElementById('dateFilter').addEventListener('change', filterVisits);
-        document.getElementById('statusFilter').addEventListener('change', filterVisits);
-        document.getElementById('typeFilter').addEventListener('change', filterVisits);
+        // Global variables
+        let qrCodeReader;
+        let isQRScanning = false;
+        let qrVideoElement;
 
-        function filterVisits() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const dateFilter = document.getElementById('dateFilter').value;
-            const statusFilter = document.getElementById('statusFilter').value;
-            const typeFilter = document.getElementById('typeFilter').value;
-            const tableRows = document.querySelectorAll('#visitsTable tbody tr');
-
-            let visibleCount = 0;
-
-            tableRows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (cells.length === 1) return; // Skip "no records" row
-
-                const studentName = cells[0].textContent.toLowerCase();
-                const visitDate = cells[1].textContent;
-                const visitType = cells[2].textContent.trim();
-                const complaint = cells[3].textContent.toLowerCase();
-                const status = cells[5].textContent.trim();
-
-                const matchesSearch = studentName.includes(searchTerm) || complaint.includes(searchTerm);
-                const matchesDate = !dateFilter || visitDate.includes(new Date(dateFilter).toLocaleDateString());
-                const matchesStatus = !statusFilter || status === statusFilter;
-                const matchesType = !typeFilter || visitType === typeFilter;
-
-                if (matchesSearch && matchesDate && matchesStatus && matchesType) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
-            // Update count display
-            const countDisplay = document.querySelector('.mt-3 small');
-            if (countDisplay) {
-                countDisplay.textContent = `Showing ${visibleCount} visits`;
-            }
-        }
-
-        function editVisit(visitId) {
-            // For now, just show an alert - edit functionality will be added later
-            alert('Edit visit functionality coming soon!');
-        }
-
-        function printVisit(visitId) {
-            // For now, just show an alert - print functionality will be added later
-            alert('Print visit functionality coming soon!');
-        }
-
-        // New Visit Modal Functions
+        // New Visit Modal Functions - Define first
         function showNewVisitModal() {
-            const modal = new bootstrap.Modal(document.getElementById('newVisitModal'));
-            modal.show();
+            console.log('showNewVisitModal called');
+            try {
+                if (typeof bootstrap === 'undefined') {
+                    console.error('Bootstrap is not loaded');
+                    alert('Bootstrap library not loaded. Please refresh the page.');
+                    return;
+                }
+
+                const modalElement = document.getElementById('newVisitModal');
+                if (!modalElement) {
+                    console.error('newVisitModal element not found');
+                    return;
+                }
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+                console.log('Modal should be showing now');
+            } catch (error) {
+                console.error('Error showing modal:', error);
+                alert('Error opening New Visit modal. Please refresh the page and try again.');
+            }
         }
 
         function openQRScanner() {
-            // For now, show alert - QR scanner will be implemented later
-            alert('QR Scanner functionality coming soon!');
+            try {
+                const qrModal = new bootstrap.Modal(document.getElementById('qrScannerModal'));
+                qrModal.show();
+            } catch (error) {
+                console.error('Error opening QR scanner:', error);
+                alert('Error opening QR scanner. Please try again.');
+            }
         }
 
-        // Student search functionality
-        document.getElementById('studentSearch').addEventListener('input', function() {
-            const searchTerm = this.value.trim();
+        function selectStudent(studentId, studentName, studentNumber, gradeSection) {
+            document.getElementById('selectedStudentId').value = studentId;
             
-            if (searchTerm.length >= 2) {
-                searchStudents(searchTerm);
-            } else {
-                document.getElementById('studentResults').style.display = 'none';
+            const selectedContainer = document.getElementById('selectedStudent');
+            selectedContainer.innerHTML = `
+                <strong>Selected Student:</strong><br>
+                <strong>${studentName}</strong><br>
+                Student #: ${studentNumber} | Grade: ${gradeSection}
+            `;
+            selectedContainer.style.display = 'block';
+            
+            // Hide search results
+            const studentResults = document.getElementById('studentResults');
+            if (studentResults) {
+                studentResults.style.display = 'none';
             }
-        });
+            
+            // Clear search input
+            const studentSearch = document.getElementById('studentSearch');
+            if (studentSearch) {
+                studentSearch.value = '';
+            }
+            
+            document.getElementById('saveVisitBtn').disabled = false;
+        }
 
         function searchStudents(searchTerm) {
             // Make AJAX request to search students
             fetch(`/clinic-staff/students/search?q=${encodeURIComponent(searchTerm)}`)
                 .then(response => response.json())
                 .then(data => {
-                    displayStudentResults(data.students);
+                    displayStudentResults(data.students || []);
                 })
                 .catch(error => {
                     console.error('Error searching students:', error);
+                    displayStudentResults([]);
                 });
         }
 
         function displayStudentResults(students) {
             const resultsContainer = document.getElementById('studentResults');
+            
+            if (!resultsContainer) return;
             
             if (students.length === 0) {
                 resultsContainer.innerHTML = '<p class="text-muted">No students found</p>';
@@ -771,50 +663,204 @@
             resultsContainer.style.display = 'block';
         }
 
-        function selectStudent(studentId, studentName, studentNumber, gradeSection) {
-            // Set the hidden input value
-            document.getElementById('selectedStudentId').value = studentId;
+        function stopQRScanning() {
+            isQRScanning = false;
+            const startBtn = document.getElementById('modal-start-btn');
+            const stopBtn = document.getElementById('modal-stop-btn');
             
-            // Show selected student info
-            const selectedContainer = document.getElementById('selectedStudent');
-            selectedContainer.innerHTML = `
-                <strong>Selected Student:</strong><br>
-                <strong>${studentName}</strong><br>
-                Student #: ${studentNumber} | Grade: ${gradeSection}
-            `;
-            selectedContainer.style.display = 'block';
-            
-            // Hide search results
-            document.getElementById('studentResults').style.display = 'none';
-            
-            // Clear search input
-            document.getElementById('studentSearch').value = '';
-            
-            // Enable save button
-            document.getElementById('saveVisitBtn').disabled = false;
+            if (startBtn) startBtn.disabled = false;
+            if (stopBtn) stopBtn.disabled = true;
+
+            if (qrVideoElement && qrVideoElement.srcObject) {
+                qrVideoElement.srcObject.getTracks().forEach(track => track.stop());
+            }
+
+            if (qrCodeReader) {
+                qrCodeReader.reset();
+            }
+
+            const modalVideo = document.getElementById('modal-scanner-video');
+            if (modalVideo) {
+                modalVideo.innerHTML = `
+                    <div class="scanner-placeholder">
+                        <div>Camera Access Required</div>
+                        <div style="font-size: 14px; margin-top: 8px;">Click "Start Scanner" to begin</div>
+                    </div>
+                    <div class="scanner-overlay"></div>
+                `;
+            }
         }
 
-        // Form submission
-        document.getElementById('newVisitForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Simple form submission for testing
-            const formData = new FormData(this);
-            
-            // Check if student is selected
-            if (!document.getElementById('selectedStudentId').value) {
-                alert('Please select a student first.');
-                return;
+        function showQRStatus(message, type) {
+            const status = document.getElementById('modal-scanner-status');
+            if (status) {
+                status.textContent = message;
+                status.className = 'scanner-status ' + type;
+                status.style.display = 'block';
+
+                if (type !== 'success') {
+                    setTimeout(() => {
+                        status.style.display = 'none';
+                    }, 5000);
+                }
             }
-            
-            // Show loading state
-            const saveBtn = document.getElementById('saveVisitBtn');
-            const originalText = saveBtn.innerHTML;
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Creating...';
-            saveBtn.disabled = true;
-            
-            // Submit form normally for now
-            this.submit();
+        }
+
+        function processQRData(qrData) {
+            showQRStatus('Processing QR code...', 'success');
+
+            fetch('{{ route("clinic-staff.qr-process") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    qr_data: qrData
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showQRStatus('Student found! Selecting student...', 'success');
+                    
+                    selectStudent(
+                        data.student.id, 
+                        data.student.name, 
+                        data.student.student_id || 'N/A', 
+                        (data.student.grade_level || '') + ' ' + (data.student.section || '')
+                    );
+                    
+                    setTimeout(() => {
+                        const qrModal = bootstrap.Modal.getInstance(document.getElementById('qrScannerModal'));
+                        if (qrModal) qrModal.hide();
+                    }, 2000);
+                } else {
+                    showQRStatus('Student not found in database', 'error');
+                    setTimeout(() => {
+                        if (!isQRScanning) {
+                            const startBtn = document.getElementById('modal-start-btn');
+                            if (startBtn) startBtn.click();
+                        }
+                    }, 3000);
+                }
+            })
+            .catch(error => {
+                console.error('Error processing QR code:', error);
+                showQRStatus('Error processing QR code', 'error');
+            });
+        }
+
+        // Make functions available globally
+        window.showNewVisitModal = showNewVisitModal;
+        window.openQRScanner = openQRScanner;
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+
+            // Initialize ZXing code reader
+            try {
+                qrCodeReader = new ZXing.BrowserQRCodeReader();
+                console.log('QR code reader initialized');
+            } catch (error) {
+                console.error('Failed to initialize QR code reader:', error);
+            }
+
+            // QR Scanner event listeners
+            const modalStartBtn = document.getElementById('modal-start-btn');
+            const modalStopBtn = document.getElementById('modal-stop-btn');
+
+            if (modalStartBtn) {
+                modalStartBtn.addEventListener('click', async function() {
+                    try {
+                        isQRScanning = true;
+                        modalStartBtn.disabled = true;
+                        modalStopBtn.disabled = false;
+
+                        const constraints = {
+                            video: { facingMode: 'environment' }
+                        };
+
+                        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                        qrVideoElement = document.createElement('video');
+                        qrVideoElement.srcObject = stream;
+                        qrVideoElement.setAttribute('playsinline', '');
+                        qrVideoElement.play();
+
+                        const modalVideo = document.getElementById('modal-scanner-video');
+                        modalVideo.innerHTML = '';
+                        modalVideo.appendChild(qrVideoElement);
+
+                        const overlay = document.createElement('div');
+                        overlay.className = 'scanner-overlay';
+                        modalVideo.appendChild(overlay);
+
+                        qrCodeReader.decodeFromVideoDevice(undefined, qrVideoElement, (result, err) => {
+                            if (result) {
+                                stopQRScanning();
+                                processQRData(result.text);
+                            }
+                            if (err && !(err instanceof ZXing.NotFoundException)) {
+                                console.error('QR Scanning error:', err);
+                            }
+                        });
+
+                    } catch (err) {
+                        console.error('Camera access error:', err);
+                        showQRStatus('Error accessing camera. Please check permissions and try again.', 'error');
+                        stopQRScanning();
+                    }
+                });
+            }
+
+            if (modalStopBtn) {
+                modalStopBtn.addEventListener('click', stopQRScanning);
+            }
+
+            // Clean up when QR modal is closed
+            const qrModal = document.getElementById('qrScannerModal');
+            if (qrModal) {
+                qrModal.addEventListener('hidden.bs.modal', stopQRScanning);
+            }
+
+            // Form submission handling
+            const newVisitForm = document.getElementById('newVisitForm');
+            if (newVisitForm) {
+                newVisitForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (!document.getElementById('selectedStudentId').value) {
+                        alert('Please select a student first.');
+                        return;
+                    }
+                    
+                    const saveBtn = document.getElementById('saveVisitBtn');
+                    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Creating...';
+                    saveBtn.disabled = true;
+                    
+                    this.submit();
+                });
+            }
+
+            // Student search functionality
+            const studentSearchInput = document.getElementById('studentSearch');
+            if (studentSearchInput) {
+                studentSearchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.trim();
+                    
+                    if (searchTerm.length >= 2) {
+                        searchStudents(searchTerm);
+                    } else {
+                        const studentResults = document.getElementById('studentResults');
+                        if (studentResults) {
+                            studentResults.style.display = 'none';
+                        }
+                    }
+                });
+            }
+
+            console.log('All event listeners initialized');
         });
     </script>
 </body>

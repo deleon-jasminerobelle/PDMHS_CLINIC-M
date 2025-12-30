@@ -110,7 +110,7 @@
             border: 2px solid var(--light);
             border-radius: 20px;
             font-family: 'Albert Sans', sans-serif;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 16px;
             transition: all 0.3s ease;
             background: #e9ecef;
@@ -122,39 +122,47 @@
             box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
         }
 
+        .form-group select option {
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 8px;
+        }
+
         /* Enhanced Date Picker Styling */
         input[type="date"] {
             position: relative;
             cursor: pointer;
         }
 
+        /* Hide default calendar picker */
         input[type="date"]::-webkit-calendar-picker-indicator {
-            background: transparent;
-            bottom: 0;
-            color: transparent;
-            cursor: pointer;
-            height: auto;
-            left: 0;
+            opacity: 0;
             position: absolute;
-            right: 0;
-            top: 0;
-            width: auto;
-        }
-
-        input[type="date"]::-webkit-inner-spin-button,
-        input[type="date"]::-webkit-clear-button {
-            display: none;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
         }
 
         /* Custom calendar icon */
-        input[type="date"]::before {
-            content: "📅";
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            font-size: 18px;
+        input[type="date"] {
+            position: relative;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%231e40af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='15' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3Ccircle cx='8' cy='14' r='1'/%3E%3Ccircle cx='12' cy='14' r='1'/%3E%3Ccircle cx='16' cy='14' r='1'/%3E%3Ccircle cx='8' cy='17' r='1'/%3E%3Ccircle cx='12' cy='17' r='1'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px 20px;
+            padding-right: 45px;
+        }
+
+        /* Enhanced hover effect */
+        input[type="date"]:hover {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='15' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3Ccircle cx='8' cy='14' r='1'/%3E%3Ccircle cx='12' cy='14' r='1'/%3E%3Ccircle cx='16' cy='14' r='1'/%3E%3Ccircle cx='8' cy='17' r='1'/%3E%3Ccircle cx='12' cy='17' r='1'/%3E%3C/svg%3E");
+        }
+
+        /* Focus state */
+        input[type="date"]:focus {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%231e40af' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='15' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3Ccircle cx='8' cy='14' r='1'/%3E%3Ccircle cx='12' cy='14' r='1'/%3E%3Ccircle cx='16' cy='14' r='1'/%3E%3Ccircle cx='8' cy='17' r='1'/%3E%3Ccircle cx='12' cy='17' r='1'/%3E%3C/svg%3E");
         }
 
         /* Date input text styling */
@@ -357,7 +365,6 @@
                 <label for="role">Role</label>
                 <select id="role" name="role" required>
                     <option value="">Select your role</option>
-                    <option value="admin">Admin</option>
                     <option value="clinic_staff">Clinic Staff</option>
                     <option value="adviser">Adviser</option>
                     <option value="student">Student</option>

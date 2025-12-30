@@ -94,7 +94,10 @@
         /* Hero Section */
         .hero {
             min-height: 100vh;
-            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            background: linear-gradient(rgba(248, 250, 252, 0.8), rgba(224, 242, 254, 0.8)), url('/pdmhs.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -123,7 +126,7 @@
         }
 
         .hero h1 {
-            font-size: 4rem;
+            font-size: 70px;
             font-weight: 800;
             margin-bottom: 1.5rem;
             background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
@@ -133,7 +136,8 @@
         }
 
         .hero p {
-            font-size: 1.25rem;
+            font-size: 23px;
+            font-weight: 500;
             color: var(--gray);
             margin-bottom: 2rem;
             max-width: 600px;
@@ -185,45 +189,7 @@
             transform: translateY(-3px);
         }
 
-        /* Stats Section */
-        .stats {
-            padding: 5rem 2rem;
-            background: var(--white);
-        }
 
-        .stats-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            text-align: center;
-        }
-
-        .stat-item {
-            padding: 2rem;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
-            border: 1px solid rgba(30, 64, 175, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 1.1rem;
-            color: var(--gray);
-            font-weight: 500;
-        }
 
         /* Features Section */
         .features {
@@ -331,6 +297,7 @@
 
         .about-content p {
             font-size: 1.1rem;
+            font-weight: 500;
             color: var(--gray);
             margin-bottom: 1.5rem;
             line-height: 1.7;
@@ -347,46 +314,7 @@
             font-size: 4rem;
         }
 
-        /* Footer */
-        .footer {
-            background: var(--dark);
-            color: var(--white);
-            padding: 3rem 2rem 2rem;
-        }
 
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .footer-section h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-
-        .footer-section p,
-        .footer-section a {
-            color: #94a3b8;
-            text-decoration: none;
-            line-height: 1.6;
-        }
-
-        .footer-section a:hover {
-            color: var(--accent);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid #334155;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            text-align: center;
-            color: #64748b;
-        }
 
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -399,7 +327,8 @@
             }
 
             .hero p {
-                font-size: 1.1rem;
+                font-size: 23px;
+                font-weight: 500;
             }
 
             .cta-buttons {
@@ -450,82 +379,61 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content fade-in">
-            <h1>Digital Health Management for PDMHS</h1>
-            <p>Streamline student health records, appointments, and clinic operations with our comprehensive management system designed specifically for educational institutions.</p>
+            <h1>PDMHS Student</h1>
+            <h1>Medical System</h1>
+            
+            <p>Modern Healthcare Management designed specifically for PDMHS students. Secure, Efficient, and Accessible.</p>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="stats-container">
-            <div class="stat-item fade-in">
-                <div class="stat-number">1000+</div>
-                <div class="stat-label">Students Registered</div>
-            </div>
-            <div class="stat-item fade-in">
-                <div class="stat-number">500+</div>
-                <div class="stat-label">Health Visits Recorded</div>
-            </div>
-            <div class="stat-item fade-in">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">Staff Members</div>
-            </div>
-            <div class="stat-item fade-in">
-                <div class="stat-number">99%</div>
-                <div class="stat-label">System Uptime</div>
-            </div>
-        </div>
-    </section>
+
 
     <!-- Features Section -->
     <section class="features">
         <div class="features-container">
-            <div class="section-header fade-in">
-                <h2>Comprehensive Health Management</h2>
-                <p>Everything you need to manage student health records, appointments, and clinic operations in one integrated platform.</p>
-            </div>
+
             <div class="features-grid">
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
                         <i class="fas fa-file-medical"></i>
                     </div>
-                    <h3>Digital Health Records</h3>
-                    <p>Secure, comprehensive digital health records for every student with easy access for authorized personnel and complete medical history tracking.</p>
+                    <h3>Comprehensive Student Health Records</h3>
+                    <p>Maintain complete digital health profiles for every PDMHS student with secure storage of medical history, allergies, medications, and vital signs. Instant access for authorized clinic staff and seamless record updates.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
                         <i class="fas fa-calendar-check"></i>
                     </div>
-                    <h3>Appointment Scheduling</h3>
-                    <p>Streamlined appointment booking system with automated reminders, conflict detection, and seamless calendar integration.</p>
+                    <h3>Smart Visit Management</h3>
+                    <p>Streamlined clinic visit tracking with QR code student identification, real-time visit logging, and automated parent notifications. Efficient workflow for busy school clinic operations.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
                         <i class="fas fa-syringe"></i>
                     </div>
-                    <h3>Immunization Tracking</h3>
-                    <p>Complete immunization record management with automated compliance tracking, reminder notifications, and reporting capabilities.</p>
+                    <h3>Immunization & Health Monitoring</h3>
+                    <p>Track vaccination records, monitor health compliance requirements, and generate automated reminders for upcoming immunizations. Ensure all students meet health standards for school attendance.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3>Health Analytics</h3>
-                    <p>Comprehensive reporting and analytics dashboard providing insights into student health trends, clinic efficiency, and resource utilization.</p>
+                    <h3>Advanced Health Analytics</h3>
+                    <p>Generate comprehensive reports on student health trends, clinic visit patterns, and health incident tracking. Data-driven insights to improve school health programs and resource allocation.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3>Secure & Compliant</h3>
-                    <p>HIPAA-compliant security measures with role-based access control, data encryption, and comprehensive audit trails.</p>
+                    <h3>Privacy & Security First</h3>
+                    <p>Bank-level security with encrypted data storage, role-based access controls, and complete audit trails. Protecting sensitive student health information with the highest security standards.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
-                    <h3>Mobile Friendly</h3>
-                    <p>Responsive design that works seamlessly across all devices, enabling access to health information anytime, anywhere.</p>
+                    <h3>Multi-Device Accessibility</h3>
+                    <p>Access the system seamlessly from any device - desktop, tablet, or smartphone. Responsive design ensures clinic staff can manage student health records efficiently from anywhere on campus.</p>
                 </div>
             </div>
         </div>
@@ -535,10 +443,10 @@
     <section class="about" id="about">
         <div class="about-container">
             <div class="about-content fade-in">
-                <h2>About PDMHS Clinic System</h2>
-                <p>Our clinic management system is specifically designed for educational institutions, providing a comprehensive solution for managing student health records, clinic operations, and health services.</p>
-                <p>Built with modern technology and user-friendly interfaces, our system ensures that healthcare providers, administrators, and students have seamless access to the tools and information they need.</p>
-                <p>We prioritize security, compliance, and ease of use to create a platform that enhances the quality of healthcare services in educational settings.</p>
+                <h2>Transforming Healthcare at PDMHS</h2>
+                <p>The PDMHS Clinic Management System represents a revolutionary approach to student healthcare in educational environments. Designed specifically for the unique needs of our school community, this comprehensive platform streamlines every aspect of clinic operations while maintaining the highest standards of care.</p>
+                <p>Our innovative system empowers clinic staff with cutting-edge tools for efficient patient management, enables students to access their health information seamlessly, and provides administrators with valuable insights into campus health trends. From QR code-based student identification to automated parent notifications, every feature is crafted to enhance the healthcare experience.</p>
+                <p>At PDMHS, we believe that technology should serve humanity. That's why our clinic system prioritizes user experience, data security, and clinical efficiency - ensuring that healthcare providers can focus on what matters most: the health and wellbeing of our students.</p>
             </div>
             <div class="about-image fade-in">
                 <i class="fas fa-hospital"></i>
@@ -546,38 +454,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>PDMHS Clinic System</h3>
-                <p>Comprehensive health management solution for educational institutions, designed to streamline clinic operations and improve student healthcare services.</p>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <p><a href="{{ route('login') }}">Login</a></p>
-                <p><a href="{{ route('register') }}">Register</a></p>
-                <p><a href="#features">Features</a></p>
-                <p><a href="#about">About</a></p>
-            </div>
-            <div class="footer-section">
-                <h3>Contact Information</h3>
-                <p>PDMHS High School</p>
-                <p>Email: clinic@pdmhs.edu.ph</p>
-                <p>Phone: (02) 123-4567</p>
-            </div>
-            <div class="footer-section">
-                <h3>Support</h3>
-                <p><a href="#">Help Center</a></p>
-                <p><a href="#">Documentation</a></p>
-                <p><a href="#">System Status</a></p>
-                <p><a href="#">Contact Support</a></p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 PDMHS Clinic Management System. All rights reserved.</p>
-        </div>
-    </footer>
+
 
     <script>
         // Navbar scroll effect

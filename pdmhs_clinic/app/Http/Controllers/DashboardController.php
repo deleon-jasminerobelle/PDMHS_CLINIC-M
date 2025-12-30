@@ -459,10 +459,6 @@ class DashboardController extends Controller
                 case 'clinic_staff':
                     Log::info('Redirecting to clinic staff dashboard');
                     return redirect()->route('clinic-staff.dashboard');
-                case 'admin':
-                    Log::info('Loading admin dashboard');
-                    // For admin, show generic dashboard
-                    break;
                 default:
                     Log::warning('Unknown role detected', ['role' => $user->role]);
                     return redirect()->route('login')->with('error', 'Invalid user role.');
@@ -1275,6 +1271,101 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             \Log::error('Clinic Staff Password Update Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'An error occurred while updating your password.');
+        }
+    }
+
+    /**
+     * Show clinic staff QR scanner page
+     */
+    public function clinicStaffScanner()
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            return view('clinic-staff-scanner', compact('user'));
+
+        } catch (\Exception $e) {
+            \Log::error('Clinic Staff Scanner Error: ' . $e->getMessage());
+            return redirect()->route('clinic-staff.dashboard')->with('error', 'An error occurred loading scanner.');
+        }
+    }
+
+    /**
+     * Process QR code scan
+     */
+    public function processQRCode(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            
+            // Ensure this is clinic staff
+            if ($user->role !== 'clinic_staff') {
+                return response()->json(['success' => false, 'message' => 'Access denied'], 403);
+            }
+
+            $qrData = $request->input('qr_data');
+            
+            \Log::info('QR Code scanned', [
+                'qr_data' => $qrData,
+                'scanned_by' => $user->id
+            ]);
+
+            // Try to find student by different possible QR data formats
+            $student = null;
+            
+            // Try to find by student ID first
+            $student = Student::where('student_id', $qrData)->first();
+            
+            // If not found, try to find by ID
+            if (!$student && is_numeric($qrData)) {
+                $student = Student::find($qrData);
+            }
+            
+            // If not found, try to parse JSON (in case QR contains JSON data)
+            if (!$student) {
+                try {
+                    $qrJson = json_decode($qrData, true);
+                    if ($qrJson && isset($qrJson['student_id'])) {
+                        $student = Student::where('student_id', $qrJson['student_id'])->first();
+                    } elseif ($qrJson && isset($qrJson['id'])) {
+                        $student = Student::find($qrJson['id']);
+                    }
+                } catch (\Exception $e) {
+                    // Not JSON, continue with other methods
+                }
+            }
+
+            if ($student) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Student found successfully!',
+                    'student' => [
+                        'id' => $student->id,
+                        'name' => $student->first_name . ' ' . $student->last_name,
+                        'student_id' => $student->student_id,
+                        'grade_level' => $student->grade_level,
+                        'section' => $student->section
+                    ],
+                    'redirect_url' => route('clinic-staff.student.profile', $student->id)
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Student not found in database. QR Data: ' . $qrData
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            \Log::error('QR Code Processing Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error processing QR code: ' . $e->getMessage()
+            ]);
         }
     }
 
