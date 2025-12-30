@@ -35,22 +35,19 @@ class DashboardController extends Controller
                 return redirect()->route('login')->with('error', 'Access denied.');
             }
 
-            // Get student record using the student_id relationship
-            $student = null;
-            if ($user->student_id) {
-                $student = Student::find($user->student_id);
-            }
+            // Get student record - prioritize direct relationship, fallback to name matching
+            $student = $this->getStudentForUser($user);
 
-            // Fallback: try to find student by name matching if no direct relationship
-            if (!$student) {
-                $nameParts = explode(' ', $user->name);
-                $firstName = $nameParts[0] ?? '';
-                $lastName = $nameParts[1] ?? '';
-
-                $student = Student::where('first_name', $firstName)
-                                 ->where('last_name', $lastName)
-                                 ->first();
-            }
+            // Debug logging
+            Log::info('Dashboard - Student lookup result', [
+                'user_id' => $user->id,
+                'user_student_id' => $user->student_id,
+                'student_found' => $student ? true : false,
+                'student_id' => $student ? $student->id : null,
+                'student_blood_type' => $student ? $student->blood_type : null,
+                'student_height' => $student ? $student->height : null,
+                'student_weight' => $student ? $student->weight : null,
+            ]);
 
             // Initialize default values
             $latestVitals = (object) ['weight' => '', 'height' => '', 'temperature' => '', 'blood_pressure' => ''];
@@ -65,103 +62,65 @@ class DashboardController extends Controller
             $totalVisits = 0;
             $lastVisit = null;
 
-            if ($student) {
-                // Calculate age if birth date exists
-                if ($student->date_of_birth) {
-                    try {
-                        $age = Carbon::parse($student->date_of_birth)->age;
-                    } catch (\Exception $e) {
-                        $age = '';
-                    }
-                }
+            // If no student record found, create a placeholder
+            if (!$student) {
+                $student = (object) [
+                    'id' => null,
+                    'student_id' => 'Not Assigned',
+                    'first_name' => explode(' ', $user->name)[0] ?? $user->name,
+                    'last_name' => explode(' ', $user->name)[1] ?? '',
+                    'date_of_birth' => null,
+                    'grade_level' => 'Not Set',
+                    'section' => 'Not Set',
+                    'blood_type' => 'Not Set',
+                    'weight' => '',
+                    'height' => '',
+                    'temperature' => '',
+                    'blood_pressure' => '',
+                    'allergies' => [],
+                    'has_allergies' => false
+                ];
+            }
 
-                // Get latest vitals - try from Vitals table first, then fallback to student data
+            // Process student data (now that we have a placeholder if needed)
+            // Calculate age if birth date exists
+            if ($student->date_of_birth) {
                 try {
-                    $latestVital = Vitals::whereHas('clinicVisit', function($query) use ($student) {
-                        $query->where('student_id', $student->id);
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->first();
-
-                    if ($latestVital) {
-                        $latestVitals = (object) [
-                            'weight' => $latestVital->weight ?? '',
-                            'height' => $latestVital->height ?? '',
-                            'temperature' => $latestVital->temperature ?? '',
-                            'blood_pressure' => $latestVital->blood_pressure ?? '',
-                            'heart_rate' => $latestVital->heart_rate ?? '',
-                            'respiratory_rate' => $latestVital->respiratory_rate ?? ''
-                        ];
-                    } else {
-                        // Fallback to student table data
-                        $latestVitals = (object) [
-                            'weight' => $student->weight ?? '',
-                            'height' => $student->height ?? '',
-                            'temperature' => $student->temperature ?? '',
-                            'blood_pressure' => $student->blood_pressure ?? '',
-                        ];
-                    }
-
-                    // Calculate BMI if both weight and height are available
-                    $weight = $latestVitals->weight ?: $student->weight;
-                    $height = $latestVitals->height ?: $student->height;
-
-                    if ($weight && $height && $height > 0) {
-                        $heightInMeters = $height / 100;
-                        $bmiValue = $weight / ($heightInMeters * $heightInMeters);
-                        $bmi = number_format($bmiValue, 1);
-
-                        // Determine BMI category
-                        if ($bmiValue < 18.5) {
-                            $bmiCategory = 'Underweight';
-                        } elseif ($bmiValue < 25) {
-                            $bmiCategory = 'Normal';
-                        } elseif ($bmiValue < 30) {
-                            $bmiCategory = 'Overweight';
-                        } else {
-                            $bmiCategory = 'Obese';
-                        }
-                    }
+                    $age = Carbon::parse($student->date_of_birth)->age;
                 } catch (\Exception $e) {
-                    Log::info('Error fetching vitals: ' . $e->getMessage());
-                    // Fallback to student data
-                    $latestVitals = (object) [
-                        'weight' => $student->weight ?? '',
-                        'height' => $student->height ?? '',
-                        'temperature' => $student->temperature ?? '',
-                        'blood_pressure' => $student->blood_pressure ?? '',
-                    ];
+                    $age = '';
                 }
+            }
 
-                // Get allergies - try from Allergy table first, then from student JSON field
-                try {
-                    $allergiesFromTable = Allergy::where('student_id', $student->id)->get();
-                    if ($allergiesFromTable->count() > 0) {
-                        $allergies = $allergiesFromTable;
-                    } else {
-                        // Fallback to JSON field in student table
-                        $studentAllergies = $student->allergies;
-                        if (is_array($studentAllergies) && count($studentAllergies) > 0) {
-                            $allergies = collect($studentAllergies)->map(function($allergy) {
-                                return (object) [
-                                    'allergy_name' => is_string($allergy) ? $allergy : ($allergy['name'] ?? 'Unknown'),
-                                    'severity' => $allergy['severity'] ?? 'Unknown'
-                                ];
-                            });
-                        }
-                    }
-                } catch (\Exception $e) {
-                    Log::info('Error fetching allergies: ' . $e->getMessage());
-                }
+            // Get latest vitals directly from student table data (health form saves here)
+            $latestVitals = (object) [
+                'weight' => $student->weight ?? '',
+                'height' => $student->height ?? '',
+                'temperature' => $student->temperature ?? '',
+                'blood_pressure' => $student->blood_pressure ?? '',
+            ];
 
-                // Get immunizations
+            // Calculate BMI using student table data
+            $bmiData = $this->calculateBMI($latestVitals, $student);
+            $bmi = $bmiData['bmi'];
+            $bmiCategory = $bmiData['category'];
+
+            // Get allergies with simplified logic
+            $allergies = $this->getAllergiesForStudent($student);
+
+            // Get immunizations (only if real student record exists)
+            $immunizations = collect();
+            if ($student->id) {
                 try {
                     $immunizations = Immunization::where('student_id', $student->id)->get();
                 } catch (\Exception $e) {
                     Log::info('Error fetching immunizations: ' . $e->getMessage());
                 }
+            }
 
-                // Get health incidents
+            // Get health incidents (only if real student record exists)
+            $healthIncidents = collect();
+            if ($student->id) {
                 try {
                     // TODO: Fix health_incidents table structure - currently missing columns
                     // $healthIncidents = HealthIncident::where('student_id', $student->id)
@@ -172,28 +131,20 @@ class DashboardController extends Controller
                 } catch (\Exception $e) {
                     Log::info('Error fetching health incidents: ' . $e->getMessage());
                 }
+            }
 
-                // Get medical visits
-                try {
-                    $medicalVisits = MedicalVisit::where('student_id', $student->id)
-                                               ->orderBy('visit_datetime', 'desc')
-                                               ->limit(10)
-                                               ->get();
-                } catch (\Exception $e) {
-                    Log::info('Error fetching medical visits: ' . $e->getMessage());
-                }
+            // Get medical visits and clinic visits (only if real student record exists)
+            $medicalVisits = collect();
+            $recentVisits = collect();
+            $totalVisits = 0;
+            $lastVisit = null;
 
-                // Get recent visits
-                try {
-                    $recentVisits = ClinicVisit::where('student_id', $student->id)
-                                              ->orderBy('visit_date', 'desc')
-                                              ->limit(5)
-                                              ->get();
-                    $totalVisits = ClinicVisit::where('student_id', $student->id)->count();
-                    $lastVisit = $recentVisits->first();
-                } catch (\Exception $e) {
-                    Log::info('Error fetching visits: ' . $e->getMessage());
-                }
+            if ($student->id) {
+                $medicalVisits = $this->getMedicalVisitsForStudent($student);
+                $visitData = $this->getClinicVisitsForStudent($student);
+                $recentVisits = $visitData['recent'];
+                $totalVisits = $visitData['total'];
+                $lastVisit = $visitData['last'];
             }
 
             $data = [
@@ -201,12 +152,12 @@ class DashboardController extends Controller
                 'student' => $student,
                 'lastVisit' => $lastVisit,
                 'latestVitals' => $latestVitals,
-                'bmi' => $bmi,
+                'bmi' => $bmi ?: 'Not Set',
                 'bmiCategory' => $bmiCategory,
-                'bloodType' => $student->blood_type ?? '',
+                'bloodType' => $student->blood_type ?: 'Not Set',
                 'allergies' => $allergies,
                 'immunizations' => $immunizations,
-                'age' => $age,
+                'age' => $age ?: 'Not Set',
                 'recentVisits' => $recentVisits,
                 'totalVisits' => $totalVisits,
                 'healthIncidents' => $healthIncidents,
@@ -255,38 +206,53 @@ class DashboardController extends Controller
     {
         try {
             $user = Auth::user();
-            
+
             if (!$user || $user->role !== 'student') {
                 return redirect()->route('login')->with('error', 'Access denied.');
             }
-            
-            // Get student record by matching name (simplified approach)
-            $nameParts = explode(' ', $user->name);
-            $firstName = $nameParts[0] ?? '';
-            $lastName = $nameParts[1] ?? '';
-            
-            $student = Student::where('first_name', $firstName)
-                             ->where('last_name', $lastName)
-                             ->first();
-            
+
+            // Get student record - prioritize direct relationship, fallback to name matching
+            $student = $this->getStudentForUser($user);
+
+            // If no student record found, create a placeholder with user data
             if (!$student) {
-                // If exact match fails, try the first student for demo purposes
-                $student = Student::first();
+                $student = (object) [
+                    'id' => null,
+                    'student_id' => 'Not Assigned',
+                    'first_name' => explode(' ', $user->name)[0] ?? $user->name,
+                    'last_name' => explode(' ', $user->name)[1] ?? '',
+                    'date_of_birth' => null,
+                    'grade_level' => 'Not Set',
+                    'section' => 'Not Set',
+                    'contact_number' => $user->phone_number ?? '',
+                    'address' => $user->address ?? '',
+                    'blood_type' => 'Not Set',
+                    'allergies' => [],
+                    'has_allergies' => false,
+                    'has_medical_condition' => false,
+                    'medical_conditions' => [],
+                    'has_surgery' => false,
+                    'surgery_details' => '',
+                    'family_history' => [],
+                    'smoke_exposure' => false,
+                    'medication' => [],
+                    'adviser' => 'Not Assigned'
+                ];
             }
-            
+
             // Calculate age if birth date exists
             $age = '';
-            if ($student && $student->date_of_birth) {
+            if ($student->date_of_birth) {
                 try {
                     $age = \Carbon\Carbon::parse($student->date_of_birth)->age;
                 } catch (\Exception $e) {
-                    $age = '20'; // Default age
+                    $age = 'Not Set';
                 }
             }
-            
+
             // Get adviser information dynamically
             $adviser = null;
-            if ($student && $student->adviser) {
+            if ($student->adviser && $student->adviser !== 'Not Assigned') {
                 // Try to find adviser by name matching
                 $adviser = Adviser::where('first_name', 'like', '%' . explode(' ', $student->adviser)[0] . '%')
                                  ->orWhere('last_name', 'like', '%' . end(explode(' ', $student->adviser)) . '%')
@@ -298,7 +264,8 @@ class DashboardController extends Controller
                 }
             } else {
                 // Fallback: try to find adviser by student's grade/section if no direct adviser field
-                if ($student && ($student->grade_level || $student->section)) {
+                if ($student->grade_level && $student->grade_level !== 'Not Set' &&
+                    $student->section && $student->section !== 'Not Set') {
                     $adviser = Adviser::whereHas('students', function($query) use ($student) {
                         $query->where('grade_level', $student->grade_level)
                               ->where('section', $student->section);
@@ -516,9 +483,9 @@ class DashboardController extends Controller
 
             // Try to get student record by matching name (simplified approach)
             try {
-                $nameParts = explode(' ', $user->name);
-                $firstName = $nameParts[0] ?? '';
-                $lastName = $nameParts[1] ?? '';
+                $nameParts = array_pad(explode(' ', trim($user->name)), 2, '');
+                $firstName = $nameParts[0];
+                $lastName = $nameParts[1];
                 
                 $student = Student::where('first_name', $firstName)
                                  ->where('last_name', $lastName)
@@ -743,9 +710,9 @@ class DashboardController extends Controller
             }
 
             // Get or create student record
-            $nameParts = explode(' ', $user->name);
-            $firstName = $nameParts[0] ?? '';
-            $lastName = $nameParts[1] ?? '';
+            $nameParts = array_pad(explode(' ', trim($user->name)), 2, '');
+            $firstName = $nameParts[0];
+            $lastName = $nameParts[1];
 
             $student = Student::where('first_name', $firstName)
                              ->where('last_name', $lastName)
@@ -1154,7 +1121,7 @@ class DashboardController extends Controller
             return view('clinic-staff-profile', compact('user'));
 
         } catch (\Exception $e) {
-            \Log::error('Clinic Staff Profile Error: ' . $e->getMessage());
+            Log::error('Clinic Staff Profile Error: ' . $e->getMessage());
             return redirect()->route('clinic-staff.dashboard')->with('error', 'An error occurred loading profile.');
         }
     }
@@ -1168,7 +1135,7 @@ class DashboardController extends Controller
             $user = Auth::user();
             
             // Debug logging
-            \Log::info('Profile update attempt', [
+            Log::info('Profile update attempt', [
                 'user_id' => $user->id,
                 'user_role' => $user->role,
                 'request_data' => $request->all(),
@@ -1178,7 +1145,7 @@ class DashboardController extends Controller
             
             // Ensure this is clinic staff
             if ($user->role !== 'clinic_staff') {
-                \Log::error('Access denied - not clinic staff', ['role' => $user->role]);
+                Log::error('Access denied - not clinic staff', ['role' => $user->role]);
                 return redirect()->route('login')->with('error', 'Access denied.');
             }
 
@@ -1191,7 +1158,7 @@ class DashboardController extends Controller
                 'position' => 'nullable|string|max:100',
             ]);
 
-            \Log::info('Validation passed', ['validated_data' => $validated]);
+            Log::info('Validation passed', ['validated_data' => $validated]);
 
             // Store old values for comparison
             $oldValues = [
@@ -1210,16 +1177,21 @@ class DashboardController extends Controller
             $user->position = $validated['position'] ?? null;
             
             // Check if there are any changes
-            $changes = $user->getDirty();
-            
-            if (empty($changes)) {
-                \Log::info('No changes detected in profile update');
-                return redirect()->route('clinic-staff.profile')->with('info', 'No changes were made to your profile.');
-            }
-            
-            $saved = $user->save();
+            if ($user instanceof \Illuminate\Database\Eloquent\Model) {
+                $changes = $user->getDirty();
 
-            \Log::info('Profile update result', [
+                if (empty($changes)) {
+                    Log::info('No changes detected in profile update');
+                    return redirect()->route('clinic-staff.profile')->with('info', 'No changes were made to your profile.');
+                }
+
+                $saved = $user->save();
+            } else {
+                Log::error('User is not an Eloquent model instance');
+                return redirect()->back()->with('error', 'An error occurred while updating your profile. Please try again.')->withInput();
+            }
+
+            Log::info('Profile update result', [
                 'saved' => $saved,
                 'old_values' => $oldValues,
                 'new_values' => [
@@ -1237,16 +1209,16 @@ class DashboardController extends Controller
             if ($saved) {
                 return redirect()->route('clinic-staff.profile')->with('success', 'Profile updated successfully!');
             } else {
-                \Log::error('Failed to save user profile');
+                Log::error('Failed to save user profile');
                 return redirect()->back()->with('error', 'Failed to update profile. Please try again.')->withInput();
             }
             
         } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Validation error in profile update', ['errors' => $e->errors()]);
+            Log::error('Validation error in profile update', ['errors' => $e->errors()]);
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            \Log::error('Clinic Staff Profile Update Error: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            Log::error('Clinic Staff Profile Update Error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return redirect()->back()->with('error', 'An error occurred while updating your profile. Please try again: ' . $e->getMessage())->withInput();
         }
     }
@@ -1284,7 +1256,7 @@ class DashboardController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->errors());
         } catch (\Exception $e) {
-            \Log::error('Clinic Staff Password Update Error: ' . $e->getMessage());
+            Log::error('Clinic Staff Password Update Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'An error occurred while updating your password.');
         }
     }
@@ -1305,7 +1277,7 @@ class DashboardController extends Controller
             return view('clinic-staff-scanner', compact('user'));
 
         } catch (\Exception $e) {
-            \Log::error('Clinic Staff Scanner Error: ' . $e->getMessage());
+            Log::error('Clinic Staff Scanner Error: ' . $e->getMessage());
             return redirect()->route('clinic-staff.dashboard')->with('error', 'An error occurred loading scanner.');
         }
     }
@@ -1325,7 +1297,7 @@ class DashboardController extends Controller
 
             $qrData = $request->input('qr_data');
             
-            \Log::info('QR Code scanned', [
+            Log::info('QR Code scanned', [
                 'qr_data' => $qrData,
                 'scanned_by' => $user->id
             ]);
@@ -1376,7 +1348,7 @@ class DashboardController extends Controller
             }
 
         } catch (\Exception $e) {
-            \Log::error('QR Code Processing Error: ' . $e->getMessage());
+            Log::error('QR Code Processing Error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Error processing QR code: ' . $e->getMessage()
@@ -1435,7 +1407,7 @@ class DashboardController extends Controller
                 'message' => 'Invalid file. Please upload a valid image (JPEG, PNG, JPG, GIF) under 5MB.'
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Profile picture upload error: ' . $e->getMessage());
+            Log::error('Profile picture upload error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while uploading the profile picture. Error: ' . $e->getMessage()
@@ -1462,7 +1434,7 @@ class DashboardController extends Controller
             return view('adviser-profile', compact('user', 'adviser'));
 
         } catch (\Exception $e) {
-            \Log::error('Adviser Profile Error: ' . $e->getMessage());
+            Log::error('Adviser Profile Error: ' . $e->getMessage());
             return redirect()->route('adviser.dashboard')->with('error', 'An error occurred loading profile.');
         }
     }
@@ -1476,7 +1448,7 @@ class DashboardController extends Controller
             $user = Auth::user();
             
             // Debug logging
-            \Log::info('Adviser profile update attempt', [
+            Log::info('Adviser profile update attempt', [
                 'user_id' => $user->id,
                 'user_role' => $user->role,
                 'request_data' => $request->all(),
@@ -1486,7 +1458,7 @@ class DashboardController extends Controller
             
             // Ensure this is an adviser
             if ($user->role !== 'adviser') {
-                \Log::error('Access denied - not adviser', ['role' => $user->role]);
+                Log::error('Access denied - not adviser', ['role' => $user->role]);
                 return redirect()->route('login')->with('error', 'Access denied.');
             }
 
@@ -1505,7 +1477,7 @@ class DashboardController extends Controller
                 'department' => 'nullable|string|max:100',
             ]);
 
-            \Log::info('Validation passed', ['validated_data' => $validated]);
+            Log::info('Validation passed', ['validated_data' => $validated]);
 
             // Store old values for comparison
             $oldValues = [
@@ -1542,16 +1514,21 @@ class DashboardController extends Controller
             $user->department = $validated['department'];
             
             // Check if there are any changes
-            $changes = $user->getDirty();
-            
-            if (empty($changes)) {
-                \Log::info('No changes detected in adviser profile update');
-                return redirect()->route('adviser.profile')->with('info', 'No changes were made to your profile.');
-            }
-            
-            $saved = $user->save();
+            if ($user instanceof \Illuminate\Database\Eloquent\Model) {
+                $changes = $user->getDirty();
 
-            \Log::info('Adviser profile update result', [
+                if (empty($changes)) {
+                    Log::info('No changes detected in adviser profile update');
+                    return redirect()->route('adviser.profile')->with('info', 'No changes were made to your profile.');
+                }
+
+                $saved = $user->save();
+            } else {
+                Log::error('User is not an Eloquent model instance');
+                return redirect()->back()->with('error', 'An error occurred while updating your profile. Please try again.')->withInput();
+            }
+
+            Log::info('Adviser profile update result', [
                 'saved' => $saved,
                 'old_values' => $oldValues,
                 'new_values' => [
@@ -1576,16 +1553,16 @@ class DashboardController extends Controller
             if ($saved) {
                 return redirect()->route('adviser.profile')->with('success', 'Profile updated successfully!');
             } else {
-                \Log::error('Failed to save adviser profile');
+                Log::error('Failed to save adviser profile');
                 return redirect()->back()->with('error', 'Failed to update profile. Please try again.')->withInput();
             }
             
         } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Validation error in adviser profile update', ['errors' => $e->errors()]);
+            Log::error('Validation error in adviser profile update', ['errors' => $e->errors()]);
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            \Log::error('Adviser Profile Update Error: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            Log::error('Adviser Profile Update Error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return redirect()->back()->with('error', 'An error occurred while updating your profile. Please try again: ' . $e->getMessage())->withInput();
         }
     }
@@ -1623,7 +1600,7 @@ class DashboardController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->errors());
         } catch (\Exception $e) {
-            \Log::error('Adviser Password Update Error: ' . $e->getMessage());
+            Log::error('Adviser Password Update Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'An error occurred while updating your password.');
         }
     }
@@ -1635,55 +1612,244 @@ class DashboardController extends Controller
     {
         try {
             $user = Auth::user();
-            
+
             if (!$user || $user->role !== 'adviser') {
                 return response()->json(['success' => false, 'message' => 'Unauthorized access.'], 403);
             }
-            
+
             $request->validate([
                 'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
             ]);
-            
+
             // Create uploads directory in public folder
             $uploadPath = public_path('uploads/profile_pictures');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
-            
+
             // Delete old profile picture if exists
             if ($user->profile_picture && file_exists(public_path($user->profile_picture))) {
                 unlink(public_path($user->profile_picture));
             }
-            
+
             // Store new profile picture
             $file = $request->file('profile_picture');
             $filename = 'profile_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-            
+
             // Move file to public/uploads/profile_pictures
             $file->move($uploadPath, $filename);
-            
+
             // Update user record with relative path
             $relativePath = 'uploads/profile_pictures/' . $filename;
             $user->profile_picture = $relativePath;
             $user->save();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Profile picture updated successfully!',
                 'profile_picture_url' => asset($relativePath)
             ]);
-            
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid file. Please upload a valid image (JPEG, PNG, JPG, GIF) under 5MB.'
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Adviser profile picture upload error: ' . $e->getMessage());
+            Log::error('Adviser profile picture upload error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while uploading the profile picture. Error: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Helper method to get student record for a user
+     */
+    private function getStudentForUser($user)
+    {
+        // First try direct relationship
+        if ($user->student_id) {
+            $student = Student::with(['vitals', 'clinicVisits', 'immunizations', 'allergies'])->find($user->student_id);
+            if ($student) {
+                return $student;
+            }
+        }
+
+        // Fallback to name matching - use same parsing logic as HealthFormController
+        $nameParts = array_pad(explode(' ', trim($user->name)), 2, '');
+        $firstName = $nameParts[0];
+        $lastName = $nameParts[1];
+
+        $student = Student::with(['vitals', 'clinicVisits', 'immunizations', 'allergies'])
+                         ->where('first_name', $firstName)
+                         ->where('last_name', $lastName)
+                         ->first();
+
+        // If found, link the user to the student for future use
+        if ($student && !$user->student_id) {
+            $user->update(['student_id' => $student->id]);
+        }
+
+        return $student;
+    }
+
+    /**
+     * Helper method to get latest vitals for a student
+     */
+    private function getLatestVitalsForStudent($student)
+    {
+        if (!$student) {
+            return (object) ['weight' => '', 'height' => '', 'temperature' => '', 'blood_pressure' => ''];
+        }
+
+        try {
+            // Try to get from Vitals table first
+            $latestVital = Vitals::whereHas('clinicVisit', function($query) use ($student) {
+                $query->where('student_id', $student->id);
+            })
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+            if ($latestVital) {
+                return (object) [
+                    'weight' => $latestVital->weight ?? '',
+                    'height' => $latestVital->height ?? '',
+                    'temperature' => $latestVital->temperature ?? '',
+                    'blood_pressure' => $latestVital->blood_pressure ?? '',
+                    'heart_rate' => $latestVital->heart_rate ?? '',
+                    'respiratory_rate' => $latestVital->respiratory_rate ?? ''
+                ];
+            }
+        } catch (\Exception $e) {
+            Log::info('Error fetching vitals from table: ' . $e->getMessage());
+        }
+
+        // Fallback to student table data
+        return (object) [
+            'weight' => $student->weight ?? '',
+            'height' => $student->height ?? '',
+            'temperature' => $student->temperature ?? '',
+            'blood_pressure' => $student->blood_pressure ?? '',
+        ];
+    }
+
+    /**
+     * Helper method to calculate BMI
+     */
+    private function calculateBMI($latestVitals, $student)
+    {
+        $weight = $latestVitals->weight ?: $student->weight ?? null;
+        $height = $latestVitals->height ?: $student->height ?? null;
+
+        if (!$weight || !$height || $height <= 0) {
+            return ['bmi' => '', 'category' => ''];
+        }
+
+        $heightInMeters = $height / 100;
+        $bmiValue = $weight / ($heightInMeters * $heightInMeters);
+        $bmi = number_format($bmiValue, 1);
+
+        // Determine BMI category
+        if ($bmiValue < 18.5) {
+            $category = 'Underweight';
+        } elseif ($bmiValue < 25) {
+            $category = 'Normal';
+        } elseif ($bmiValue < 30) {
+            $category = 'Overweight';
+        } else {
+            $category = 'Obese';
+        }
+
+        return ['bmi' => $bmi, 'category' => $category];
+    }
+
+    /**
+     * Helper method to get allergies for a student
+     */
+    private function getAllergiesForStudent($student)
+    {
+        if (!$student) {
+            return collect();
+        }
+
+        try {
+            // First try from eager loaded relationship
+            $allergiesFromTable = $student->allergies instanceof \Illuminate\Support\Collection ? $student->allergies : collect($student->allergies ?? []);
+
+            if ($allergiesFromTable->count() > 0) {
+                return $allergiesFromTable;
+            }
+
+            // Try direct query if eager loading didn't work
+            $allergiesFromTable = Allergy::where('student_id', $student->id)->get();
+            if ($allergiesFromTable->count() > 0) {
+                return $allergiesFromTable;
+            }
+
+            // Fallback to JSON field in student table
+            $studentAllergies = $student instanceof \Illuminate\Database\Eloquent\Model ? $student->getAttribute('allergies') : $student->allergies ?? [];
+            if (is_array($studentAllergies) && count($studentAllergies) > 0) {
+                return collect($studentAllergies)->map(function($allergy) {
+                    return (object) [
+                        'allergy_name' => is_string($allergy) ? $allergy : ($allergy['name'] ?? 'Unknown'),
+                        'severity' => $allergy['severity'] ?? 'Unknown'
+                    ];
+                });
+            }
+        } catch (\Exception $e) {
+            Log::info('Error fetching allergies: ' . $e->getMessage());
+        }
+
+        return collect();
+    }
+
+    /**
+     * Helper method to get medical visits for a student
+     */
+    private function getMedicalVisitsForStudent($student)
+    {
+        if (!$student) {
+            return collect();
+        }
+
+        try {
+            return MedicalVisit::where('student_id', $student->id)
+                              ->orderBy('visit_datetime', 'desc')
+                              ->limit(10)
+                              ->get();
+        } catch (\Exception $e) {
+            Log::info('Error fetching medical visits: ' . $e->getMessage());
+            return collect();
+        }
+    }
+
+    /**
+     * Helper method to get clinic visits for a student
+     */
+    private function getClinicVisitsForStudent($student)
+    {
+        if (!$student) {
+            return ['recent' => collect(), 'total' => 0, 'last' => null];
+        }
+
+        try {
+            $recentVisits = ClinicVisit::where('student_id', $student->id)
+                                      ->orderBy('visit_date', 'desc')
+                                      ->limit(5)
+                                      ->get();
+            $totalVisits = ClinicVisit::where('student_id', $student->id)->count();
+            $lastVisit = $recentVisits->first();
+
+            return [
+                'recent' => $recentVisits,
+                'total' => $totalVisits,
+                'last' => $lastVisit
+            ];
+        } catch (\Exception $e) {
+            Log::info('Error fetching clinic visits: ' . $e->getMessage());
+            return ['recent' => collect(), 'total' => 0, 'last' => null];
         }
     }
 }

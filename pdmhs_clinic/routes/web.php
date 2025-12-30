@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ClinicVisitController;
 use App\Http\Controllers\HealthIncidentController;
@@ -28,7 +31,7 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
-Route::match(['get', 'post'], '/logout', [LoginController::class, 'logout'])->name('logout');
+Route::match(['GET', 'POST'], '/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/register', function () {
     return view('register');
@@ -53,7 +56,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 // Student routes - using auth middleware only (role check is in controller)
 Route::middleware(['auth'])->prefix('student')->name('student.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])
+        ->name('dashboard');
     Route::get('/medical', [DashboardController::class, 'studentMedical'])->name('medical');
     Route::get('/medical-history', [DashboardController::class, 'studentMedicalHistory'])->name('medical-history');
     Route::get('/info', [DashboardController::class, 'studentInfo'])->name('info');
@@ -66,10 +70,6 @@ Route::middleware(['auth'])->prefix('student')->name('student.')->group(function
 // Adviser routes - using auth middleware only (role check is in controller)
 Route::middleware(['auth'])->prefix('adviser')->name('adviser.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'adviserDashboard'])->name('dashboard');
-    Route::get('/profile', [DashboardController::class, 'adviserProfile'])->name('profile');
-    Route::put('/profile', [DashboardController::class, 'updateAdviserProfile'])->name('profile.update');
-    Route::put('/password', [DashboardController::class, 'updateAdviserPassword'])->name('password.update');
-    Route::post('/upload-profile-picture', [DashboardController::class, 'uploadAdviserProfilePicture'])->name('upload-profile-picture');
 });
 
 // Clinic Staff routes - using auth middleware only (role check is in controller)
@@ -89,7 +89,6 @@ Route::middleware(['auth'])->prefix('clinic-staff')->name('clinic-staff.')->grou
     Route::put('/profile', [DashboardController::class, 'updateClinicStaffProfile'])->name('profile.update');
     Route::put('/password', [DashboardController::class, 'updateClinicStaffPassword'])->name('password.update');
     Route::post('/upload-profile-picture', [DashboardController::class, 'uploadClinicStaffProfilePicture'])->name('upload-profile-picture');
-    Route::post('/qr-process', [DashboardController::class, 'processQRCode'])->name('qr-process');
 });
 
 /*
@@ -115,6 +114,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/student-health-form', [HealthFormController::class, 'store'])->name('student.health.store');
 
+    Route::get('/scanner', function () {
+        return view('scanner');
+    })->name('scanner');
+
     Route::get('/architecture', function () {
         return view('architecture');
     })->name('architecture');
@@ -138,7 +141,7 @@ Route::post('/keep-alive', function () {
     }
     return response()->json([
         'status' => 'alive',
-        'user' => Auth::user()->only(['id', 'name', 'role']),
+        'user' => ['id' => Auth::user()->id, 'name' => Auth::user()->name, 'role' => Auth::user()->role],
         'timestamp' => now()->toISOString()
     ]);
 })->middleware('auth');
@@ -147,7 +150,7 @@ Route::post('/keep-alive', function () {
 Route::get('/session-status', function () {
     return response()->json([
         'authenticated' => Auth::check(),
-        'user' => Auth::check() ? Auth::user()->only(['id', 'name', 'email', 'role']) : null,
+        'user' => Auth::check() ? ['id' => Auth::user()->id, 'name' => Auth::user()->name, 'email' => Auth::user()->email, 'role' => Auth::user()->role] : null,
         'session_id' => session()->getId(),
         'csrf_token' => csrf_token(),
         'timestamp' => now()->toISOString()
@@ -168,29 +171,29 @@ Route::get('/create-test-users', function () {
             ['email' => 'student@pdmhs.edu.ph'],
             [
                 'name' => 'Hannah Loraine Geronday',
-                'password' => \Hash::make('student123'),
+                'password' => Hash::make('student123'),
                 'role' => 'student',
                 'email_verified_at' => now(),
             ]
         );
-        
+
         // Create clinic staff user
         $clinicStaff = \App\Models\User::updateOrCreate(
             ['email' => 'nurse@pdmhs.edu.ph'],
             [
                 'name' => 'Maria Santos',
-                'password' => \Hash::make('nurse123'),
+                'password' => Hash::make('nurse123'),
                 'role' => 'clinic_staff',
                 'email_verified_at' => now(),
             ]
         );
-        
+
         // Create adviser user
         $adviser = \App\Models\User::updateOrCreate(
             ['email' => 'adviser@pdmhs.edu.ph'],
             [
                 'name' => 'John Doe',
-                'password' => \Hash::make('adviser123'),
+                'password' => Hash::make('adviser123'),
                 'role' => 'adviser',
                 'email_verified_at' => now(),
             ]
@@ -226,10 +229,12 @@ Route::get('/debug-auth', function () {
     ]);
 })->middleware('auth');
 
+
+
 // Test profile update route
 Route::post('/test-profile-update', function (Request $request) {
     $user = Auth::user();
-    \Log::info('Test profile update', [
+    Log::info('Test profile update', [
         'user' => $user ? $user->toArray() : null,
         'request_data' => $request->all(),
         'method' => $request->method()
@@ -241,33 +246,6 @@ Route::post('/test-profile-update', function (Request $request) {
         'request_data' => $request->all()
     ]);
 })->middleware('auth');
-
-// Reset clinic staff password
-Route::get('/reset-clinic-staff-password', function () {
-    try {
-        $user = \App\Models\User::where('email', 'staffcfv@pdmhs.edu.ph')->first();
-        if ($user) {
-            $user->password = \Hash::make('staff123');
-            $user->save();
-            return response()->json([
-                'success' => true,
-                'message' => 'Password reset successfully!',
-                'email' => 'staffcfv@pdmhs.edu.ph',
-                'new_password' => 'staff123'
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'User not found'
-            ]);
-        }
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Error: ' . $e->getMessage()
-        ]);
-    }
-});
 
 // Session debug route (no auth required)
 Route::get('/debug-session', function () {

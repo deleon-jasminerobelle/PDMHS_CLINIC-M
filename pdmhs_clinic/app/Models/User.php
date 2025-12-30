@@ -94,6 +94,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the student record for this user
+     */
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'student_id', 'id');
+    }
+
+    /**
      * Get notifications for this user
      */
     public function notifications()

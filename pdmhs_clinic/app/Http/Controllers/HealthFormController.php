@@ -208,9 +208,23 @@ class HealthFormController extends Controller
         if ($request->height && $request->weight && $request->height > 0) {
             $heightInMeters = $request->height / 100;
             $bmi = round($request->weight / ($heightInMeters * $heightInMeters), 2);
-            // Update BMI using DB query to avoid model method issues
-            DB::table('students')->where('id', $student->id)->update(['bmi' => $bmi]);
-            Log::info('Updated BMI', ['student_id' => $student->id, 'bmi' => $bmi]);
+
+            // Validate BMI is within realistic range (10-50 for humans)
+            if ($bmi >= 10 && $bmi <= 50) {
+                // Update BMI using DB query to avoid model method issues
+                DB::table('students')->where('id', $student->id)->update(['bmi' => $bmi]);
+                Log::info('Updated BMI', ['student_id' => $student->id, 'bmi' => $bmi, 'height' => $request->height, 'weight' => $request->weight]);
+            } else {
+                Log::warning('Invalid BMI calculated, skipping update', [
+                    'student_id' => $student->id,
+                    'bmi' => $bmi,
+                    'height' => $request->height,
+                    'weight' => $request->weight,
+                    'height_meters' => $heightInMeters
+                ]);
+                // Set BMI to null for invalid calculations
+                DB::table('students')->where('id', $student->id)->update(['bmi' => null]);
+            }
         }
 
         // Update session to indicate student profile is complete
