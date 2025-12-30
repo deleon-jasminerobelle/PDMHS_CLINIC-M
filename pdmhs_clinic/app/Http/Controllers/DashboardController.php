@@ -1677,15 +1677,8 @@ class DashboardController extends Controller
             }
         }
 
-        // Fallback to name matching - use same parsing logic as HealthFormController
-        $nameParts = array_pad(explode(' ', trim($user->name)), 2, '');
-        $firstName = $nameParts[0];
-        $lastName = $nameParts[1];
-
-        $student = Student::with(['vitals', 'clinicVisits', 'immunizations', 'allergies'])
-                         ->where('first_name', $firstName)
-                         ->where('last_name', $lastName)
-                         ->first();
+        // Fallback to improved name matching logic
+        $student = $this->findStudentByName($user->name);
 
         // If found, link the user to the student for future use
         if ($student && !$user->student_id) {
@@ -1693,6 +1686,76 @@ class DashboardController extends Controller
         }
 
         return $student;
+    }
+
+    /**
+     * Find student by name using improved logic to handle middle names and complex names
+     */
+    private function findStudentByName($userName)
+    {
+        $nameParts = array_filter(explode(' ', trim($userName)));
+
+        if (empty($nameParts)) {
+            return null;
+        }
+
+        // Strategy 1: Try to match by reconstructing the name
+        // For names like "JASMINE ROBELLE CABARGA DE LEON"
+        // Student record might have first_name = "JASMINE ROBELLE", last_name = "CABARGA DE LEON"
+
+        for ($i = 1; $i < count($nameParts); $i++) {
+            $possibleFirstName = implode(' ', array_slice($nameParts, 0, $i));
+            $possibleLastName = implode(' ', array_slice($nameParts, $i));
+
+            $student = Student::whereRaw('LOWER(first_name) = LOWER(?)', [$possibleFirstName])
+                ->whereRaw('LOWER(last_name) = LOWER(?)', [$possibleLastName])
+                ->first();
+
+            if ($student) {
+                return $student;
+            }
+        }
+
+        // Strategy 2: Try exact match with first and last parts
+        $firstName = $nameParts[0];
+        $lastName = end($nameParts);
+
+        $student = Student::whereRaw('LOWER(first_name) = LOWER(?)', [$firstName])
+            ->whereRaw('LOWER(last_name) = LOWER(?)', [$lastName])
+            ->first();
+
+        if ($student) {
+            return $student;
+        }
+
+        // Strategy 3: Try to find student where the user name contains the student name
+        $allStudents = Student::all();
+        foreach ($allStudents as $student) {
+            $fullStudentName = strtolower($student->first_name . ' ' . $student->last_name);
+            $userNameLower = strtolower($userName);
+
+            // Check if user name contains student name or vice versa
+            if (str_contains($userNameLower, $fullStudentName) || str_contains($fullStudentName, $userNameLower)) {
+                return $student;
+            }
+        }
+
+        // Strategy 4: Try partial matching - match first name and check if last name parts match
+        foreach ($allStudents as $student) {
+            $studentFirstName = strtolower($student->first_name);
+            $studentLastNameParts = explode(' ', strtolower($student->last_name));
+
+            if (strtolower($firstName) === $studentFirstName) {
+                // Check if any part of the user's name matches the student's last name parts
+                foreach ($nameParts as $part) {
+                    if (in_array(strtolower($part), $studentLastNameParts)) {
+                        return $student;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
