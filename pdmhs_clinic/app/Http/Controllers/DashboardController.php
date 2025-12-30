@@ -354,36 +354,78 @@ class DashboardController extends Controller
     {
         try {
             $user = Auth::user();
-            
+
             if (!$user) {
                 return redirect()->route('login')->with('error', 'Please log in to continue.');
             }
-            
+
             // Ensure this is actually an adviser
             if ($user->role !== 'adviser') {
                 return redirect()->route('login')->with('error', 'Access denied.');
             }
-            
+
+            // Get adviser record
+            $adviser = Adviser::where('user_id', $user->id)->first();
+
+            // Get students assigned to this adviser
+            $students = collect();
+            $totalStudents = 0;
+            $studentsWithAllergies = 0;
+
+            if ($adviser) {
+                $students = $adviser->students()->with(['clinicVisits' => function($query) {
+                    $query->orderBy('visit_date', 'desc')->limit(1);
+                }])->get();
+
+                $totalStudents = $students->count();
+
+                // Count students with allergies
+                $studentsWithAllergies = $students->filter(function($student) {
+                    $allergies = $student->allergies;
+                    return !empty($allergies) && is_array($allergies) && count($allergies) > 0;
+                })->count();
+            }
+
+            // Get recent clinic visits for adviser's students (last 30 days)
+            $recentVisits = collect();
+            if ($adviser && $totalStudents > 0) {
+                $studentIds = $students->pluck('id');
+                $recentVisits = ClinicVisit::whereIn('student_id', $studentIds)
+                    ->where('visit_date', '>=', now()->subDays(30))
+                    ->with(['student'])
+                    ->orderBy('visit_date', 'desc')
+                    ->limit(10)
+                    ->get();
+            }
+
+            // Get pending visits for adviser's students
+            $pendingVisits = 0;
+            if ($adviser && $totalStudents > 0) {
+                $studentIds = $students->pluck('id');
+                $pendingVisits = ClinicVisit::whereIn('student_id', $studentIds)
+                    ->where('status', 'pending')
+                    ->count();
+            }
+
             // Get notifications for this adviser
             $notifications = \App\Models\Notification::where('user_id', $user->id)
                 ->orderBy('created_at', 'desc')
                 ->limit(10)
                 ->get();
-            
+
             // Get unread notifications count
             $unreadNotifications = \App\Models\Notification::where('user_id', $user->id)
                 ->where('is_read', false)
                 ->count();
-            
-            // Return with basic data
+
             return view('adviser-dashboard', [
                 'user' => $user,
-                'adviser' => null,
-                'students' => collect(),
-                'totalStudents' => 0,
-                'studentsWithAllergies' => 0,
-                'recentVisits' => collect(),
-                'pendingVisits' => 0,
+                'adviser' => $adviser,
+                'students' => $students,
+                'totalStudents' => $totalStudents,
+                'studentsWithAllergies' => $studentsWithAllergies,
+                'recentVisits' => $recentVisits,
+                'pendingVisits' => $pendingVisits,
                 'notifications' => $notifications,
                 'unreadNotifications' => $unreadNotifications
             ]);

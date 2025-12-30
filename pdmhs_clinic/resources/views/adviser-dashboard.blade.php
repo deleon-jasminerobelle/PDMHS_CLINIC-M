@@ -342,7 +342,13 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
                             <h1 class="h3 mb-1 welcome-header">Welcome, {{ $user->name }}!</h1>
-                            <p class="text-muted dashboard-subtitle">Adviser Class - Grade 12 - STEM</p>
+                            <p class="text-muted dashboard-subtitle">
+                                @if($adviser)
+                                    Adviser Class - {{ $adviser->first_name }} {{ $adviser->last_name }}
+                                @else
+                                    Adviser Dashboard
+                                @endif
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -377,41 +383,34 @@
                         <div class="section-card">
                             <div class="section-header">
                                 <h5 class="mb-0"><i class="fas fa-users me-2"></i>Students Under Your Advisory</h5>
-                                <small class="text-muted">3 students</small>
+                                <small class="text-muted">{{ $totalStudents }} students</small>
                             </div>
                             <div class="section-content">
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <div class="student-card text-center">
-                                            <div class="student-avatar mb-2">
-                                                <i class="fas fa-user-circle" style="font-size: 3rem; color: #6c757d;"></i>
+                                @if($students->count() > 0)
+                                    <div class="row">
+                                        @foreach($students as $student)
+                                            <div class="col-md-4 mb-3">
+                                                <div class="student-card text-center">
+                                                    <div class="student-avatar mb-2">
+                                                        <i class="fas fa-user-circle" style="font-size: 3rem; color: #6c757d;"></i>
+                                                    </div>
+                                                    <h6 class="student-name">{{ $student->first_name }} {{ $student->last_name }}</h6>
+                                                    <p class="student-info text-muted small">
+                                                        {{ $student->grade_level ?? 'N/A' }}<br>
+                                                        Grade {{ $student->grade_level ?? 'N/A' }} - {{ $student->section ?? 'N/A' }}
+                                                    </p>
+                                                    <button class="btn btn-sm btn-primary">View Profile</button>
+                                                </div>
                                             </div>
-                                            <h6 class="student-name">Irish Galieza</h6>
-                                            <p class="student-info text-muted small">STEM<br>Grade 12 - STEM A</p>
-                                            <button class="btn btn-sm btn-primary">View Profile</button>
-                                        </div>
+                                        @endforeach
                                     </div>
-                                    <div class="col-md-4 mb-3">
-                                        <div class="student-card text-center">
-                                            <div class="student-avatar mb-2">
-                                                <i class="fas fa-user-circle" style="font-size: 3rem; color: #6c757d;"></i>
-                                            </div>
-                                            <h6 class="student-name">Hannah Loraine Geronday</h6>
-                                            <p class="student-info text-muted small">STEM<br>Grade 12 - STEM A</p>
-                                            <button class="btn btn-sm btn-primary">View Profile</button>
-                                        </div>
+                                @else
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-users text-muted" style="font-size: 3rem;"></i>
+                                        <h6 class="text-muted mt-3">No Students Assigned</h6>
+                                        <p class="text-muted small">No students have been assigned to your advisory yet.</p>
                                     </div>
-                                    <div class="col-md-4 mb-3">
-                                        <div class="student-card text-center">
-                                            <div class="student-avatar mb-2">
-                                                <i class="fas fa-user-circle" style="font-size: 3rem; color: #6c757d;"></i>
-                                            </div>
-                                            <h6 class="student-name">Clarence Villas</h6>
-                                            <p class="student-info text-muted small">STEM<br>Grade 12 - STEM A</p>
-                                            <button class="btn btn-sm btn-primary">View Profile</button>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -425,15 +424,30 @@
                                 <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Clinic Activity</h5>
                             </div>
                             <div class="section-content">
-                                <div class="clinic-activity-item d-flex align-items-center p-3 border-bottom">
-                                    <div class="activity-icon me-3">
-                                        <i class="fas fa-user-injured text-primary"></i>
+                                @if($recentVisits->count() > 0)
+                                    @foreach($recentVisits as $visit)
+                                        <div class="clinic-activity-item d-flex align-items-center p-3 border-bottom">
+                                            <div class="activity-icon me-3">
+                                                <i class="fas fa-user-injured text-primary"></i>
+                                            </div>
+                                            <div class="activity-details">
+                                                <p class="mb-1">
+                                                    <strong>{{ $visit->student->first_name }} {{ $visit->student->last_name }}</strong>
+                                                    visited the clinic - {{ $visit->chief_complaint ?? 'General checkup' }}
+                                                </p>
+                                                <small class="text-muted">
+                                                    {{ $visit->visit_date ? $visit->visit_date->format('M d, Y h:i A') : 'Date not set' }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-history text-muted" style="font-size: 2rem;"></i>
+                                        <h6 class="text-muted mt-2">No Recent Activity</h6>
+                                        <p class="text-muted small">No clinic visits recorded for your students in the last 30 days.</p>
                                     </div>
-                                    <div class="activity-details">
-                                        <p class="mb-1"><strong>Hannah Loraine Geronday</strong> visited the clinic - may sakit ka na naman</p>
-                                        <small class="text-muted">Today, 2:30 PM</small>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -534,207 +548,108 @@
 
                 <!-- Student Health Cards -->
                 <div class="row">
-                    <!-- Student 1: Irish Galieza -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card h-100" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                            <div class="card-body p-4">
-                                <!-- Student Header -->
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="student-avatar me-3">
-                                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="student-name mb-1">Irish Galieza</h6>
-                                        <p class="student-info text-muted small mb-0">Grade 12 - STEM A</p>
+                    @if($students->count() > 0)
+                        @foreach($students as $student)
+                            <div class="col-lg-4 mb-4">
+                                <div class="card h-100" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                                    <div class="card-body p-4">
+                                        <!-- Student Header -->
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="student-avatar me-3">
+                                                <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="student-name mb-1">{{ $student->first_name }} {{ $student->last_name }}</h6>
+                                                <p class="student-info text-muted small mb-0">
+                                                    Grade {{ $student->grade_level ?? 'N/A' }} - {{ $student->section ?? 'N/A' }}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Basic Info -->
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                                    <i class="fas fa-heartbeat text-danger mb-1"></i>
+                                                    <div class="small text-muted">Blood Type</div>
+                                                    <div class="fw-bold">{{ $student->blood_type ?? 'N/A' }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                                    <i class="fas fa-user text-primary mb-1"></i>
+                                                    <div class="small text-muted">Gender</div>
+                                                    <div class="fw-bold">{{ $student->gender ? ucfirst($student->gender) : 'N/A' }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                                    <i class="fas fa-calendar text-info mb-1"></i>
+                                                    <div class="small text-muted">Age</div>
+                                                    <div class="fw-bold">
+                                                        @if($student->date_of_birth)
+                                                            {{ \Carbon\Carbon::parse($student->date_of_birth)->age }}
+                                                        @else
+                                                            N/A
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                                    <i class="fas fa-phone text-success mb-1"></i>
+                                                    <div class="small text-muted">Contact</div>
+                                                    <div class="fw-bold">{{ $student->contact_number ?? 'N/A' }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Last Clinic Visit -->
+                                        <div class="mb-3">
+                                            <h6 class="visit-name mb-2">Last Clinic Visit</h6>
+                                            <div class="visit-info p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                                @if($student->clinicVisits && $student->clinicVisits->count() > 0)
+                                                    @php $lastVisit = $student->clinicVisits->first(); @endphp
+                                                    <div class="visit-date fw-bold">{{ $lastVisit->visit_date ? $lastVisit->visit_date->format('M d, Y') : 'Date not set' }}</div>
+                                                    <div class="visit-type text-muted small">
+                                                        {{ $lastVisit->chief_complaint ?? 'General checkup' }}
+                                                        @if($lastVisit->visit_date)
+                                                            {{ $lastVisit->visit_date->format('h:i A') }}
+                                                        @endif
+                                                    </div>
+                                                    @if($lastVisit->status)
+                                                        <div class="visit-status">
+                                                            <span class="badge bg-{{ $lastVisit->status == 'completed' ? 'success' : 'warning' }} text-dark">
+                                                                {{ ucfirst($lastVisit->status) }}
+                                                            </span>
+                                                        </div>
+                                                    @endif
+                                                @else
+                                                    <div class="visit-type text-muted small">No clinic visits recorded</div>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <!-- Action Button -->
+                                        <button class="btn btn-primary w-100" style="border-radius: 8px;">
+                                            View Full Record
+                                        </button>
                                     </div>
                                 </div>
-
-                                <!-- Basic Info -->
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-heartbeat text-danger mb-1"></i>
-                                            <div class="small text-muted">Blood Type</div>
-                                            <div class="fw-bold">N/A</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-user text-primary mb-1"></i>
-                                            <div class="small text-muted">Gender</div>
-                                            <div class="fw-bold">Female</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-calendar text-info mb-1"></i>
-                                            <div class="small text-muted">Age</div>
-                                            <div class="fw-bold">18</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-phone text-success mb-1"></i>
-                                            <div class="small text-muted">Contact</div>
-                                            <div class="fw-bold">09123456789</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Last Clinic Visit -->
-                                <div class="mb-3">
-                                    <h6 class="visit-name mb-2">Last Clinic Visit</h6>
-                                    <div class="visit-info p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                        <div class="visit-type text-muted small">No clinic visits recorded</div>
-                                    </div>
-                                </div>
-
-                                <!-- Action Button -->
-                                <button class="btn btn-primary w-100" style="border-radius: 8px;">
-                                    View Full Record
-                                </button>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="col-12">
+                            <div class="text-center py-5">
+                                <i class="fas fa-users text-muted" style="font-size: 3rem;"></i>
+                                <h6 class="text-muted mt-3">No Students Assigned</h6>
+                                <p class="text-muted">No students have been assigned to your advisory yet.</p>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Student 2: Hannah Loraine Geronday -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card h-100" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                            <div class="card-body p-4">
-                                <!-- Student Header -->
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="student-avatar me-3">
-                                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="student-name mb-1">Hannah Loraine Geronday</h6>
-                                        <p class="student-info text-muted small mb-0">Grade 12 - STEM A</p>
-                                    </div>
-                                </div>
-
-                                <!-- Basic Info -->
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-heartbeat text-danger mb-1"></i>
-                                            <div class="small text-muted">Blood Type</div>
-                                            <div class="fw-bold">O+</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-user text-primary mb-1"></i>
-                                            <div class="small text-muted">Gender</div>
-                                            <div class="fw-bold">Female</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-calendar text-info mb-1"></i>
-                                            <div class="small text-muted">Age</div>
-                                            <div class="fw-bold">17</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-phone text-success mb-1"></i>
-                                            <div class="small text-muted">Contact</div>
-                                            <div class="fw-bold">09234567890</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Last Clinic Visit -->
-                                <div class="mb-3">
-                                    <h6 class="visit-name mb-2">Last Clinic Visit</h6>
-                                    <div class="visit-info p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                        <div class="visit-date fw-bold">Dec 21, 2024</div>
-                                        <div class="visit-type text-muted small">TEMP 38.5°C 2:30 PM</div>
-                                        <div class="visit-status">
-                                            <span class="badge bg-warning text-dark">Allergic Reaction</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Action Button -->
-                                <button class="btn btn-primary w-100" style="border-radius: 8px;">
-                                    View Full Record
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Student 3: Clarence Villas -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card h-100" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                            <div class="card-body p-4">
-                                <!-- Student Header -->
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="student-avatar me-3">
-                                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="student-name mb-1">Clarence Villas</h6>
-                                        <p class="student-info text-muted small mb-0">Grade 12 - STEM A</p>
-                                    </div>
-                                </div>
-
-                                <!-- Basic Info -->
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-heartbeat text-danger mb-1"></i>
-                                            <div class="small text-muted">Blood Type</div>
-                                            <div class="fw-bold">N/A</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-user text-primary mb-1"></i>
-                                            <div class="small text-muted">Gender</div>
-                                            <div class="fw-bold">Male</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-calendar text-info mb-1"></i>
-                                            <div class="small text-muted">Age</div>
-                                            <div class="fw-bold">18</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-phone text-success mb-1"></i>
-                                            <div class="small text-muted">Contact</div>
-                                            <div class="fw-bold">09123456789</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Last Clinic Visit -->
-                                <div class="mb-3">
-                                    <h6 class="visit-name mb-2">Last Clinic Visit</h6>
-                                    <div class="visit-info p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                        <div class="visit-type text-muted small">No clinic visits recorded</div>
-                                    </div>
-                                </div>
-
-                                <!-- Action Button -->
-                                <button class="btn btn-primary w-100" style="border-radius: 8px;">
-                                    View Full Record
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
