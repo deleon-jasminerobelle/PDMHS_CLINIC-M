@@ -93,13 +93,9 @@ class LoginController extends Controller
                             $user = \App\Models\User::find($user->id);
                         }
 
-                        if ($this->studentHasData($user)) {
-                            $request->session()->regenerate();
-                            return redirect()->route('student.dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
-                        } else {
-                            $request->session()->regenerate();
-                            return redirect()->route('student-health-form')->with('info', 'Please complete your health form to access the dashboard.');
-                        }
+                        // Always redirect to student dashboard (skip health form check)
+                        $request->session()->regenerate();
+                        return redirect()->route('student.dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
                         break;
                     case 'adviser':
                         $request->session()->regenerate();

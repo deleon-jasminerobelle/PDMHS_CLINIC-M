@@ -163,10 +163,12 @@ class DashboardController extends Controller
 
                 // Get health incidents
                 try {
-                    $healthIncidents = HealthIncident::where('student_id', $student->id)
-                                                   ->orderBy('incident_date', 'desc')
-                                                   ->limit(5)
-                                                   ->get();
+                    // TODO: Fix health_incidents table structure - currently missing columns
+                    // $healthIncidents = HealthIncident::where('student_id', $student->id)
+                    //                                ->orderBy('incident_date', 'desc')
+                    //                                ->limit(5)
+                    //                                ->get();
+                    $healthIncidents = collect(); // Empty collection for now
                 } catch (\Exception $e) {
                     Log::info('Error fetching health incidents: ' . $e->getMessage());
                 }

@@ -53,9 +53,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 // Student routes - using auth middleware only (role check is in controller)
 Route::middleware(['auth'])->prefix('student')->name('student.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])
-        ->middleware('check.health.form')
-        ->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])->name('dashboard');
     Route::get('/medical', [DashboardController::class, 'studentMedical'])->name('medical');
     Route::get('/medical-history', [DashboardController::class, 'studentMedicalHistory'])->name('medical-history');
     Route::get('/info', [DashboardController::class, 'studentInfo'])->name('info');
