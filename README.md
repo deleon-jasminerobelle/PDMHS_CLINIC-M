@@ -1,6 +1,6 @@
 # PDMHS Student Medical System
 
-A comprehensive medical management system for Pedro Diaz Memorial High School (PDMHS) built with Laravel 12. The system manages student health records, clinic operations, and medical consultations with role-based access for Students, Clinic Staff, and Class Advisers.
+A comprehensive medical management system for President Diosdado Macapagal High School (PDMHS) built with Laravel 12. The system manages student health records, clinic operations, and medical consultations with role-based access for Students, Clinic Staff, and Class Advisers.
 
 ## Key Features
 
