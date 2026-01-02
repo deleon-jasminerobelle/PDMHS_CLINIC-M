@@ -30,7 +30,6 @@ A comprehensive medical management system for President Diosdado Macapagal High 
 - **Students** - View personal health records, medical history, and profile management
 - **Clinic Staff** - Full clinic operations, student management, and health reporting
 - **Class Advisers** - View assigned students' health summaries and medical records
-- **Admin** - Complete system administration and user management
 
 ### 🔒 Security Features
 - **Authentication System** - Secure login with role-based routing
@@ -43,7 +42,7 @@ A comprehensive medical management system for President Diosdado Macapagal High 
 ### Backend
 - **PHP 8.2+** - Modern PHP with latest features
 - **Laravel 12** - Latest Laravel framework with enhanced performance
-- **MySQL/SQLite** - Flexible database configuration
+- **MySQL** - Flexible database configuration
 - **Laravel Sanctum** - API authentication for secure access
 
 ### Frontend
