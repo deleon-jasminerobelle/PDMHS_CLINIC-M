@@ -175,124 +175,27 @@
             font-size: 25px;
             margin-bottom: 0;
         }
-        
-        .secondary-nav {
-            background: white;
-            border-bottom: 1px solid #e9ecef;
-            padding: 0;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        .secondary-nav .nav-tabs {
-            border-bottom: none;
-            padding: 0 2rem;
-        }
-        
-        .secondary-nav .nav-tabs .nav-link {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 600;
-            font-size: 18px;
-            color: #6c757d;
-            border: none;
-            border-bottom: 3px solid transparent;
-            padding: 1rem 2rem;
-            margin-right: 1rem;
-            background: transparent;
-            transition: all 0.3s ease;
-        }
-        
-        .secondary-nav .nav-tabs .nav-link:hover {
-            color: var(--primary);
-            border-bottom-color: rgba(30, 64, 175, 0.3);
-            background: rgba(30, 64, 175, 0.05);
-        }
-        
-        .secondary-nav .nav-tabs .nav-link.active {
-            color: var(--primary) !important;
-            border-bottom-color: var(--primary) !important;
-            background: rgba(30, 64, 175, 0.05) !important;
-            font-weight: 700 !important;
-        }
-        
-        /* Fix for top navigation tabs */
-        .nav-tabs .nav-link {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            color: #6c757d;
-            border: none;
-            border-bottom: 2px solid transparent;
-            background: transparent;
-            padding: 0.75rem 1.5rem;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-tabs .nav-link:hover {
-            color: #1e40af;
-            border-bottom-color: rgba(30, 64, 175, 0.3);
-            background: rgba(30, 64, 175, 0.05);
-        }
-        
-        .nav-tabs .nav-link.active {
-            color: #1e40af !important;
-            border-bottom-color: #1e40af !important;
-            background: rgba(30, 64, 175, 0.05) !important;
-            font-weight: 700 !important;
-        }
-        
-        .tab-content {
-            padding: 0 2rem;
-        }
-        
-        /* Navbar Tab Styling */
-        .navbar .nav-pills .nav-link {
-            color: rgba(255, 255, 255, 0.8) !important;
-            border-radius: 8px;
-            margin: 0 0.5rem;
-            padding: 0.5rem 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .navbar .nav-pills .nav-link:hover {
-            color: white !important;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .navbar .nav-pills .nav-link.active {
-            color: white !important;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-bottom: 2px solid white;
-        }
     </style>
 </head>
 <body>
-    <!-- Top Navigation Bar -->
-    <nav class="navbar navbar-expand-lg" style="background: white; border-bottom: 1px solid #e9ecef; padding: 0.5rem 0;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <!-- Navigation Tabs -->
-            <ul class="nav nav-tabs border-0" id="dashboardTabs" role="tablist" style="margin-bottom: 0;">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="true" style="font-family: 'Albert Sans', sans-serif; font-size: 16px; font-weight: 600; color: #1e40af; border: none; border-bottom: 2px solid #1e40af; background: transparent; padding: 0.75rem 1.5rem;">
-                        Dashboard
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="alerts-tab" data-bs-toggle="tab" data-bs-target="#alerts" type="button" role="tab" aria-controls="alerts" aria-selected="false" style="font-family: 'Albert Sans', sans-serif; font-size: 16px; font-weight: 600; color: #6c757d; border: none; border-bottom: 2px solid transparent; background: transparent; padding: 0.75rem 1.5rem;">
-                        Alerts
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="health-status-tab" data-bs-toggle="tab" data-bs-target="#health-status" type="button" role="tab" aria-controls="health-status" aria-selected="false" style="font-family: 'Albert Sans', sans-serif; font-size: 16px; font-weight: 600; color: #6c757d; border: none; border-bottom: 2px solid transparent; background: transparent; padding: 0.75rem 1.5rem;">
-                        Health Status
-                    </button>
-                </li>
-            </ul>
-            
-            <!-- User Profile Dropdown -->
+            <a class="navbar-brand" href="{{ route('adviser.dashboard') }}">
+            </a>
+            <div class="navbar-nav me-auto">
+                <a class="nav-link active" href="{{ route('adviser.dashboard') }}">
+                    <i></i>Dashboard
+                </a>
+                <a class="nav-link" href="#" onclick="showTab('alerts')">
+                    <i></i>Alerts
+                </a>
+                <a class="nav-link" href="#" onclick="showTab('health-status')">
+                    <i></i>Health Status
+                </a>
+            </div>
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #6c757d;">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user me-1"></i>
                         {{ $user->name }}
                     </a>
@@ -334,9 +237,9 @@
         @endif
 
         <!-- Tab Content -->
-        <div class="tab-content" id="dashboardTabsContent">
-            <!-- Dashboard Tab (Main Content) -->
-            <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+        <div id="dashboardContent">
+            <!-- Dashboard Section (Main Content) -->
+            <div id="dashboard-section" class="content-section">
                 <!-- Header -->
                 <div class="mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -454,8 +357,8 @@
                 </div>
             </div>
 
-            <!-- Alerts Tab -->
-            <div class="tab-pane fade" id="alerts" role="tabpanel" aria-labelledby="alerts-tab">
+            <!-- Alerts Section -->
+            <div id="alerts-section" class="content-section" style="display: none;">
                 <div class="row mb-4">
                     <div class="col-12">
                         <div class="section-card">
@@ -508,8 +411,8 @@
                 </div>
             </div>
 
-            <!-- Health Status Tab -->
-            <div class="tab-pane fade" id="health-status" role="tabpanel" aria-labelledby="health-status-tab">
+            <!-- Health Status Section -->
+            <div id="health-status-section" class="content-section" style="display: none;">
                 <!-- Health Status Overview -->
                 <div class="row mb-4">
                     <div class="col-12">
@@ -532,14 +435,14 @@
                     </div>
 
                     <div class="col-md-4 mb-3">
-                        <div class="stat-card" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; text-align: center;">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; text-align: center;">
                             <h2>{{ isset($recentVisits) ? $recentVisits->count() : 1 }}</h2>
                             <p>With Clinic Visits</p>
                         </div>
                     </div>
 
                     <div class="col-md-4 mb-3">
-                        <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; text-align: center;">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; text-align: center;">
                             <h2>{{ $studentsWithAllergies ?? 1 }}</h2>
                             <p>With Allergies</p>
                         </div>
@@ -657,6 +560,45 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Navigation function to show different sections
+        function showTab(tabName) {
+            // Hide all content sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show the selected section
+            const targetSection = document.getElementById(tabName + '-section');
+            if (targetSection) {
+                targetSection.style.display = 'block';
+            }
+            
+            // Update navbar active states
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Set active state based on tab
+            if (tabName === 'dashboard') {
+                document.querySelector('.navbar-nav .nav-link[href*="dashboard"]').classList.add('active');
+            } else {
+                document.querySelector('.navbar-nav .nav-link[onclick*="' + tabName + '"]').classList.add('active');
+            }
+        }
+        
+        // Initialize dashboard view
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('dashboard');
+        });
+        
+        // Function to mark notification as read
+        function markAsRead(notificationId) {
+            // This would typically make an AJAX call to mark the notification as read
+            alert('Mark as read functionality will be implemented soon.');
+        }
+
         // Auto-dismiss alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
             const alerts = document.querySelectorAll('.alert');
