@@ -192,6 +192,9 @@
                 <a class="nav-link" href="{{ route('clinic-staff.visits') }}">
                     <i ></i>Visits
                 </a>
+                <a class="nav-link" href="{{ route('scanner') }}">
+                    Scanner
+                </a>
                 <a class="nav-link" href="{{ route('clinic-staff.reports') }}">
                     Reports
                 </a>
@@ -206,10 +209,20 @@
                         <li><a class="dropdown-item" href="{{ route('clinic-staff.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
-                            <a class="dropdown-item text-danger" href="{{ route('logout') }}">
+                            <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="fas fa-sign-out-alt me-2"></i>Logout
                             </a>
                         </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hidden logout form -->
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
                     </ul>
                 </div>
             </div>
@@ -244,28 +257,28 @@
         <div class="row mb-4">
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-blue d-flex flex-column justify-content-center" style="min-height: 120px;">
-                    <h2>4</h2>
+                    <h2>{{ $totalStudents }}</h2>
                     <p>Total Students</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-orange d-flex flex-column justify-content-center" style="min-height: 120px;">
-                    <h2>1</h2>
+                    <h2>{{ $todayVisits }}</h2>
                     <p>Today's Visits</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-yellow d-flex flex-column justify-content-center" style="min-height: 120px;">
-                    <h2>2</h2>
+                    <h2>{{ $newVisits }}</h2>
                     <p>New Visits</p>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
                 <div class="stat-card stat-card-purple d-flex flex-column justify-content-center" style="min-height: 120px;">
-                    <h2>0</h2>
+                    <h2>{{ $pendingVisits }}</h2>
                     <p>Pending Visits</p>
                 </div>
             </div>
@@ -287,10 +300,10 @@
                                 </button>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <button class="btn btn-action w-100" onclick="alert('Find Student functionality coming soon!')">
+                                <a href="{{ route('clinic-staff.students') }}" class="btn btn-action w-100 text-decoration-none">
                                     <i class="fas fa-search mb-2"></i>
                                     <div>Find Student</div>
-                                </button>
+                                </a>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <button class="btn btn-action w-100" onclick="alert('Generate Report functionality coming soon!')">
@@ -355,18 +368,31 @@
                         <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Students with Allergies</h5>
                     </div>
                     <div class="section-content" style="text-align: left; padding: 1rem;">
+                        @forelse($studentsWithAllergies as $student)
                         <div class="allergy-item mb-3 p-3" style="background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
                             <div class="d-flex align-items-center">
                                 <div class="allergy-avatar me-3">
                                     <i class="fas fa-user-circle" style="font-size: 2rem; color: #ffc107;"></i>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h6 class="mb-1 allergy-name">Hannah Loraine Geronday</h6>
-                                    <p class="mb-0 allergy-list">Peanuts, Shellfish</p>
+                                    <h6 class="mb-1 allergy-name">{{ $student->first_name }} {{ $student->last_name }}</h6>
+                                    <p class="mb-0 allergy-list">
+                                        @if(is_array($student->allergies) && count($student->allergies) > 0)
+                                            {{ implode(', ', $student->allergies) }}
+                                        @else
+                                            Allergies recorded
+                                        @endif
+                                    </p>
                                 </div>
                                 <i class="fas fa-exclamation-circle text-warning"></i>
                             </div>
                         </div>
+                        @empty
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-check-circle fa-2x mb-2 text-success"></i>
+                            <p>No students with allergies found</p>
+                        </div>
+                        @endforelse
                     </div>
                 </div>
             </div>

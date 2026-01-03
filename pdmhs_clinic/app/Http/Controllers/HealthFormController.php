@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Student;
+use App\Models\Adviser;
 
 class HealthFormController extends Controller
 {
@@ -208,9 +209,28 @@ class HealthFormController extends Controller
         if ($request->height && $request->weight && $request->height > 0) {
             $heightInMeters = $request->height / 100;
             $bmi = round($request->weight / ($heightInMeters * $heightInMeters), 2);
-            // Update BMI using DB query to avoid model method issues
-            DB::table('students')->where('id', $student->id)->update(['bmi' => $bmi]);
-            Log::info('Updated BMI', ['student_id' => $student->id, 'bmi' => $bmi]);
+
+            // Validate BMI is within realistic range (10-50 for humans)
+            if ($bmi >= 10 && $bmi <= 50) {
+                // Update BMI using DB query to avoid model method issues
+                DB::table('students')->where('id', $student->id)->update(['bmi' => $bmi]);
+                Log::info('Updated BMI', ['student_id' => $student->id, 'bmi' => $bmi, 'height' => $request->height, 'weight' => $request->weight]);
+            } else {
+                Log::warning('Invalid BMI calculated, skipping update', [
+                    'student_id' => $student->id,
+                    'bmi' => $bmi,
+                    'height' => $request->height,
+                    'weight' => $request->weight,
+                    'height_meters' => $heightInMeters
+                ]);
+                // Set BMI to null for invalid calculations
+                DB::table('students')->where('id', $student->id)->update(['bmi' => null]);
+            }
+        }
+
+        // Handle adviser assignment if adviser name is provided
+        if ($request->adviser && !empty(trim($request->adviser))) {
+            $this->assignAdviserToStudent($student, $request->adviser);
         }
 
         // Update session to indicate student profile is complete
@@ -218,5 +238,73 @@ class HealthFormController extends Controller
 
         return redirect()->route('student.dashboard')
             ->with('success', 'Health form saved successfully');
+    }
+
+    /**
+     * Assign an adviser to a student based on adviser name
+     */
+    private function assignAdviserToStudent($student, $adviserName)
+    {
+        try {
+            // Clean the adviser name
+            $adviserName = trim($adviserName);
+
+            if (empty($adviserName)) {
+                return;
+            }
+
+            // Try to find adviser by full name match
+            $adviser = Adviser::whereRaw("CONCAT(first_name, ' ', last_name) = ?", [$adviserName])->first();
+
+            // If not found, try partial name matching
+            if (!$adviser) {
+                $nameParts = explode(' ', $adviserName);
+                if (count($nameParts) >= 2) {
+                    $firstName = $nameParts[0];
+                    $lastName = implode(' ', array_slice($nameParts, 1));
+
+                    $adviser = Adviser::where('first_name', 'like', "%{$firstName}%")
+                                    ->where('last_name', 'like', "%{$lastName}%")
+                                    ->first();
+                }
+            }
+
+            // If adviser found, create the relationship
+            if ($adviser) {
+                // Check if relationship already exists
+                $existingRelationship = DB::table('student_adviser')
+                    ->where('student_id', $student->id)
+                    ->where('adviser_id', $adviser->id)
+                    ->first();
+
+                if (!$existingRelationship) {
+                    // Create the relationship
+                    DB::table('student_adviser')->insert([
+                        'student_id' => $student->id,
+                        'adviser_id' => $adviser->id,
+                        'assigned_date' => now(),
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+
+                    Log::info('Adviser assigned to student', [
+                        'student_id' => $student->id,
+                        'adviser_id' => $adviser->id,
+                        'adviser_name' => $adviserName
+                    ]);
+                }
+            } else {
+                Log::warning('Adviser not found for assignment', [
+                    'student_id' => $student->id,
+                    'adviser_name' => $adviserName
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Error assigning adviser to student: ' . $e->getMessage(), [
+                'student_id' => $student->id,
+                'adviser_name' => $adviserName
+            ]);
+        }
     }
 }

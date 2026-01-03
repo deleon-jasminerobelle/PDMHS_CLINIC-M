@@ -213,6 +213,9 @@
                 <a class="nav-link active" href="{{ route('clinic-staff.visits') }}">
                     Visits
                 </a>
+                <a class="nav-link" href="{{ route('scanner') }}">
+                    Scanner
+                </a>
                 <a class="nav-link" href="{{ route('clinic-staff.reports') }}">
                     Reports
                 </a>
@@ -709,7 +712,7 @@
         function processQRData(qrData) {
             showQRStatus('Processing QR code...', 'success');
 
-            fetch('{{ route("clinic-staff.qr-process") }}', {
+            fetch('{{ route("qr-process") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

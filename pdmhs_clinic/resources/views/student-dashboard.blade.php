@@ -266,25 +266,25 @@
                             <div class="col-md-2 mb-3">
                                 <div class="text-center">
                                     <h6 class="text-muted mb-1 health-info-label">Height</h6>
-                                    <h4 class="mb-0">{{ isset($latestVitals->height) && $latestVitals->height ? $latestVitals->height . ' cm' : '' }}</h4>
+                                    <h4 class="mb-0">{{ $latestVitals->height ? $latestVitals->height . ' cm' : 'Not Set' }}</h4>
                                 </div>
                             </div>
                             <div class="col-md-2 mb-3">
                                 <div class="text-center">
                                     <h6 class="text-muted mb-1 health-info-label">Weight</h6>
-                                    <h4 class="mb-0">{{ isset($latestVitals->weight) && $latestVitals->weight ? $latestVitals->weight . ' kg' : '' }}</h4>
+                                    <h4 class="mb-0">{{ $latestVitals->weight ? $latestVitals->weight . ' kg' : 'Not Set' }}</h4>
                                 </div>
                             </div>
                             <div class="col-md-2 mb-3">
                                 <div class="text-center">
                                     <h6 class="text-muted mb-1 health-info-label">Age</h6>
-                                    <h4 class="mb-0">{{ $age ?? '' }}</h4>
+                                    <h4 class="mb-0">{{ $age ?? 'Not Set' }}</h4>
                                 </div>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <div class="text-center">
                                     <h6 class="text-muted mb-1 health-info-label">BMI</h6>
-                                    <h4 class="mb-0">{{ $bmi ?? '' }}</h4>
+                                    <h4 class="mb-0">{{ $bmi ? $bmi : 'Not Set' }}</h4>
                                     @if(isset($bmiCategory) && $bmiCategory)
                                         <small class="text-muted">({{ $bmiCategory }})</small>
                                     @endif
@@ -293,7 +293,7 @@
                             <div class="col-md-3 mb-3">
                                 <div class="text-center">
                                     <h6 class="text-muted mb-1 health-info-label">Blood Type</h6>
-                                    <h4 class="mb-0">{{ $bloodType ?? '' }}</h4>
+                                    <h4 class="mb-0">{{ $bloodType ? $bloodType : 'Not Set' }}</h4>
                                 </div>
                             </div>
                         </div>

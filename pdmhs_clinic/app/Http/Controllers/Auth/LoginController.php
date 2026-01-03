@@ -209,90 +209,54 @@ class LoginController extends Controller
      */
     private function linkUserToStudent($user)
     {
-        // Parse user name to find matching student
-        $nameParts = explode(' ', trim($user->name));
-        if (count($nameParts) >= 2) {
-            $firstName = $nameParts[0];
+        // Use same parsing logic as HealthFormController
+        [$firstName, $lastName] = array_pad(explode(' ', trim($user->name), 2), 2, '');
 
-            // Try different combinations for last name (handle multiple last names)
-            $possibleLastNames = [];
+        if (empty($firstName) || empty($lastName)) {
+            \Illuminate\Support\Facades\Log::info('Could not parse user name', [
+                'user_id' => $user->id,
+                'user_name' => $user->name
+            ]);
+            return false;
+        }
 
-            // Try last part only
-            $possibleLastNames[] = end($nameParts);
+        // Try exact match first
+        $student = \App\Models\Student::where('first_name', $firstName)
+            ->where('last_name', $lastName)
+            ->first();
 
-            // Try last two parts (for names like "DE LEON")
-            if (count($nameParts) >= 3) {
-                $possibleLastNames[] = $nameParts[count($nameParts) - 2] . ' ' . end($nameParts);
-            }
+        if ($student) {
+            $user->update(['student_id' => $student->id]);
+            \Illuminate\Support\Facades\Log::info('Linked user to existing student', [
+                'user_id' => $user->id,
+                'student_id' => $student->id,
+                'student_name' => $student->first_name . ' ' . $student->last_name,
+                'user_name' => $user->name
+            ]);
+            return true;
+        }
 
-            // Try last three parts (for names like "CABARGA DE LEON")
-            if (count($nameParts) >= 4) {
-                $possibleLastNames[] = $nameParts[count($nameParts) - 3] . ' ' . $nameParts[count($nameParts) - 2] . ' ' . end($nameParts);
-            }
+        // Try case-insensitive match
+        $student = \App\Models\Student::whereRaw('LOWER(first_name) = LOWER(?)', [$firstName])
+            ->whereRaw('LOWER(last_name) = LOWER(?)', [$lastName])
+            ->first();
 
-            // Try all combinations with case-insensitive matching
-            foreach ($possibleLastNames as $lastName) {
-                // Try exact match first
-                $student = \App\Models\Student::where('first_name', 'like', $firstName)
-                    ->where('last_name', 'like', $lastName)
-                    ->first();
-
-                if ($student) {
-                    $user->update(['student_id' => $student->id]);
-                    \Illuminate\Support\Facades\Log::info('Linked user to existing student', [
-                        'user_id' => $user->id,
-                        'student_id' => $student->id,
-                        'student_name' => $student->first_name . ' ' . $student->last_name,
-                        'user_name' => $user->name
-                    ]);
-                    return true;
-                }
-
-                // Try case-insensitive match
-                $student = \App\Models\Student::whereRaw('LOWER(first_name) LIKE LOWER(?)', [$firstName])
-                    ->whereRaw('LOWER(last_name) LIKE LOWER(?)', [$lastName])
-                    ->first();
-
-                if ($student) {
-                    $user->update(['student_id' => $student->id]);
-                    \Illuminate\Support\Facades\Log::info('Linked user to existing student (case-insensitive)', [
-                        'user_id' => $user->id,
-                        'student_id' => $student->id,
-                        'student_name' => $student->first_name . ' ' . $student->last_name,
-                        'user_name' => $user->name
-                    ]);
-                    return true;
-                }
-            }
-
-            // Try partial matching - search for any student containing the first name
-            $studentsWithFirstName = \App\Models\Student::where('first_name', 'like', '%' . $firstName . '%')
-                ->orWhere('last_name', 'like', '%' . $firstName . '%')
-                ->get();
-
-            foreach ($studentsWithFirstName as $student) {
-                // Check if any part of the user name matches the student name
-                $studentFullName = strtolower($student->first_name . ' ' . $student->last_name);
-                $userNameLower = strtolower($user->name);
-
-                // Simple substring match
-                if (str_contains($studentFullName, $firstName) || str_contains($userNameLower, strtolower($student->first_name))) {
-                    $user->update(['student_id' => $student->id]);
-                    \Illuminate\Support\Facades\Log::info('Linked user to existing student (partial match)', [
-                        'user_id' => $user->id,
-                        'student_id' => $student->id,
-                        'student_name' => $student->first_name . ' ' . $student->last_name,
-                        'user_name' => $user->name
-                    ]);
-                    return true;
-                }
-            }
+        if ($student) {
+            $user->update(['student_id' => $student->id]);
+            \Illuminate\Support\Facades\Log::info('Linked user to existing student (case-insensitive)', [
+                'user_id' => $user->id,
+                'student_id' => $student->id,
+                'student_name' => $student->first_name . ' ' . $student->last_name,
+                'user_name' => $user->name
+            ]);
+            return true;
         }
 
         \Illuminate\Support\Facades\Log::info('Could not link user to student', [
             'user_id' => $user->id,
             'user_name' => $user->name,
-            'name_parts' => $nameParts ?? []
+            'parsed_first' => $firstName,
+            'parsed_last' => $lastName
         ]);
         return false;
     }

@@ -11,7 +11,7 @@ A comprehensive medical management system designed specifically for PDMHS (Pedro
 - **Medical Certificate Generation** - Automated medical clearance and fitness certificates
 
 ### 👨‍⚕️ Healthcare Provider Tools
-- **/Nurse Dashboard** - Centralized view of daily appointments and patient queue
+- **Nurse Dashboard** - Centralized view of daily appointments and patient queue
 - **Prescription Management** - Digital prescription creation and medication tracking
 - **Medical Inventory** - Medicine stock monitoring and supply management
 - **Emergency Response** - Quick access to critical student medical information

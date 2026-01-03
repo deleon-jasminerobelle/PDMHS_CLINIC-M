@@ -175,124 +175,27 @@
             font-size: 25px;
             margin-bottom: 0;
         }
-        
-        .secondary-nav {
-            background: white;
-            border-bottom: 1px solid #e9ecef;
-            padding: 0;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        .secondary-nav .nav-tabs {
-            border-bottom: none;
-            padding: 0 2rem;
-        }
-        
-        .secondary-nav .nav-tabs .nav-link {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 600;
-            font-size: 18px;
-            color: #6c757d;
-            border: none;
-            border-bottom: 3px solid transparent;
-            padding: 1rem 2rem;
-            margin-right: 1rem;
-            background: transparent;
-            transition: all 0.3s ease;
-        }
-        
-        .secondary-nav .nav-tabs .nav-link:hover {
-            color: var(--primary);
-            border-bottom-color: rgba(30, 64, 175, 0.3);
-            background: rgba(30, 64, 175, 0.05);
-        }
-        
-        .secondary-nav .nav-tabs .nav-link.active {
-            color: var(--primary) !important;
-            border-bottom-color: var(--primary) !important;
-            background: rgba(30, 64, 175, 0.05) !important;
-            font-weight: 700 !important;
-        }
-        
-        /* Fix for top navigation tabs */
-        .nav-tabs .nav-link {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            color: #6c757d;
-            border: none;
-            border-bottom: 2px solid transparent;
-            background: transparent;
-            padding: 0.75rem 1.5rem;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-tabs .nav-link:hover {
-            color: #1e40af;
-            border-bottom-color: rgba(30, 64, 175, 0.3);
-            background: rgba(30, 64, 175, 0.05);
-        }
-        
-        .nav-tabs .nav-link.active {
-            color: #1e40af !important;
-            border-bottom-color: #1e40af !important;
-            background: rgba(30, 64, 175, 0.05) !important;
-            font-weight: 700 !important;
-        }
-        
-        .tab-content {
-            padding: 0 2rem;
-        }
-        
-        /* Navbar Tab Styling */
-        .navbar .nav-pills .nav-link {
-            color: rgba(255, 255, 255, 0.8) !important;
-            border-radius: 8px;
-            margin: 0 0.5rem;
-            padding: 0.5rem 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .navbar .nav-pills .nav-link:hover {
-            color: white !important;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .navbar .nav-pills .nav-link.active {
-            color: white !important;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-bottom: 2px solid white;
-        }
     </style>
 </head>
 <body>
-    <!-- Top Navigation Bar -->
-    <nav class="navbar navbar-expand-lg" style="background: white; border-bottom: 1px solid #e9ecef; padding: 0.5rem 0;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <!-- Navigation Tabs -->
-            <ul class="nav nav-tabs border-0" id="dashboardTabs" role="tablist" style="margin-bottom: 0;">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="true" style="font-family: 'Albert Sans', sans-serif; font-size: 16px; font-weight: 600; color: #1e40af; border: none; border-bottom: 2px solid #1e40af; background: transparent; padding: 0.75rem 1.5rem;">
-                        Dashboard
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="alerts-tab" data-bs-toggle="tab" data-bs-target="#alerts" type="button" role="tab" aria-controls="alerts" aria-selected="false" style="font-family: 'Albert Sans', sans-serif; font-size: 16px; font-weight: 600; color: #6c757d; border: none; border-bottom: 2px solid transparent; background: transparent; padding: 0.75rem 1.5rem;">
-                        Alerts
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="health-status-tab" data-bs-toggle="tab" data-bs-target="#health-status" type="button" role="tab" aria-controls="health-status" aria-selected="false" style="font-family: 'Albert Sans', sans-serif; font-size: 16px; font-weight: 600; color: #6c757d; border: none; border-bottom: 2px solid transparent; background: transparent; padding: 0.75rem 1.5rem;">
-                        Health Status
-                    </button>
-                </li>
-            </ul>
-            
-            <!-- User Profile Dropdown -->
+            <a class="navbar-brand" href="{{ route('adviser.dashboard') }}">
+            </a>
+            <div class="navbar-nav me-auto">
+                <a class="nav-link active" href="{{ route('adviser.dashboard') }}">
+                    <i></i>Dashboard
+                </a>
+                <a class="nav-link" href="#" onclick="showTab('alerts')">
+                    <i></i>Alerts
+                </a>
+                <a class="nav-link" href="#" onclick="showTab('health-status')">
+                    <i></i>Health Status
+                </a>
+            </div>
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #6c757d;">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user me-1"></i>
                         {{ $user->name }}
                     </a>
@@ -334,15 +237,21 @@
         @endif
 
         <!-- Tab Content -->
-        <div class="tab-content" id="dashboardTabsContent">
-            <!-- Dashboard Tab (Main Content) -->
-            <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+        <div id="dashboardContent">
+            <!-- Dashboard Section (Main Content) -->
+            <div id="dashboard-section" class="content-section">
                 <!-- Header -->
                 <div class="mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
                             <h1 class="h3 mb-1 welcome-header">Welcome, {{ $user->name }}!</h1>
-                            <p class="text-muted dashboard-subtitle">Adviser Class - Grade 12 - STEM</p>
+                            <p class="text-muted dashboard-subtitle">
+                                @if($adviser)
+                                    Adviser Class - {{ $adviser->first_name }} {{ $adviser->last_name }}
+                                @else
+                                    Adviser Dashboard
+                                @endif
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -377,41 +286,34 @@
                         <div class="section-card">
                             <div class="section-header">
                                 <h5 class="mb-0"><i class="fas fa-users me-2"></i>Students Under Your Advisory</h5>
-                                <small class="text-muted">3 students</small>
+                                <small class="text-muted">{{ $totalStudents }} students</small>
                             </div>
                             <div class="section-content">
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <div class="student-card text-center">
-                                            <div class="student-avatar mb-2">
-                                                <i class="fas fa-user-circle" style="font-size: 3rem; color: #6c757d;"></i>
+                                @if($students->count() > 0)
+                                    <div class="row">
+                                        @foreach($students as $student)
+                                            <div class="col-md-4 mb-3">
+                                                <div class="student-card text-center">
+                                                    <div class="student-avatar mb-2">
+                                                        <i class="fas fa-user-circle" style="font-size: 3rem; color: #6c757d;"></i>
+                                                    </div>
+                                                    <h6 class="student-name">{{ $student->first_name }} {{ $student->last_name }}</h6>
+                                                    <p class="student-info text-muted small">
+                                                        {{ $student->grade_level ?? 'N/A' }}<br>
+                                                        Grade {{ $student->grade_level ?? 'N/A' }} - {{ $student->section ?? 'N/A' }}
+                                                    </p>
+                                                    <button class="btn btn-sm btn-primary">View Profile</button>
+                                                </div>
                                             </div>
-                                            <h6 class="student-name">Irish Galieza</h6>
-                                            <p class="student-info text-muted small">STEM<br>Grade 12 - STEM A</p>
-                                            <button class="btn btn-sm btn-primary">View Profile</button>
-                                        </div>
+                                        @endforeach
                                     </div>
-                                    <div class="col-md-4 mb-3">
-                                        <div class="student-card text-center">
-                                            <div class="student-avatar mb-2">
-                                                <i class="fas fa-user-circle" style="font-size: 3rem; color: #6c757d;"></i>
-                                            </div>
-                                            <h6 class="student-name">Hannah Loraine Geronday</h6>
-                                            <p class="student-info text-muted small">STEM<br>Grade 12 - STEM A</p>
-                                            <button class="btn btn-sm btn-primary">View Profile</button>
-                                        </div>
+                                @else
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-users text-muted" style="font-size: 3rem;"></i>
+                                        <h6 class="text-muted mt-3">No Students Assigned</h6>
+                                        <p class="text-muted small">No students have been assigned to your advisory yet.</p>
                                     </div>
-                                    <div class="col-md-4 mb-3">
-                                        <div class="student-card text-center">
-                                            <div class="student-avatar mb-2">
-                                                <i class="fas fa-user-circle" style="font-size: 3rem; color: #6c757d;"></i>
-                                            </div>
-                                            <h6 class="student-name">Clarence Villas</h6>
-                                            <p class="student-info text-muted small">STEM<br>Grade 12 - STEM A</p>
-                                            <button class="btn btn-sm btn-primary">View Profile</button>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -425,23 +327,38 @@
                                 <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Clinic Activity</h5>
                             </div>
                             <div class="section-content">
-                                <div class="clinic-activity-item d-flex align-items-center p-3 border-bottom">
-                                    <div class="activity-icon me-3">
-                                        <i class="fas fa-user-injured text-primary"></i>
+                                @if($recentVisits->count() > 0)
+                                    @foreach($recentVisits as $visit)
+                                        <div class="clinic-activity-item d-flex align-items-center p-3 border-bottom">
+                                            <div class="activity-icon me-3">
+                                                <i class="fas fa-user-injured text-primary"></i>
+                                            </div>
+                                            <div class="activity-details">
+                                                <p class="mb-1">
+                                                    <strong>{{ $visit->student->first_name }} {{ $visit->student->last_name }}</strong>
+                                                    visited the clinic - {{ $visit->chief_complaint ?? 'General checkup' }}
+                                                </p>
+                                                <small class="text-muted">
+                                                    {{ $visit->visit_date ? $visit->visit_date->format('M d, Y h:i A') : 'Date not set' }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-history text-muted" style="font-size: 2rem;"></i>
+                                        <h6 class="text-muted mt-2">No Recent Activity</h6>
+                                        <p class="text-muted small">No clinic visits recorded for your students in the last 30 days.</p>
                                     </div>
-                                    <div class="activity-details">
-                                        <p class="mb-1"><strong>Hannah Loraine Geronday</strong> visited the clinic - may sakit ka na naman</p>
-                                        <small class="text-muted">Today, 2:30 PM</small>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Alerts Tab -->
-            <div class="tab-pane fade" id="alerts" role="tabpanel" aria-labelledby="alerts-tab">
+            <!-- Alerts Section -->
+            <div id="alerts-section" class="content-section" style="display: none;">
                 <div class="row mb-4">
                     <div class="col-12">
                         <div class="section-card">
@@ -494,8 +411,8 @@
                 </div>
             </div>
 
-            <!-- Health Status Tab -->
-            <div class="tab-pane fade" id="health-status" role="tabpanel" aria-labelledby="health-status-tab">
+            <!-- Health Status Section -->
+            <div id="health-status-section" class="content-section" style="display: none;">
                 <!-- Health Status Overview -->
                 <div class="row mb-4">
                     <div class="col-12">
@@ -518,14 +435,14 @@
                     </div>
 
                     <div class="col-md-4 mb-3">
-                        <div class="stat-card" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; text-align: center;">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; text-align: center;">
                             <h2>{{ isset($recentVisits) ? $recentVisits->count() : 1 }}</h2>
                             <p>With Clinic Visits</p>
                         </div>
                     </div>
 
                     <div class="col-md-4 mb-3">
-                        <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; text-align: center;">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; text-align: center;">
                             <h2>{{ $studentsWithAllergies ?? 1 }}</h2>
                             <p>With Allergies</p>
                         </div>
@@ -534,207 +451,108 @@
 
                 <!-- Student Health Cards -->
                 <div class="row">
-                    <!-- Student 1: Irish Galieza -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card h-100" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                            <div class="card-body p-4">
-                                <!-- Student Header -->
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="student-avatar me-3">
-                                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="student-name mb-1">Irish Galieza</h6>
-                                        <p class="student-info text-muted small mb-0">Grade 12 - STEM A</p>
+                    @if($students->count() > 0)
+                        @foreach($students as $student)
+                            <div class="col-lg-4 mb-4">
+                                <div class="card h-100" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                                    <div class="card-body p-4">
+                                        <!-- Student Header -->
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="student-avatar me-3">
+                                                <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="student-name mb-1">{{ $student->first_name }} {{ $student->last_name }}</h6>
+                                                <p class="student-info text-muted small mb-0">
+                                                    Grade {{ $student->grade_level ?? 'N/A' }} - {{ $student->section ?? 'N/A' }}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Basic Info -->
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                                    <i class="fas fa-heartbeat text-danger mb-1"></i>
+                                                    <div class="small text-muted">Blood Type</div>
+                                                    <div class="fw-bold">{{ $student->blood_type ?? 'N/A' }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                                    <i class="fas fa-user text-primary mb-1"></i>
+                                                    <div class="small text-muted">Gender</div>
+                                                    <div class="fw-bold">{{ $student->gender ? ucfirst($student->gender) : 'N/A' }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                                    <i class="fas fa-calendar text-info mb-1"></i>
+                                                    <div class="small text-muted">Age</div>
+                                                    <div class="fw-bold">
+                                                        @if($student->date_of_birth)
+                                                            {{ \Carbon\Carbon::parse($student->date_of_birth)->age }}
+                                                        @else
+                                                            N/A
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                                    <i class="fas fa-phone text-success mb-1"></i>
+                                                    <div class="small text-muted">Contact</div>
+                                                    <div class="fw-bold">{{ $student->contact_number ?? 'N/A' }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Last Clinic Visit -->
+                                        <div class="mb-3">
+                                            <h6 class="visit-name mb-2">Last Clinic Visit</h6>
+                                            <div class="visit-info p-2" style="background: #f8f9fa; border-radius: 8px;">
+                                                @if($student->clinicVisits && $student->clinicVisits->count() > 0)
+                                                    @php $lastVisit = $student->clinicVisits->first(); @endphp
+                                                    <div class="visit-date fw-bold">{{ $lastVisit->visit_date ? $lastVisit->visit_date->format('M d, Y') : 'Date not set' }}</div>
+                                                    <div class="visit-type text-muted small">
+                                                        {{ $lastVisit->chief_complaint ?? 'General checkup' }}
+                                                        @if($lastVisit->visit_date)
+                                                            {{ $lastVisit->visit_date->format('h:i A') }}
+                                                        @endif
+                                                    </div>
+                                                    @if($lastVisit->status)
+                                                        <div class="visit-status">
+                                                            <span class="badge bg-{{ $lastVisit->status == 'completed' ? 'success' : 'warning' }} text-dark">
+                                                                {{ ucfirst($lastVisit->status) }}
+                                                            </span>
+                                                        </div>
+                                                    @endif
+                                                @else
+                                                    <div class="visit-type text-muted small">No clinic visits recorded</div>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <!-- Action Button -->
+                                        <button class="btn btn-primary w-100" style="border-radius: 8px;">
+                                            View Full Record
+                                        </button>
                                     </div>
                                 </div>
-
-                                <!-- Basic Info -->
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-heartbeat text-danger mb-1"></i>
-                                            <div class="small text-muted">Blood Type</div>
-                                            <div class="fw-bold">N/A</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-user text-primary mb-1"></i>
-                                            <div class="small text-muted">Gender</div>
-                                            <div class="fw-bold">Female</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-calendar text-info mb-1"></i>
-                                            <div class="small text-muted">Age</div>
-                                            <div class="fw-bold">18</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-phone text-success mb-1"></i>
-                                            <div class="small text-muted">Contact</div>
-                                            <div class="fw-bold">09123456789</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Last Clinic Visit -->
-                                <div class="mb-3">
-                                    <h6 class="visit-name mb-2">Last Clinic Visit</h6>
-                                    <div class="visit-info p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                        <div class="visit-type text-muted small">No clinic visits recorded</div>
-                                    </div>
-                                </div>
-
-                                <!-- Action Button -->
-                                <button class="btn btn-primary w-100" style="border-radius: 8px;">
-                                    View Full Record
-                                </button>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="col-12">
+                            <div class="text-center py-5">
+                                <i class="fas fa-users text-muted" style="font-size: 3rem;"></i>
+                                <h6 class="text-muted mt-3">No Students Assigned</h6>
+                                <p class="text-muted">No students have been assigned to your advisory yet.</p>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Student 2: Hannah Loraine Geronday -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card h-100" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                            <div class="card-body p-4">
-                                <!-- Student Header -->
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="student-avatar me-3">
-                                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="student-name mb-1">Hannah Loraine Geronday</h6>
-                                        <p class="student-info text-muted small mb-0">Grade 12 - STEM A</p>
-                                    </div>
-                                </div>
-
-                                <!-- Basic Info -->
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-heartbeat text-danger mb-1"></i>
-                                            <div class="small text-muted">Blood Type</div>
-                                            <div class="fw-bold">O+</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-user text-primary mb-1"></i>
-                                            <div class="small text-muted">Gender</div>
-                                            <div class="fw-bold">Female</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-calendar text-info mb-1"></i>
-                                            <div class="small text-muted">Age</div>
-                                            <div class="fw-bold">17</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-phone text-success mb-1"></i>
-                                            <div class="small text-muted">Contact</div>
-                                            <div class="fw-bold">09234567890</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Last Clinic Visit -->
-                                <div class="mb-3">
-                                    <h6 class="visit-name mb-2">Last Clinic Visit</h6>
-                                    <div class="visit-info p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                        <div class="visit-date fw-bold">Dec 21, 2024</div>
-                                        <div class="visit-type text-muted small">TEMP 38.5°C 2:30 PM</div>
-                                        <div class="visit-status">
-                                            <span class="badge bg-warning text-dark">Allergic Reaction</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Action Button -->
-                                <button class="btn btn-primary w-100" style="border-radius: 8px;">
-                                    View Full Record
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Student 3: Clarence Villas -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="card h-100" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                            <div class="card-body p-4">
-                                <!-- Student Header -->
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="student-avatar me-3">
-                                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="student-name mb-1">Clarence Villas</h6>
-                                        <p class="student-info text-muted small mb-0">Grade 12 - STEM A</p>
-                                    </div>
-                                </div>
-
-                                <!-- Basic Info -->
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-heartbeat text-danger mb-1"></i>
-                                            <div class="small text-muted">Blood Type</div>
-                                            <div class="fw-bold">N/A</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-user text-primary mb-1"></i>
-                                            <div class="small text-muted">Gender</div>
-                                            <div class="fw-bold">Male</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-calendar text-info mb-1"></i>
-                                            <div class="small text-muted">Age</div>
-                                            <div class="fw-bold">18</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="text-center p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                            <i class="fas fa-phone text-success mb-1"></i>
-                                            <div class="small text-muted">Contact</div>
-                                            <div class="fw-bold">09123456789</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Last Clinic Visit -->
-                                <div class="mb-3">
-                                    <h6 class="visit-name mb-2">Last Clinic Visit</h6>
-                                    <div class="visit-info p-2" style="background: #f8f9fa; border-radius: 8px;">
-                                        <div class="visit-type text-muted small">No clinic visits recorded</div>
-                                    </div>
-                                </div>
-
-                                <!-- Action Button -->
-                                <button class="btn btn-primary w-100" style="border-radius: 8px;">
-                                    View Full Record
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -742,6 +560,45 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Navigation function to show different sections
+        function showTab(tabName) {
+            // Hide all content sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show the selected section
+            const targetSection = document.getElementById(tabName + '-section');
+            if (targetSection) {
+                targetSection.style.display = 'block';
+            }
+            
+            // Update navbar active states
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Set active state based on tab
+            if (tabName === 'dashboard') {
+                document.querySelector('.navbar-nav .nav-link[href*="dashboard"]').classList.add('active');
+            } else {
+                document.querySelector('.navbar-nav .nav-link[onclick*="' + tabName + '"]').classList.add('active');
+            }
+        }
+        
+        // Initialize dashboard view
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('dashboard');
+        });
+        
+        // Function to mark notification as read
+        function markAsRead(notificationId) {
+            // This would typically make an AJAX call to mark the notification as read
+            alert('Mark as read functionality will be implemented soon.');
+        }
+
         // Auto-dismiss alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
             const alerts = document.querySelectorAll('.alert');
