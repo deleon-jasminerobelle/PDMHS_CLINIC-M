@@ -738,25 +738,20 @@ class DashboardController extends Controller
             // Update user email and name
             $user->email = $validated['email'];
             $user->name = $validated['first_name'] . ' ' . $validated['last_name'];
-            if ($user instanceof \Illuminate\Database\Eloquent\Model) {
-                $user->save();
-            }
+            $user->save();
 
-            // Get or create student record
-            $nameParts = explode(' ', $user->name);
-            $firstName = $nameParts[0] ?? '';
-            $lastName = $nameParts[1] ?? '';
-
-            $student = Student::where('first_name', $firstName)
-                             ->where('last_name', $lastName)
+            // Find student by email or create new one
+            $student = Student::where('first_name', $validated['first_name'])
+                             ->where('last_name', $validated['last_name'])
                              ->first();
 
             if (!$student) {
                 // Create new student record
                 $student = new Student();
+                $student->student_id = '000001'; // Default student ID, should be generated properly
             }
 
-            // Update student record with correct field names
+            // Update student record
             $student->first_name = $validated['first_name'];
             $student->middle_name = $validated['middle_name'];
             $student->last_name = $validated['last_name'];
@@ -767,17 +762,17 @@ class DashboardController extends Controller
             $student->blood_type = $validated['blood_type'];
             $student->address = $validated['address'];
             $student->emergency_contact = $validated['emergency_contact'];
-            $student->contact_number = $validated['phone_number']; // Use contact_number instead of phone_number
-            if ($student instanceof \Illuminate\Database\Eloquent\Model) {
-                $student->save();
-            }
+            $student->contact_number = $validated['phone_number'];
+            $student->save();
 
             return redirect()->route('student.profile')->with('success', 'Profile updated successfully!');
             
         } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Profile Update Validation Error: ' . json_encode($e->errors()));
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             Log::error('Profile Update Error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return redirect()->back()->with('error', 'An error occurred while updating your profile. Please try again.')->withInput();
         }
     }
