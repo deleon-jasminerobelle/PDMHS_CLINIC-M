@@ -93,7 +93,17 @@ class LoginController extends Controller
                             $user = \App\Models\User::find($user->id);
                         }
 
-                        // Always redirect to student dashboard (skip health form check)
+                        // Check if student has any health data stored before allowing dashboard access
+                        if (!$this->studentHasAnyHealthData($user)) {
+                            Log::info('Student login - no health data stored, redirecting to health form', [
+                                'user_id' => $user->id,
+                                'user_name' => $user->name
+                            ]);
+                            $request->session()->regenerate();
+                            return redirect()->route('student-health-form')->with('info', 'Please complete your health information to access your dashboard.');
+                        }
+
+                        // Student has complete health data, allow dashboard access
                         $request->session()->regenerate();
                         return redirect()->route('student.dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
                         break;
@@ -262,10 +272,16 @@ class LoginController extends Controller
     }
 
     /**
-     * Check if a student user has complete health data in the students table
+     * Check if a student user has any health data stored in the students table
      */
-    private function studentHasData($user)
+    private function studentHasAnyHealthData($user)
     {
+        \Illuminate\Support\Facades\Log::info('Checking student data for user', [
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'user_student_id' => $user->student_id
+        ]);
+
         if (!$user->student_id) {
             \Illuminate\Support\Facades\Log::info('User has no student_id, checking by name', ['user_id' => $user->id, 'user_name' => $user->name]);
 
@@ -279,10 +295,11 @@ class LoginController extends Controller
                     'student_id' => $student->id,
                     'student_name' => $student->first_name . ' ' . $student->last_name
                 ]);
-                // Check if this linked student has complete health data
-                return $this->hasCompleteHealthData($student);
+                // Check if this linked student has any health data
+                return $this->hasAnyHealthData($student);
             }
 
+            \Illuminate\Support\Facades\Log::info('No student found by name for user', ['user_id' => $user->id, 'user_name' => $user->name]);
             return false;
         }
 
@@ -299,114 +316,145 @@ class LoginController extends Controller
                     'student_id' => $student->id,
                     'student_name' => $student->first_name . ' ' . $student->last_name
                 ]);
-                // Check if this relinked student has complete health data
-                return $this->hasCompleteHealthData($student);
+                // Check if this relinked student has any health data
+                return $this->hasAnyHealthData($student);
             }
 
+            \Illuminate\Support\Facades\Log::info('No student found by name as fallback', ['user_id' => $user->id, 'user_name' => $user->name]);
             return false;
         }
 
-        // Check if the student has complete health data
-        return $this->hasCompleteHealthData($student);
+        \Illuminate\Support\Facades\Log::info('Found student for user', [
+            'user_id' => $user->id,
+            'student_id' => $student->id,
+            'student_name' => $student->first_name . ' ' . $student->last_name
+        ]);
+
+        // Check if the student has any health data
+        return $this->hasAnyHealthData($student);
     }
 
     /**
-     * Check if a student has complete health data required for dashboard display
+     * Check if a student has any health data stored (consistent with CheckHealthForm middleware)
      */
-    private function hasCompleteHealthData($student)
+    private function hasAnyHealthData($student)
     {
-        // Check for essential health data fields that should be filled by the health form
-        $requiredFields = [
-            'blood_type',
-            'height',
-            'weight',
+        // Check for REQUIRED health data fields only (matches CheckHealthForm middleware)
+        // Only check emergency contact fields as they are required
+        $healthDataFields = [
             'emergency_contact_name',
             'emergency_contact_number',
             'emergency_relation',
             'emergency_address'
         ];
 
-        foreach ($requiredFields as $field) {
-            if (empty($student->$field)) {
-                \Illuminate\Support\Facades\Log::info('Student missing required health data', [
-                    'student_id' => $student->id,
-                    'missing_field' => $field,
-                    'student_name' => $student->first_name . ' ' . $student->last_name
-                ]);
-                return false;
-            }
-        }
-
-        \Illuminate\Support\Facades\Log::info('Student has complete health data', [
+        \Illuminate\Support\Facades\Log::info('Checking for any health data', [
             'student_id' => $student->id,
             'student_name' => $student->first_name . ' ' . $student->last_name
         ]);
-        return true;
+
+        foreach ($healthDataFields as $field) {
+            $value = $student->$field;
+
+            // Handle different field types properly
+            $hasValue = false;
+            if ($value !== null) {
+                if (is_array($value)) {
+                    // For array fields (allergies, medical_conditions, medication, vaccination_history)
+                    $hasValue = !empty($value);
+                } else {
+                    // For string/numeric fields
+                    $hasValue = trim((string)$value) !== '';
+                }
+            }
+
+            if ($hasValue) {
+                \Illuminate\Support\Facades\Log::info('Student has health data', [
+                    'student_id' => $student->id,
+                    'field_with_data' => $field,
+                    'field_value' => $value,
+                    'student_name' => $student->first_name . ' ' . $student->last_name
+                ]);
+                return true;
+            }
+        }
+
+        \Illuminate\Support\Facades\Log::info('Student has no health data stored', [
+            'student_id' => $student->id,
+            'student_name' => $student->first_name . ' ' . $student->last_name
+        ]);
+        return false;
     }
 
     /**
-     * Find student by name with flexible matching (similar to DashboardController)
+     * Find student by name with flexible matching
      */
     private function findStudentByName($userName)
     {
-        $nameParts = explode(' ', trim($userName));
-        if (count($nameParts) >= 2) {
-            $firstName = $nameParts[0];
+        $nameParts = array_filter(explode(' ', trim($userName)));
 
-            // Try different combinations for last name (handle multiple last names)
-            $possibleLastNames = [];
+        if (empty($nameParts)) {
+            return null;
+        }
 
-            // Try last part only
-            $possibleLastNames[] = end($nameParts);
+        // Strategy 1: Try to match by reconstructing the name
+        // For names like "JASMINE ROBELLE ROBELLE CABARGA DE LEON"
+        // Student record might have first_name = "JASMINE ROBELLE", last_name = "CABARGA DE LEON"
 
-            // Try last two parts (for names like "DE LEON")
-            if (count($nameParts) >= 3) {
-                $possibleLastNames[] = $nameParts[count($nameParts) - 2] . ' ' . end($nameParts);
+        for ($i = 1; $i < count($nameParts); $i++) {
+            $possibleFirstName = implode(' ', array_slice($nameParts, 0, $i));
+            $possibleLastName = implode(' ', array_slice($nameParts, $i));
+
+            $student = \App\Models\Student::whereRaw('LOWER(first_name) = LOWER(?)', [$possibleFirstName])
+                ->whereRaw('LOWER(last_name) = LOWER(?)', [$possibleLastName])
+                ->first();
+
+            if ($student) {
+                return $student;
             }
+        }
 
-            // Try last three parts (for names like "CABARGA DE LEON")
-            if (count($nameParts) >= 4) {
-                $possibleLastNames[] = $nameParts[count($nameParts) - 3] . ' ' . $nameParts[count($nameParts) - 2] . ' ' . end($nameParts);
+        // Strategy 2: Try exact match with first and last parts
+        $firstName = $nameParts[0];
+        $lastName = end($nameParts);
+
+        $student = \App\Models\Student::whereRaw('LOWER(first_name) = LOWER(?)', [$firstName])
+            ->whereRaw('LOWER(last_name) = LOWER(?)', [$lastName])
+            ->first();
+
+        if ($student) {
+            return $student;
+        }
+
+        // Strategy 3: Try to find student where the user name contains the student name
+        $allStudents = \App\Models\Student::all();
+        foreach ($allStudents as $student) {
+            $fullStudentName = strtolower($student->first_name . ' ' . $student->last_name);
+            $userNameLower = strtolower($userName);
+
+            // Check if user name contains student name or vice versa
+            if (str_contains($userNameLower, $fullStudentName) || str_contains($fullStudentName, $userNameLower)) {
+                return $student;
             }
+        }
 
-            // Try all combinations with case-insensitive matching
-            foreach ($possibleLastNames as $lastName) {
-                // Try exact match first
-                $student = \App\Models\Student::where('first_name', 'like', $firstName)
-                    ->where('last_name', 'like', $lastName)
-                    ->first();
+        // Strategy 4: Try partial matching - match first name and check if last name parts match
+        foreach ($allStudents as $student) {
+            $studentFirstName = strtolower($student->first_name);
+            $studentLastNameParts = explode(' ', strtolower($student->last_name));
 
-                if ($student) {
-                    return $student;
-                }
-
-                // Try case-insensitive match
-                $student = \App\Models\Student::whereRaw('LOWER(first_name) LIKE LOWER(?)', [$firstName])
-                    ->whereRaw('LOWER(last_name) LIKE LOWER(?)', [$lastName])
-                    ->first();
-
-                if ($student) {
-                    return $student;
-                }
-            }
-
-            // Try partial matching - search for any student containing the first name
-            $studentsWithFirstName = \App\Models\Student::where('first_name', 'like', '%' . $firstName . '%')
-                ->orWhere('last_name', 'like', '%' . $firstName . '%')
-                ->get();
-
-            foreach ($studentsWithFirstName as $student) {
-                // Check if any part of the user name matches the student name
-                $studentFullName = strtolower($student->first_name . ' ' . $student->last_name);
-                $userNameLower = strtolower($userName);
-
-                // Simple substring match
-                if (str_contains($studentFullName, $firstName) || str_contains($userNameLower, strtolower($student->first_name))) {
-                    return $student;
+            if (strtolower($firstName) === $studentFirstName) {
+                // Check if any part of the user's name matches the student's last name parts
+                foreach ($nameParts as $part) {
+                    if (in_array(strtolower($part), $studentLastNameParts)) {
+                        return $student;
+                    }
                 }
             }
         }
 
         return null;
     }
+
+
 }

@@ -5,18 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Student's Health Record</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <div class="bg-white rounded-lg shadow-lg p-8">
-            <h1 class="text-2xl font-bold text-sky-700 mb-6 text-center">STUDENT'S HEALTH RECORD</h1>
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-sky-700">STUDENT'S HEALTH RECORD</h1>
+                <div class="flex gap-2">
+                    <a href="{{ route('student.dashboard') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
+                    <button type="button" id="editBtn" class="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-edit mr-2"></i>Edit
+                    </button>
+                </div>
+            </div>
 
-            <form action="{{ isset($student) ? route('student.profile.update') : route('student.health.store') }}" method="POST" id="healthForm">
+            <form action="{{ route('health-form.store') }}" method="POST" id="healthForm">
                 @csrf
-                @if(isset($student))
-                    @method('PUT')
-                @endif
 
                 {{-- Basic Information --}}
                 <div class="bg-sky-50 p-6 rounded-lg mb-6">
@@ -126,7 +134,7 @@
                             </div>
                             <div id="allergiesDiv" class="grid grid-cols-2 md:grid-cols-4 gap-2 ml-6 {{ isset($student) && $student->has_allergies == '1' ? '' : 'hidden' }}">
                                 @php
-                                $allergies = isset($student) ? json_decode($student->allergies, true) ?? [] : [];
+                                $allergies = isset($student) ? $student->allergies ?? [] : [];
                                 @endphp
                                 <label class="flex items-center">
                                     <input type="checkbox" name="allergies[]" value="Medicine" {{ in_array('Medicine', $allergies) ? 'checked' : '' }} class="mr-2 text-sky-600">
@@ -165,7 +173,7 @@
                             </div>
                             <div id="medicalConditionsDiv" class="grid grid-cols-2 gap-2 ml-6 {{ isset($student) && $student->has_medical_condition == '1' ? '' : 'hidden' }}">
                                 @php
-                                $medicalConditions = isset($student) ? json_decode($student->medical_conditions, true) ?? [] : [];
+                                $medicalConditions = isset($student) ? $student->medical_conditions ?? [] : [];
                                 @endphp
                                 <label class="flex items-center">
                                     <input type="checkbox" name="medical_conditions[]" value="Error of refraction" {{ in_array('Error of refraction', $medicalConditions) ? 'checked' : '' }} class="mr-2 text-sky-600">
@@ -228,7 +236,7 @@
 
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                         @php
-                        $familyHistory = isset($student) ? json_decode($student->family_history, true) ?? [] : [];
+                        $familyHistory = isset($student) ? $student->family_history ?? [] : [];
                         @endphp
                         <label class="flex items-center">
                             <input type="checkbox" name="family_history[]" value="Tuberculosis" {{ in_array('Tuberculosis', $familyHistory) ? 'checked' : '' }} class="mr-2 text-sky-600">
@@ -318,7 +326,7 @@
                                 @endphp
 
                                 @php
-                                $vaccinationHistory = isset($student) ? json_decode($student->vaccination_history, true) ?? [] : [];
+                                $vaccinationHistory = isset($student) ? $student->vaccination_history ?? [] : [];
                                 @endphp
                                 @foreach($vaccines as $vaccine)
                                 @php
@@ -373,7 +381,7 @@
                         <p class="font-medium text-gray-700 mb-2">If in case your child develops fever, pain, allergies he/she will be given:</p>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                             @php
-                            $medications = isset($student) ? json_decode($student->medications, true) ?? [] : [];
+                            $medications = isset($student) ? $student->medications ?? [] : [];
                             @endphp
                             <label class="flex items-center">
                                 <input type="checkbox" name="medication[]" value="Paracetamol" {{ in_array('Paracetamol', $medications) ? 'checked' : '' }} class="mr-2 text-sky-600">
@@ -441,6 +449,45 @@
     </div>
 
     <script>
+        // Initially disable all form inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('healthForm');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            // Disable all inputs initially
+            inputs.forEach(input => {
+                input.disabled = true;
+            });
+
+            // Hide submit button initially
+            if (submitBtn) {
+                submitBtn.style.display = 'none';
+            }
+        });
+
+        // Edit button functionality
+        document.getElementById('editBtn').addEventListener('click', function() {
+            const form = document.getElementById('healthForm');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            // Enable all inputs
+            inputs.forEach(input => {
+                input.disabled = false;
+            });
+
+            // Show submit button
+            if (submitBtn) {
+                submitBtn.style.display = 'block';
+            }
+
+            // Change edit button to save mode
+            this.innerHTML = '<i class="fas fa-save mr-2"></i>Save Changes';
+            this.classList.remove('bg-sky-600', 'hover:bg-sky-700');
+            this.classList.add('bg-green-600', 'hover:bg-green-700');
+        });
+
         // Show/hide conditional fields
         document.querySelectorAll('input[name="has_allergies"]').forEach(radio => {
             radio.addEventListener('change', function() {

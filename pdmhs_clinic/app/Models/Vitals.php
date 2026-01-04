@@ -11,13 +11,14 @@ class Vitals extends Model
 
     protected $fillable = [
         'clinic_visit_id',
+        'student_id', // added for direct student association
         'temperature',
         'blood_pressure',
         'heart_rate',
         'respiratory_rate',
         'weight',
         'height',
-        'notes'
+        'notes',
     ];
 
     protected $casts = [
@@ -32,6 +33,14 @@ class Vitals extends Model
     public function clinicVisit()
     {
         return $this->belongsTo(ClinicVisit::class);
+    }
+
+    /**
+     * Student relationship
+     */
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'student_id');
     }
 
     /**

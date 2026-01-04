@@ -42,4 +42,9 @@ class ClinicVisit extends Model
     {
         return $this->hasMany(Vitals::class);
     }
+
+    public function clinicStaff()
+    {
+        return $this->belongsTo(ClinicStaff::class, 'staff_id');
+    }
 }

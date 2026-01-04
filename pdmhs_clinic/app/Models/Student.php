@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\HealthForm;
 
 class Student extends Model
 {
@@ -12,7 +13,6 @@ class Student extends Model
     protected $table = 'students';
 
     public $incrementing = true;
-
     public $timestamps = true;
 
     protected $fillable = [
@@ -55,58 +55,38 @@ class Student extends Model
     ];
 
     protected $casts = [
-        'date_of_birth'          => 'date',
-        'parent_certification'   => 'array',
-        'vaccination_history'    => 'array',
-        'allergies'              => 'array',
-        'medical_conditions'     => 'array',
-        'family_history'         => 'array',
-        'medication'             => 'array',
+        'date_of_birth'        => 'date',
+        'parent_certification' => 'array',
+        'vaccination_history'  => 'array',
+        'allergies'            => 'array',
+        'medical_conditions'   => 'array',
+        'family_history'       => 'array',
+        'medication'           => 'array',
     ];
 
     /**
-     * Get the advisers assigned to this student
+     * Adviser relationship (many-to-many)
      */
     public function advisers()
     {
-        return $this->belongsToMany(Adviser::class, 'student_adviser', 'student_id', 'adviser_id')
-                    ->withPivot('assigned_date');
+        return $this->belongsToMany(
+            Adviser::class, 
+            'student_adviser', 
+            'student_id', 
+            'adviser_id'
+        )->withPivot('assigned_date');
     }
 
     /**
-     * Get the clinic visits for this student
+     * Clinic visits relationship
      */
     public function clinicVisits()
     {
-        return $this->hasMany(ClinicVisit::class);
+        return $this->hasMany(ClinicVisit::class, 'student_id');
     }
 
     /**
-     * Get the immunizations for this student
-     */
-    public function immunizations()
-    {
-        return $this->hasMany(Immunization::class);
-    }
-
-    /**
-     * Get the health incidents for this student
-     */
-    public function healthIncidents()
-    {
-        return $this->hasMany(HealthIncident::class);
-    }
-
-    /**
-     * Get the vitals for this student
-     */
-    public function vitals()
-    {
-        return $this->hasMany(Vitals::class);
-    }
-
-    /**
-     * Get the latest clinic visit for this student
+     * Latest clinic visit
      */
     public function latestVisit()
     {
@@ -114,18 +94,44 @@ class Student extends Model
     }
 
     /**
-     * Get all visits for this student
-     */
-    public function visits()
-    {
-        return $this->hasMany(ClinicVisit::class, 'student_id')->orderBy('visit_date', 'desc');
-    }
-
-    /**
-     * Get medical visits for this student
+     * All medical visits
      */
     public function medicalVisits()
     {
-        return $this->hasMany(MedicalVisit::class, 'student_id', 'student_id');
+        return $this->hasMany(MedicalVisit::class, 'student_id');
     }
+
+    /**
+     * Immunizations
+     */
+    public function immunizations()
+    {
+        return $this->hasMany(Immunization::class, 'student_id');
+    }
+
+    /**
+     * Health incidents
+     */
+    public function healthIncidents()
+    {
+        return $this->hasMany(HealthIncident::class, 'student_id');
+    }
+
+    /**
+     * Vitals
+     */
+    public function vitals()
+    {
+        return $this->hasMany(Vitals::class, 'student_id');
+    }
+
+    /**
+     * Allergies
+     */
+    public function allergies()
+    {
+        return $this->hasMany(Allergy::class, 'student_id');
+    }
+
+
 }

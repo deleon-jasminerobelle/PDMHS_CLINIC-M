@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Models;
@@ -11,7 +12,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * Mass assignable attributes
      */
     protected $fillable = [
         'name',
@@ -35,7 +36,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Hidden attributes
      */
     protected $hidden = [
         'password',
@@ -43,77 +44,67 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Attribute casts
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
     /**
-     * Check if user is admin
+     * Role checks
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
-    /**
-     * Check if user is clinic staff
-     */
-    public function isClinicStaff()
+    public function isClinicStaff(): bool
     {
         return $this->role === 'clinic_staff';
     }
 
-    /**
-     * Check if user is student
-     */
-    public function isStudent()
+    public function isStudent(): bool
     {
         return $this->role === 'student';
     }
 
-    /**
-     * Check if user is adviser
-     */
-    public function isAdviser()
+    public function isAdviser(): bool
     {
         return $this->role === 'adviser';
     }
 
     /**
-     * Get the adviser record for this user
+     * Relationships
      */
     public function adviser()
     {
         return $this->hasOne(Adviser::class, 'user_id', 'id');
     }
 
-    /**
-     * Get the student record for this user
-     */
     public function student()
     {
         return $this->belongsTo(Student::class, 'student_id', 'id');
     }
 
-    /**
-     * Get notifications for this user
-     */
     public function notifications()
     {
         return $this->hasMany(Notification::class)->orderBy('created_at', 'desc');
     }
 
     /**
-     * Get unread notifications count
+     * Unread notifications count accessor
      */
-    public function getUnreadNotificationsCountAttribute()
+    public function getUnreadNotificationsCountAttribute(): int
     {
-        return $this->notifications()->unread()->count();
+        return $this->notifications()->whereNull('read_at')->count();
+    }
+
+    /**
+     * Helper: Get associated Student record
+     */
+    public function getStudentRecord(): ?Student
+    {
+        return $this->student;
     }
 }
