@@ -186,6 +186,17 @@
             transform: translateY(-1px);
         }
         
+        .form-control[readonly], .form-select[disabled] {
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
+            cursor: not-allowed;
+        }
+        
+        .form-control.edit-mode, .form-select.edit-mode {
+            border-color: var(--primary);
+            background-color: white;
+        }
+        
         .form-control.is-invalid, .form-select.is-invalid {
             border-color: #dc3545;
             box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.15);
@@ -208,48 +219,96 @@
             background: var(--gradient);
             color: white;
             border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
             font-family: 'Albert Sans', sans-serif;
             font-weight: 700;
-            font-size: 20px;
+            font-size: 18px;
+            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.3);
+            transition: all 0.3s ease;
         }
         
         .btn-edit:hover {
             background: var(--primary-dark);
             color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(30, 64, 175, 0.4);
         }
         
         .btn-password {
             background: var(--gradient);
             color: white;
             border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
             font-family: 'Albert Sans', sans-serif;
             font-weight: 700;
-            font-size: 20px;
+            font-size: 18px;
+            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.3);
+            transition: all 0.3s ease;
         }
         
         .btn-password:hover {
             background: var(--primary-dark);
             color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(30, 64, 175, 0.4);
         }
         
         .btn-qr {
             background: var(--gradient);
             color: white;
             border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
             font-family: 'Albert Sans', sans-serif;
             font-weight: 700;
-            font-size: 20px;
+            font-size: 18px;
+            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.3);
+            transition: all 0.3s ease;
         }
         
         .btn-qr:hover {
             background: var(--primary-dark);
             color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(30, 64, 175, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-family: 'Albert Sans', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #5a6268 0%, #343a40 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(108, 117, 125, 0.4);
         }
         
         .alert {
@@ -353,21 +412,21 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">First Name</label>
-                            <input type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', $student->first_name ?? 'Hannah Lorraine') }}" required>
+                            <input type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', $student->first_name ?? 'Hannah Lorraine') }}" readonly required>
                             @error('first_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label class="form-label">Middle Name</label>
-                            <input type="text" class="form-control @error('middle_name') is-invalid @enderror" name="middle_name" value="{{ old('middle_name', $student->middle_name ?? '') }}">
+                            <input type="text" class="form-control @error('middle_name') is-invalid @enderror" name="middle_name" value="{{ old('middle_name', $student->middle_name ?? '') }}" readonly>
                             @error('middle_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label class="form-label">Last Name</label>
-                            <input type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', $student->last_name ?? 'Geronday') }}" required>
+                            <input type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', $student->last_name ?? 'Geronday') }}" readonly required>
                             @error('last_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -382,7 +441,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Gender</label>
-                            <select class="form-select @error('gender') is-invalid @enderror" name="gender">
+                            <select class="form-select @error('gender') is-invalid @enderror" name="gender" disabled>
                                 <option value="">Select Gender</option>
                                 <option value="M" {{ old('gender', $student->gender ?? '') == 'M' ? 'selected' : '' }}>Male</option>
                                 <option value="F" {{ old('gender', $student->gender ?? 'F') == 'F' ? 'selected' : '' }}>Female</option>
@@ -393,7 +452,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Birthday</label>
-                            <input type="date" class="form-control @error('birth_date') is-invalid @enderror" name="birth_date" value="{{ old('birth_date', $student->date_of_birth ?? '2005-04-01') }}">
+                            <input type="date" class="form-control @error('birth_date') is-invalid @enderror" name="birth_date" value="{{ old('birth_date', $student->date_of_birth ?? '2005-04-01') }}" readonly>
                             @error('birth_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -407,21 +466,21 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Grade Level</label>
-                            <input type="text" class="form-control @error('grade_level') is-invalid @enderror" name="grade_level" value="{{ old('grade_level', $student->grade_level ?? '12') }}">
+                            <input type="text" class="form-control @error('grade_level') is-invalid @enderror" name="grade_level" value="{{ old('grade_level', $student->grade_level ?? '12') }}" readonly>
                             @error('grade_level')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label class="form-label">Section</label>
-                            <input type="text" class="form-control @error('section') is-invalid @enderror" name="section" value="{{ old('section', $student->section ?? 'STEM 1') }}">
+                            <input type="text" class="form-control @error('section') is-invalid @enderror" name="section" value="{{ old('section', $student->section ?? 'STEM 1') }}" readonly>
                             @error('section')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label class="form-label">Blood Type</label>
-                            <select class="form-select @error('blood_type') is-invalid @enderror" name="blood_type">
+                            <select class="form-select @error('blood_type') is-invalid @enderror" name="blood_type" disabled>
                                 <option value="">Select Blood Type</option>
                                 <option value="A+" {{ old('blood_type', $student->blood_type ?? 'O+') == 'A+' ? 'selected' : '' }}>A+</option>
                                 <option value="A-" {{ old('blood_type', $student->blood_type ?? '') == 'A-' ? 'selected' : '' }}>A-</option>
@@ -445,14 +504,14 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Email Address</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email ?? 'loraineh540@gmail.com') }}" required>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email ?? 'loraineh540@gmail.com') }}" readonly required>
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label class="form-label">Phone Number</label>
-                            <input type="text" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" value="{{ old('phone_number', $student->contact_number ?? '09923603742') }}">
+                            <input type="text" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" value="{{ old('phone_number', $student->contact_number ?? '09923603742') }}" readonly>
                             @error('phone_number')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -463,7 +522,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Address</label>
-                            <textarea class="form-control textarea-large @error('address') is-invalid @enderror" name="address" rows="3">{{ old('address', $student->address ?? 'Test Address Update') }}</textarea>
+                            <textarea class="form-control textarea-large @error('address') is-invalid @enderror" name="address" rows="3" readonly>{{ old('address', $student->address ?? 'Test Address Update') }}</textarea>
                             @error('address')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -474,29 +533,41 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Emergency Contact</label>
-                            <input type="text" class="form-control @error('emergency_contact') is-invalid @enderror" name="emergency_contact" value="{{ old('emergency_contact', $student->emergency_contact ?? 'Parent: 09123456789') }}">
+                            <input type="text" class="form-control @error('emergency_contact') is-invalid @enderror" name="emergency_contact" value="{{ old('emergency_contact', $student->emergency_contact ?? 'Parent: 09123456789') }}" readonly>
                             @error('emergency_contact')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                </div>
 
-                <!-- Submit Button and Additional Actions -->
-                <div class="form-section">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <button type="submit" class="btn btn-edit">
-                            <i class="fas fa-save me-1"></i>Edit Profile
-                        </button>
-                        
-                        <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-password" onclick="showPasswordModal()">
-                                <i class="fas fa-key me-1"></i>Change Password
-                            </button>
-                            <button type="button" class="btn btn-qr" onclick="showQRModal()">
-                                <i class="fas fa-qrcode me-1"></i>View QR Code
+                    <!-- Edit Profile Button -->
+                    <div class="text-center mt-4">
+                        <div id="editButtons">
+                            <button type="button" class="btn btn-edit btn-lg" onclick="enableEditMode()">
+                                <i class="fas fa-edit me-2"></i>Edit Profile
                             </button>
                         </div>
+                        
+                        <div id="saveButtons" style="display: none;">
+                            <button type="submit" class="btn btn-success btn-lg me-3">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-lg" onclick="cancelEdit()">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Actions -->
+                <div class="form-section">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-password btn-lg me-4" onclick="showPasswordModal()">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </button>
+                        <button type="button" class="btn btn-qr btn-lg" onclick="showQRModal()">
+                            <i class="fas fa-qrcode me-2"></i>View QR Code
+                        </button>
                     </div>
                 </div>
             </form>
@@ -761,6 +832,88 @@
                     bsAlert.close();
                 }
             }, 5000);
+        }
+
+        // Edit mode functionality
+        let originalValues = {};
+
+        function enableEditMode() {
+            try {
+                // Store original values
+                const inputs = document.querySelectorAll('input[readonly], select[disabled], textarea[readonly]');
+                inputs.forEach(input => {
+                    if (input.name) {
+                        originalValues[input.name] = input.value;
+                    }
+                });
+
+                // Enable all form fields
+                document.querySelectorAll('input[readonly]').forEach(input => {
+                    input.removeAttribute('readonly');
+                    input.classList.add('edit-mode');
+                });
+                
+                document.querySelectorAll('select[disabled]').forEach(select => {
+                    select.removeAttribute('disabled');
+                    select.classList.add('edit-mode');
+                });
+                
+                document.querySelectorAll('textarea[readonly]').forEach(textarea => {
+                    textarea.removeAttribute('readonly');
+                    textarea.classList.add('edit-mode');
+                });
+
+                // Show save/cancel buttons, hide edit button
+                const editButtons = document.getElementById('editButtons');
+                const saveButtons = document.getElementById('saveButtons');
+                
+                if (editButtons) editButtons.style.display = 'none';
+                if (saveButtons) saveButtons.style.display = 'block';
+            } catch (error) {
+                console.error('Error enabling edit mode:', error);
+                alert('Error enabling edit mode. Please refresh the page and try again.');
+            }
+        }
+
+        function cancelEdit() {
+            try {
+                // Restore original values
+                Object.keys(originalValues).forEach(name => {
+                    const field = document.querySelector(`[name="${name}"]`);
+                    if (field) {
+                        field.value = originalValues[name];
+                    }
+                });
+
+                // Disable all form fields
+                document.querySelectorAll('input.edit-mode').forEach(input => {
+                    input.setAttribute('readonly', true);
+                    input.classList.remove('edit-mode');
+                });
+                
+                document.querySelectorAll('select.edit-mode').forEach(select => {
+                    select.setAttribute('disabled', true);
+                    select.classList.remove('edit-mode');
+                });
+                
+                document.querySelectorAll('textarea.edit-mode').forEach(textarea => {
+                    textarea.setAttribute('readonly', true);
+                    textarea.classList.remove('edit-mode');
+                });
+
+                // Show edit button, hide save/cancel buttons
+                const editButtons = document.getElementById('editButtons');
+                const saveButtons = document.getElementById('saveButtons');
+                
+                if (editButtons) editButtons.style.display = 'block';
+                if (saveButtons) saveButtons.style.display = 'none';
+                
+                // Clear original values
+                originalValues = {};
+            } catch (error) {
+                console.error('Error canceling edit:', error);
+                alert('Error canceling edit. Please refresh the page.');
+            }
         }
     </script>
 </body>
