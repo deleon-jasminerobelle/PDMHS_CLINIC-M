@@ -62,7 +62,7 @@ class AdviserController extends Controller
             // Fetch all students for adviser access
             $allStudents = Student::with('user')->paginate(20);
 
-            return view('adviser-dashboard', compact('studentsData', 'students', 'totalStudents', 'recentVisits', 'studentsWithAllergies', 'adviser', 'allStudents'));
+            return view('adviser-dashboard', compact('studentsData', 'students', 'totalStudents', 'recentVisits', 'studentsWithAllergies', 'adviser', 'allStudents', 'user'));
 
         } catch (\Exception $e) {
             Log::error('Adviser Dashboard Error: ' . $e->getMessage());
