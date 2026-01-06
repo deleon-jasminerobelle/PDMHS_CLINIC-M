@@ -14,11 +14,23 @@ class HealthFormController extends Controller
     public function index()
     {
         $student = null;
+
         if (Auth::check() && Auth::user()->student_id) {
             $student = Student::find(Auth::user()->student_id);
+
+            // Redirect to dashboard if already completed
+            if ($student && $student->health_form_completed) {
+                return redirect()->route('student.dashboard')
+                    ->with('info', 'You have already completed your health form.');
+            }
         }
 
-        return view('student-health-form', compact('student'));
+        $advisers = Adviser::where('is_active', true)
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+
+        return view('student-health-form', compact('student', 'advisers'));
     }
 
     public function store(Request $request)
@@ -28,14 +40,22 @@ class HealthFormController extends Controller
             'request_data' => $request->all()
         ]);
 
+        // Debug LRN value
+        Log::info('LRN from request', ['lrn' => $request->input('lrn')]);
+
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'User not authenticated.');
+        }
+
         // Validation
         $request->validate([
             'name' => 'required|string|max:255',
             'lrn' => 'required|string|max:50',
             'school' => 'required|string|max:255',
-            'grade_section' => ['required', 'string', 'max:50', 'regex:/^\d+\s*.*/'],
+            'grade_section' => ['required', 'string', 'max:50', 'regex:/^\d+\s*[A-Z]?$/'], // Allow optional space
             'birthday' => 'required|date',
-            'sex' => 'required|in:M,F',
+            'gender' => 'required|in:M,F',
             'age' => 'required|integer|min:1',
             'adviser' => 'nullable|string|max:255',
             'blood_type' => 'nullable|string|max:10',
@@ -54,7 +74,7 @@ class HealthFormController extends Controller
             'emergency_contact_name' => 'required|string|max:255',
             'emergency_relation' => 'required|string|max:255',
             'emergency_address' => 'required|string|max:500',
-            'emergency_phone' => 'required|string|max:20',
+            'emergency_contact_number' => 'required|string|max:20',
             'medication' => 'nullable|array',
             'contact_number' => 'nullable|string|max:20',
             'parent_signature' => 'required|string|max:255',
@@ -63,7 +83,11 @@ class HealthFormController extends Controller
             'parent_contact' => 'required|string|max:20',
         ]);
 
-        [$first, $last] = array_pad(explode(' ', $request->name, 2), 2, '');
+        // Parse full name
+        $nameParts = explode(' ', trim($request->name));
+        $first = $nameParts[0] ?? '';
+        $middle = count($nameParts) > 2 ? implode(' ', array_slice($nameParts, 1, -1)) : '';
+        $last = $nameParts[count($nameParts) - 1] ?? '';
 
         // Parse grade_section
         $grade = null;
@@ -108,16 +132,23 @@ class HealthFormController extends Controller
         ];
 
         // Find or create student by LRN
-        $student = Student::firstOrNew(['student_id' => $request->lrn]);
+        Log::info('Finding or creating student', ['lrn' => $request->lrn]);
+        $student = Student::firstOrNew(['lrn' => $request->lrn]);
+        Log::info('Student found/created', [
+            'student_id' => $student->id,
+            'exists' => $student->exists,
+            'lrn' => $student->lrn
+        ]);
 
         // Fill student data
         $student->first_name = $first;
+        $student->middle_name = $middle;
         $student->last_name = $last;
         $student->date_of_birth = $request->birthday;
         $student->grade_level = $grade;
         $student->section = $section;
         $student->school = $request->school;
-        $student->gender = $request->sex;
+        $student->gender = $request->gender;
         $student->age = $request->age;
         $student->adviser = $request->adviser;
         $student->blood_type = $request->blood_type;
@@ -133,7 +164,7 @@ class HealthFormController extends Controller
         $student->parent_certification = $parentCertification;
         $student->vaccination_history = $vaccinationHistory;
         $student->emergency_contact_name = $request->emergency_contact_name;
-        $student->emergency_contact_number = $request->emergency_phone;
+        $student->emergency_contact_number = $request->emergency_contact_number;
         $student->emergency_relation = $request->emergency_relation;
         $student->emergency_address = $request->emergency_address;
         $student->has_allergies = $request->has_allergies;
@@ -143,32 +174,69 @@ class HealthFormController extends Controller
 
         // Calculate BMI
         if ($request->height && $request->weight && $request->height > 0) {
-            $heightM = $request->height / 100;
-            $bmi = round($request->weight / ($heightM * $heightM), 2);
-            $student->bmi = ($bmi >= 10 && $bmi <= 50) ? $bmi : null;
+            $weight = floatval($request->weight);
+            $height = floatval($request->height);
+
+            if ($weight > 500) $weight = $weight / 1000;
+            if ($height > 300) $height = $height / 10;
+
+            $heightM = $height / 100;
+            $bmi = round($weight / ($heightM * $heightM), 2);
+
+            if ($bmi >= 10 && $bmi <= 50) {
+                $student->bmi = $bmi;
+                $student->weight = $weight;
+                $student->height = $height;
+            } else {
+                $student->bmi = null;
+            }
         }
 
         // Mark health form as completed
         $student->health_form_completed = true;
 
-        $student->save(); // ✅ no more undefined method error
+        // Save student
+        Log::info('About to save student', [
+            'student_id' => $student->id,
+            'lrn' => $student->lrn,
+            'health_form_completed' => $student->health_form_completed,
+            'first_name' => $student->first_name,
+            'last_name' => $student->last_name
+        ]);
+
+        $studentSaveResult = $student->save();
+
+        Log::info('Student save result', [
+            'student_id' => $student->id,
+            'save_result' => $studentSaveResult,
+            'health_form_completed_after_save' => $student->health_form_completed
+        ]);
 
         // Assign adviser if provided
         if ($request->adviser && trim($request->adviser)) {
             $this->assignAdviserToStudent($student, $request->adviser);
         }
 
-        // Link student to user if not already
-        if (!Auth::user()->student_id) {
-            Auth::user()->student_id = $student->id;
-            Auth::user()->save();
-        }
+        // Link student to user
+        Log::info('Linking student to user', [
+            'user_id' => $user->id,
+            'student_id' => $student->id
+        ]);
+        $user->student_id = $student->id;
+        $userSaveResult = $user->save();
+        Log::info('User save result', [
+            'user_id' => $user->id,
+            'student_id' => $user->student_id,
+            'save_result' => $userSaveResult
+        ]);
 
-        // Update session flag
+        // Update session
         $request->session()->put('student_profile', true);
 
+        Log::info('Student saved successfully', ['student_id' => $student->id, 'user_id' => $user->id]);
+
         return redirect()->route('student.dashboard')
-            ->with('success', 'Health form saved successfully.');
+            ->with('success', 'Health form saved successfully. You can now access your dashboard.');
     }
 
     private function assignAdviserToStudent($student, $adviserName)

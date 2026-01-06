@@ -364,11 +364,11 @@
         <!-- Visits History Section -->
         <div class="visits-section">
             <div class="visits-header">
-                <i class="fas fa-clipboard-list me-2"></i>Visit History ({{ count($visits) }} visits)
+                <i class="fas fa-clipboard-list me-2"></i>Visit History ({{ count($clinicVisits) }} visits)
             </div>
-            
-            @if(count($visits) > 0)
-                @foreach($visits as $visit)
+
+            @if(count($clinicVisits) > 0)
+                @foreach($clinicVisits as $visit)
                 <div class="visit-card">
                     <div class="visit-header">
                         <div>

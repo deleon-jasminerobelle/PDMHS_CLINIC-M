@@ -5,12 +5,11 @@ require_once 'vendor/autoload.php';
 $app = require_once 'bootstrap/app.php';
 $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
-$user = \App\Models\User::find(7); // Student Two
-if ($user) {
-    echo "User ID: {$user->id}\n";
-    echo "User Name: {$user->name}\n";
-    echo "User Role: {$user->role}\n";
-    echo "User Student ID: {$user->student_id}\n";
-} else {
-    echo "User not found\n";
+echo "Checking user roles...\n";
+
+$users = \App\Models\User::all();
+
+foreach ($users as $user) {
+    echo "ID: {$user->id}, Email: {$user->email}, Name: {$user->name}, Role: '{$user->role}' (length: " . strlen($user->role) . ")\n";
+    echo "Role bytes: " . implode(' ', array_map('ord', str_split($user->role))) . "\n";
 }

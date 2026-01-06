@@ -131,6 +131,19 @@ trait StudentHealthService
     }
 
     /**
+     * Get immunizations for a student
+     */
+    public function getImmunizationsForStudent(Student $student)
+    {
+        try {
+            return $student->immunizations()->orderBy('created_at', 'desc')->get();
+        } catch (\Exception $e) {
+            Log::info('Error fetching immunizations: ' . $e->getMessage());
+            return collect();
+        }
+    }
+
+    /**
      * Check if student has complete emergency health data
      */
     public function hasCompleteHealthData(Student $student): bool

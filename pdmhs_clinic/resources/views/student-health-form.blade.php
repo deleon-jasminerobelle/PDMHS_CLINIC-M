@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-            <form action="{{ route('health-form.store') }}" method="POST" id="healthForm">
+            <form action="{{ route('student.health.store') }}" method="POST" id="healthForm">
                 @csrf
 
                 {{-- Basic Information --}}
@@ -53,16 +53,16 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Birthday</label>
-                            <input type="date" name="birthday" value="{{ isset($student) ? $student->date_of_birth->format('Y-m-d') : old('birthday') }}" required class="w-full px-3 py-2 border border-sky-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            <input type="date" name="birthday" value="{{ isset($student) && $student->date_of_birth ? $student->date_of_birth->format('Y-m-d') : old('birthday') }}" class="w-full px-3 py-2 border border-sky-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Sex/Age</label>
                             <div class="flex gap-2">
-                                <select name="sex" required class="flex-1 px-3 py-2 border border-sky-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <select name="gender" required class="flex-1 px-3 py-2 border border-sky-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
                                     <option value="">Select</option>
-                                    <option value="M" {{ isset($student) && $student->sex == 'M' ? 'selected' : '' }}>Male</option>
-                                    <option value="F" {{ isset($student) && $student->sex == 'F' ? 'selected' : '' }}>Female</option>
+                                    <option value="M" {{ isset($student) && $student->gender == 'M' ? 'selected' : '' }}>Male</option>
+                                    <option value="F" {{ isset($student) && $student->gender == 'F' ? 'selected' : '' }}>Female</option>
                                 </select>
                                 <input type="number" name="age" placeholder="Age" value="{{ isset($student) ? $student->age : old('age') }}" required class="w-20 px-3 py-2 border border-sky-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
                             </div>
@@ -70,7 +70,14 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Adviser</label>
-                            <input type="text" name="adviser" value="{{ isset($student) ? $student->adviser : old('adviser') }}" class="w-full px-3 py-2 border border-sky-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            <select name="adviser" class="w-full px-3 py-2 border border-sky-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <option value="">Select Adviser</option>
+                                @foreach($advisers as $adviser)
+                                    <option value="{{ $adviser->first_name . ' ' . $adviser->last_name }}" {{ isset($student) && $student->adviser == $adviser->first_name . ' ' . $adviser->last_name ? 'selected' : '' }}>
+                                        {{ $adviser->first_name . ' ' . $adviser->last_name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div>
@@ -373,7 +380,7 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Phone No.</label>
-                            <input type="text" name="emergency_phone" value="{{ isset($student) ? $student->emergency_phone : old('emergency_phone') }}" required class="w-full px-3 py-2 border border-sky-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            <input type="text" name="emergency_contact_number" value="{{ isset($student) ? $student->emergency_contact_number : old('emergency_contact_number') }}" required class="w-full px-3 py-2 border border-sky-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                     </div>
 

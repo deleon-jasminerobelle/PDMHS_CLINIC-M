@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdviserMiddleware
 {
@@ -13,10 +14,10 @@ class AdviserMiddleware
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         try {
             if (!Auth::check()) {
@@ -24,15 +25,31 @@ class AdviserMiddleware
             }
 
             $user = Auth::user();
-            
+
             if (!$user || $user->role !== 'adviser') {
-                Auth::logout();
-                return redirect()->route('login')->with('error', 'Access denied. Adviser role required.');
+                if ($user) {
+                    switch ($user->role) {
+                        case 'student':
+                            return redirect()->route('student.dashboard')->with('error', 'Access denied. Adviser role required.');
+                        case 'clinic_staff':
+                            return redirect()->route('clinic-staff.dashboard')->with('error', 'Access denied. Adviser role required.');
+                        default:
+                            Auth::logout();
+                            return redirect()->route('login')->with('error', 'Access denied. Adviser role required.');
+                    }
+                } else {
+                    return redirect()->route('login')->with('error', 'Please log in to access this page.');
+                }
             }
 
+            // User is adviser, allow access
             return $next($request);
+
         } catch (\Exception $e) {
-            Log::error('Adviser Middleware Error: ' . $e->getMessage());
+            Log::error('AdviserMiddleware Error: ' . $e->getMessage(), [
+                'stack_trace' => $e->getTraceAsString(),
+                'session_id' => session()->getId(),
+            ]);
             return redirect()->route('login')->with('error', 'An error occurred. Please try logging in again.');
         }
     }

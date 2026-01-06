@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use App\Traits\StudentHealthService;
 use App\Models\User;
+use App\Models\Student;
 
 class StudentDashboardController extends Controller
 {
@@ -28,9 +30,17 @@ class StudentDashboardController extends Controller
             return redirect()->route('login')->with('error', 'Access denied.');
         }
 
-        $student = $this->getStudentForUser($user);
+        $student = Student::find($user->student_id);
 
-        // Get health-related data
+        if (!$student) {
+            return redirect()->route('login')->with('error', 'Student record not found.');
+        }
+
+        if (!$student->health_form_completed) {
+            return redirect()->route('student-health-form')->with('error', 'Please complete your health form first.');
+        }
+
+        // Fetch all relevant data for dashboard
         $latestVitals = $this->getLatestVitalsForStudent($student);
         $bmiData = $this->calculateBMI($latestVitals, $student);
         $bmi = $bmiData['bmi'];
@@ -55,14 +65,22 @@ class StudentDashboardController extends Controller
         ));
     }
 
-
-
     /**
      * Update student profile
      */
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
+
+        if (!$user->isStudent()) {
+            return redirect()->route('login')->with('error', 'Access denied.');
+        }
+
+        $student = Student::find($user->student_id);
+
+        if (!$student) {
+            return redirect()->route('login')->with('error', 'Student record not found.');
+        }
 
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
@@ -97,6 +115,10 @@ class StudentDashboardController extends Controller
     {
         $user = Auth::user();
 
+        if (!$user->isStudent()) {
+            return redirect()->route('login')->with('error', 'Access denied.');
+        }
+
         $validated = $request->validate([
             'current_password' => 'required',
             'password' => 'required|min:8|confirmed',
@@ -117,6 +139,10 @@ class StudentDashboardController extends Controller
     public function uploadProfilePicture(Request $request)
     {
         $user = Auth::user();
+
+        if (!$user->isStudent()) {
+            return response()->json(['error' => 'Access denied.'], 403);
+        }
 
         $request->validate([
             'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:' . config('clinic.max_profile_picture_size', 2048),
@@ -153,14 +179,62 @@ class StudentDashboardController extends Controller
             return redirect()->route('login')->with('error', 'Access denied.');
         }
 
-        $student = $this->getStudentForUser($user);
-        $clinicVisits = $this->getClinicVisitsForStudent($student);
+        $student = Student::find($user->student_id);
 
+        if (!$student || !$student->health_form_completed) {
+            return redirect()->route('student-health-form')->with('error', 'Please complete your health form first.');
+        }
+
+        $clinicVisits = $this->getClinicVisitsForStudent($student);
         $totalVisits = $clinicVisits->count();
         $recentVisits = $clinicVisits->filter(fn($visit) => $visit->created_at >= now()->subDays(30))->count();
         $allergies = $this->getAllergiesForStudent($student);
 
         return view('student-medical', compact('user', 'totalVisits', 'recentVisits', 'allergies'));
+    }
+
+    /**
+     * Show student medical history
+     */
+    public function medicalHistory()
+    {
+        $user = Auth::user();
+
+        if (!$user->isStudent()) {
+            return redirect()->route('login')->with('error', 'Access denied.');
+        }
+
+        $student = Student::find($user->student_id);
+
+        if (!$student || !$student->health_form_completed) {
+            return redirect()->route('student.healthform')->with('error', 'Please complete your health form first.');
+        }
+
+        $clinicVisits = $this->getClinicVisitsForStudent($student);
+        $allergies = $this->getAllergiesForStudent($student);
+        $immunizations = $this->getImmunizationsForStudent($student);
+
+        return view('student-medical-history', compact('user', 'student', 'clinicVisits', 'allergies', 'immunizations'));
+    }
+
+    /**
+     * Show student info
+     */
+    public function info()
+    {
+        $user = Auth::user();
+
+        if (!$user->isStudent()) {
+            return redirect()->route('login')->with('error', 'Access denied.');
+        }
+
+        $student = Student::find($user->student_id);
+
+        if (!$student || !$student->health_form_completed) {
+            return redirect()->route('student-health-form')->with('error', 'Please complete your health form first.');
+        }
+
+        return view('student-info', compact('user', 'student'));
     }
 
     /**
@@ -174,7 +248,11 @@ class StudentDashboardController extends Controller
             return redirect()->route('login')->with('error', 'Access denied.');
         }
 
-        $student = $this->getStudentForUser($user);
+        $student = Student::find($user->student_id);
+
+        if (!$student || !$student->health_form_completed) {
+            return redirect()->route('student-health-form')->with('error', 'Please complete your health form first.');
+        }
 
         return view('student-profile', compact('user', 'student'));
     }
@@ -190,9 +268,13 @@ class StudentDashboardController extends Controller
             return response()->json(['error' => 'Access denied.'], 403);
         }
 
-        $student = $this->getStudentForUser($user);
-        $allergies = $this->getAllergiesForStudent($student);
+        $student = Student::find($user->student_id);
 
+        if (!$student || !$student->health_form_completed) {
+            return response()->json(['error' => 'Please complete your health form first.'], 403);
+        }
+
+        $allergies = $this->getAllergiesForStudent($student);
         return response()->json(['allergies' => $allergies]);
     }
 
@@ -207,15 +289,18 @@ class StudentDashboardController extends Controller
             return response()->json(['error' => 'Access denied.'], 403);
         }
 
+        $student = Student::find($user->student_id);
+
+        if (!$student || !$student->health_form_completed) {
+            return response()->json(['error' => 'Please complete your health form first.'], 403);
+        }
+
         $request->validate([
             'allergies' => 'required|array',
             'allergies.*.allergy_name' => 'required|string|max:255',
             'allergies.*.severity' => 'required|in:mild,moderate,severe',
         ]);
 
-        $student = $this->getStudentForUser($user);
-
-        // Update allergies in the student record
         $student->update([
             'allergies' => $request->allergies,
             'has_allergies' => count($request->allergies) > 0
@@ -226,6 +311,4 @@ class StudentDashboardController extends Controller
             'message' => 'Allergies updated successfully!'
         ]);
     }
-
-    // You can add other methods (info, medicalHistory) here as needed
 }

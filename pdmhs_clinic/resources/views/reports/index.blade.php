@@ -348,7 +348,7 @@
         @endif
 
         function exportPDF() {
-            fetch('{{ route("clinic-staff.reports.export-pdf") }}', {
+            fetch('{{ route("clinic-staff.reports-export-pdf") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -367,7 +367,7 @@
         }
 
         function exportExcel() {
-            fetch('{{ route("clinic-staff.reports.export-excel") }}', {
+            fetch('{{ route("clinic-staff.reports-export-excel") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

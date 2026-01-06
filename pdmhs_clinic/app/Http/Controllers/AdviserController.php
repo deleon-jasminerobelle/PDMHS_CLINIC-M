@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Models\Adviser;
 use App\Models\User;
+use App\Models\ClinicVisit;
+use App\Models\Student;
 use App\Traits\StudentHealthService;
 
 class AdviserController extends Controller
@@ -17,7 +19,7 @@ class AdviserController extends Controller
     /**
      * Adviser Dashboard
      */
-    public function dashboard()
+    public function adviserDashboard()
     {
         /** @var User $user */
         $user = Auth::user();
@@ -30,6 +32,14 @@ class AdviserController extends Controller
             // Load adviser with related students
             $adviser = Adviser::where('user_id', $user->id)->with('students')->first();
             $students = $adviser->students ?? collect();
+
+            // Fetch dashboard statistics
+            $totalStudents = $students->count();
+            $recentVisits = ClinicVisit::whereHas('student', function($query) use ($students) {
+                $query->whereIn('id', $students->pluck('id'));
+            })->with('student')->orderBy('visit_date', 'desc')->limit(10)->get();
+
+            $studentsWithAllergies = $students->where('allergies', '!=', '')->whereNotNull('allergies')->count();
 
             $studentsData = $students->map(function ($student) {
                 $latestVitals = $this->getLatestVitalsForStudent($student);
@@ -49,7 +59,10 @@ class AdviserController extends Controller
                 ];
             });
 
-            return view('adviser.dashboard', compact('studentsData'));
+            // Fetch all students for adviser access
+            $allStudents = Student::with('user')->paginate(20);
+
+            return view('adviser-dashboard', compact('studentsData', 'students', 'totalStudents', 'recentVisits', 'studentsWithAllergies', 'adviser', 'allStudents'));
 
         } catch (\Exception $e) {
             Log::error('Adviser Dashboard Error: ' . $e->getMessage());

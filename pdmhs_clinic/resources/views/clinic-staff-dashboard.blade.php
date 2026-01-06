@@ -223,11 +223,6 @@
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <div class="container mt-4">
         <!-- Success/Error Messages -->

@@ -13,7 +13,9 @@ class StudentMiddleware
     /**
      * Handle an incoming request.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -24,14 +26,30 @@ class StudentMiddleware
 
             $user = Auth::user();
 
-            if (!$user || !($user instanceof \App\Models\User) || $user->role !== 'student') {
-                Auth::logout();
-                return redirect()->route('login')->with('error', 'Access denied. Students only.');
+            if (!$user || $user->role !== 'student') {
+                if ($user) {
+                    switch ($user->role) {
+                        case 'adviser':
+                            return redirect()->route('adviser.dashboard')->with('error', 'Access denied. Student role required.');
+                        case 'clinic_staff':
+                            return redirect()->route('clinic-staff.dashboard')->with('error', 'Access denied. Student role required.');
+                        default:
+                            Auth::logout();
+                            return redirect()->route('login')->with('error', 'Access denied. Student role required.');
+                    }
+                } else {
+                    return redirect()->route('login')->with('error', 'Please log in to access this page.');
+                }
             }
 
+            // User is student, allow access
             return $next($request);
+
         } catch (\Exception $e) {
-            Log::error('Student Middleware Error: ' . $e->getMessage());
+            Log::error('StudentMiddleware Error: ' . $e->getMessage(), [
+                'stack_trace' => $e->getTraceAsString(),
+                'session_id' => session()->getId(),
+            ]);
             return redirect()->route('login')->with('error', 'An error occurred. Please try logging in again.');
         }
     }

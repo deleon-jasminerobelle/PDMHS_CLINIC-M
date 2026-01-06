@@ -314,7 +314,7 @@
                 </div>
             </div>
 
-            <form action="{{ route('clinic-staff.profile.update') }}" method="POST" id="profileForm">
+            <form action="{{ route('clinic-staff.profile-update') }}" method="POST" id="profileForm">
                 @csrf
                 @method('PUT')
                 
@@ -410,7 +410,7 @@
                     <h5 class="modal-title">Change Password</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form action="{{ route('clinic-staff.password.update') }}" method="POST">
+                <form action="{{ route('clinic-staff.password-update') }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">

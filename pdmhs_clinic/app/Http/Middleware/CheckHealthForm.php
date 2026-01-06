@@ -6,63 +6,52 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use App\Models\Student;
 
 class CheckHealthForm
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
     public function handle(Request $request, Closure $next)
     {
-        // Check if user is authenticated
+        // Not logged in
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
+        // ✅ Allow health form routes (VERY IMPORTANT)
+        if ($request->routeIs('student-health-form', 'student.health.store')) {
+            return $next($request);
+        }
+
         $user = Auth::user();
 
-        // Only apply this middleware to students
+        // Only students are checked
         if ($user->role !== 'student') {
             return $next($request);
         }
 
-        // Get student record
-        $student = Student::find($user->student_id);
+        // Use relationship instead of find
+        $student = $user->student ?? null;
 
         if (!$student) {
-            Log::warning('No student record found for user', [
+            Log::warning('No student record found', [
                 'user_id' => $user->id,
-                'user_name' => $user->name,
             ]);
 
             return redirect()->route('student-health-form')
-                ->with('info', 'Please complete your health form before accessing your dashboard.');
+                ->with('info', 'Please complete your health form.');
         }
 
-        // Check if emergency contact is filled out
-        if (!$student->emergency_contact_name ||
-            !$student->emergency_contact_number ||
-            !$student->emergency_relation ||
-            !$student->emergency_address) {
-            Log::info('Student attempted to access dashboard without emergency contact', [
-                'student_id' => $student->id,
-                'user_id' => $user->id,
-                'student_name' => $student->first_name . ' ' . $student->last_name,
-                'emergency_contact_name' => $student->emergency_contact_name,
-                'emergency_contact_number' => $student->emergency_contact_number,
-                'emergency_relation' => $student->emergency_relation,
-                'emergency_address' => $student->emergency_address
-            ]);
-
-            return redirect()->route('student-health-form')
-                ->with('info', 'Please complete your health form before accessing your dashboard.');
+        // If health form is completed, allow access
+        if ($student->health_form_completed) {
+            return $next($request);
         }
 
-        return $next($request);
+        // If health form is not completed, redirect to form
+        Log::info('Student blocked from dashboard (health form not completed)', [
+            'student_id' => $student->id,
+            'user_id' => $user->id,
+        ]);
+
+        return redirect()->route('student-health-form')
+            ->with('info', 'Please complete your health form before accessing the dashboard.');
     }
 }

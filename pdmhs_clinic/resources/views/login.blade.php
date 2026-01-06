@@ -8,696 +8,206 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        'primary-dark': '#1e3a8a',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                        dark: '#0f172a',
+                        gray: '#64748b',
+                        light: '#f1f5f9',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                        'albert': ['Albert Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #1e40af;
-            --primary-dark: #1e3a8a;
-            --secondary: #3b82f6;
-            --accent: #60a5fa;
-            --dark: #0f172a;
-            --gray: #64748b;
-            --light: #f1f5f9;
-            --white: #ffffff;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom right, #f8fafc, #e0f2fe);
-            color: var(--dark);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow-x: hidden;
-        }
-
-        /* Login Form */
-        .login-container {
-            background: var(--white);
-            border-radius: 24px;
-            padding: 48px;
-            box-shadow: 0 32px 64px rgba(30, 64, 175, 0.15);
-            border: 1px solid rgba(30, 64, 175, 0.1);
-            width: 731px;
-            height: 480px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .login-container.expanded {
-            height: 1024px;
-        }
-
-        .login-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: var(--gradient);
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .login-header h1 {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 60px;
-            font-weight: 900;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .login-header p {
-            color: var(--gray);
-            font-size: 16px;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-group label {
-            display: block;
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 600;
-            font-size: 25px;
-            margin-bottom: 8px;
-            color: var(--dark);
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid var(--light);
-            border-radius: 20px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #e9ecef;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
-        }
-
-        .form-group input::placeholder {
-            color: var(--gray);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 16px 32px;
-            border: none;
-            border-radius: 20px;
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 20px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .btn-primary {
-            background: var(--gradient);
-            color: var(--white);
-            box-shadow: 0 8px 24px rgba(30, 64, 175, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(30, 64, 175, 0.4);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary);
-            color: var(--white);
-            transform: translateY(-3px);
-        }
-
-        .login-footer {
-            text-align: center;
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid var(--light);
-            display: none; /* Hidden by default */
-        }
-
-        .login-footer p {
-            font-family: 'Albert Sans', sans-serif;
-            color: var(--gray);
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .login-footer a {
-            font-family: 'Albert Sans', sans-serif;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 20px;
-        }
-
-        .login-footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Alert Messages */
-        .alert {
-            padding: 16px 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            font-weight: 600;
-            font-size: 14px;
-            border: 2px solid;
-            animation: slideInDown 0.5s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .alert::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            animation: progressBar 3s ease-out;
-        }
-
-        .alert-success {
-            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-            color: #065f46;
-            border-color: #10b981;
-        }
-
-        .alert-success::before {
-            background: #10b981;
-        }
-
-        .alert-error {
-            background: linear-gradient(135deg, #fee2e2, #fecaca);
-            color: #991b1b;
-            border-color: #ef4444;
-            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2);
-        }
-
-        .alert-error::before {
-            background: #ef4444;
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes progressBar {
-            from {
-                width: 100%;
-            }
-            to {
-                width: 0%;
-            }
-        }
-
-        .error-text {
-            color: #ef4444;
-            font-size: 12px;
-            margin-top: 4px;
-            display: block;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Role Selection */
-        .role-selection {
-            margin-bottom: 32px;
-        }
-
-        .role-selection h3 {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 30px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-            letter-spacing: -0.5px;
-        }
-
-        .role-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .role-btn {
-            padding: 16px 12px;
-            border: 2px solid var(--light);
-            border-radius: 12px;
-            background: var(--white);
-            color: var(--gray);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            position: relative;
-            overflow: hidden;
-            min-width: 120px;
-            flex: 0 0 auto;
-        }
-
-        .role-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: transparent;
-            transition: all 0.3s ease;
-        }
-
-        .role-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(30, 64, 175, 0.15);
-        }
-
-        .role-btn.active {
-            border-color: var(--primary);
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-            color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(30, 64, 175, 0.2);
-        }
-
-        .role-btn .role-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
-            filter: grayscale(0.3);
-            transition: all 0.3s ease;
-            display: block;
-            text-align: center;
-        }
-
-        .role-btn .role-icon svg {
-            width: 32px;
-            height: 32px;
-            transition: all 0.3s ease;
-        }
-
-        /* Same blue color for all role icons */
-        .role-btn[data-role="clinic_staff"] .role-icon svg,
-        .role-btn[data-role="student"] .role-icon svg,
-        .role-btn[data-role="adviser"] .role-icon svg {
-            color: #1e40af;
-        }
-
-        .role-btn .role-icon i {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            line-height: 32px;
-        }
-
-        .role-btn:hover .role-icon {
-            filter: grayscale(0);
-            transform: scale(1.1);
-        }
-
-        /* Same hover color for all roles */
-        .role-btn[data-role="clinic_staff"]:hover .role-icon svg,
-        .role-btn[data-role="student"]:hover .role-icon svg,
-        .role-btn[data-role="adviser"]:hover .role-icon svg {
-            color: #1e3a8a;
-        }
-
-        .role-btn.active .role-icon {
-            filter: grayscale(0);
-            transform: scale(1.15);
-        }
-
-        .role-btn.active .role-icon svg {
-            color: #1e3a8a;
-        }
-
-        /* Consistent blue styling for all roles */
-        .role-btn:hover,
-        .role-btn.active {
-            border-color: var(--primary);
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-            color: var(--primary);
-        }
-
-        /* Top border colors - consistent blue */
-        .role-btn:hover::before,
-        .role-btn.active::before {
-            background: var(--primary);
-        }
-
-        .role-btn .role-name {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 23px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-        }
-
-        .role-btn .role-desc {
-            font-size: 10px;
-            opacity: 0.7;
-            font-weight: 500;
-            line-height: 1.2;
-        }
-
-        .role-btn:hover .role-desc,
-        .role-btn.active .role-desc {
-            opacity: 0.9;
-        }
-
-        .login-form {
-            display: none;
-        }
-
-        .login-form.active {
-            display: block;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-
-            .login-container {
-                margin: 2rem;
-                padding: 32px 24px;
-            }
-        }
-
-        /* Animation keyframes */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        .gradient-bg { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+        .gradient-text { background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .login-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes progressBar { from { width: 100%; } to { width: 0%; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .alert { animation: slideInDown 0.5s ease-out; position: relative; overflow: hidden; }
+        .alert::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; animation: progressBar 3s linear; }
+        .alert-success { background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #065f46; border-color: #10b981; }
+        .alert-success::before { background: #10b981; }
+        .alert-error { background: linear-gradient(135deg, #fee2e2, #fecaca); color: #991b1b; border-color: #ef4444; box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2); }
+        .alert-error::before { background: #ef4444; }
+        .error-text { color: #ef4444; font-size: 12px; margin-top: 4px; display: block; animation: fadeIn 0.3s ease-out; }
+        .role-btn.active, .role-btn:hover { border-color: #1e40af; background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #1e40af; transform: translateY(-3px); box-shadow: 0 12px 32px rgba(30, 64, 175, 0.2); }
+        .role-btn .role-icon { filter: grayscale(0.3); transition: all 0.3s ease; }
+        .role-btn:hover .role-icon, .role-btn.active .role-icon { filter: grayscale(0); transform: scale(1.15); }
     </style>
 </head>
-<body>
-    <div class="login-container">
-        <div class="login-header">
-            <h1>Welcome Back</h1>
-        </div>
+<body class="font-poppins bg-gradient-to-br from-slate-50 to-sky-100 text-slate-900 min-h-screen flex items-center justify-center overflow-x-hidden">
+<div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative">
+    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-800 to-blue-600 rounded-t-2xl"></div>
 
-        @if (session('success'))
-            <div class="alert alert-success">
-                <strong>✓ Success!</strong> {{ session('success') }}
-            </div>
-        @endif
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-albert font-bold text-slate-800 mb-2">Welcome Back</h1>
+        <p class="text-slate-600">Sign in to your PDMHS account</p>
+    </div>
 
-        @if ($errors->any())
-            <div class="alert alert-error">
-                <strong>⚠ Login Failed!</strong>
-                @foreach ($errors->all() as $error)
-                    <br>• {{ $error }}
-                @endforeach
-            </div>
-        @endif
-
-        <!-- Role Selection -->
-        <div class="role-selection">
-            <h3>Select Your Role</h3>
-            <div class="role-buttons">
-                <div class="role-btn" data-role="clinic_staff">
-                    <div class="role-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20.84 4.61C19.32 3.04 17.06 3.04 15.54 4.61L12 8.69L8.46 4.61C6.94 3.04 4.68 3.04 3.16 4.61C1.64 6.18 1.64 8.82 3.16 10.39L12 20.18L20.84 10.39C22.36 8.82 22.36 6.18 20.84 4.61Z" fill="currentColor"/>
-                            <path d="M3 12H6L8 16L10 8L12 12H15" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="role-name">Clinic Staff</div>
+    @if (session('success'))
+        <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-6 rounded-r-lg animate-slideInDown">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
                 </div>
-                <div class="role-btn" data-role="student">
-                    <div class="role-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <div class="role-name">Student</div>
-                </div>
-                <div class="role-btn" data-role="adviser">
-                    <div class="role-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <div class="role-name">Adviser</div>
+                <div class="ml-3">
+                    <p class="text-sm text-green-700">{{ session('success') }}</p>
                 </div>
             </div>
         </div>
+    @endif
 
-        <!-- Login Forms for each role -->
-        <div id="clinic_staff-form" class="login-form">
-            <form method="POST" action="{{ route('login.post') }}">
-                @csrf
-                <div class="form-group">
-                    <label for="staff-email">Email Address</label>
-                    <input type="email" id="staff-email" name="username" placeholder="Enter staff email" 
-                           value="{{ old('username') }}" required>
-                    @error('username')
-                        <span class="error-text">{{ $message }}</span>
-                    @enderror
+    @if ($errors->any())
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-r-lg animate-slideInDown">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
                 </div>
-                <div class="form-group">
-                    <label for="staff-password">Password</label>
-                    <input type="password" id="staff-password" name="password" placeholder="Enter staff password" required>
-                    @error('password')
-                        <span class="error-text">{{ $message }}</span>
-                    @enderror
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Login Failed</h3>
+                    <div class="mt-2 text-sm text-red-700">
+                        <ul role="list" class="list-disc pl-5 space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Sign In as Clinic Staff</button>
-            </form>
+            </div>
         </div>
+    @endif
 
-        <div id="adviser-form" class="login-form">
-            <form method="POST" action="{{ route('login.post') }}">
-                @csrf
-                <div class="form-group">
-                    <label for="adviser-email">Email Address</label>
-                    <input type="email" id="adviser-email" name="username" placeholder="Enter adviser email" 
-                           value="{{ old('username') }}" required>
-                    @error('username')
-                        <span class="error-text">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label for="adviser-password">Password</label>
-                    <input type="password" id="adviser-password" name="password" placeholder="Enter adviser password" required>
-                    @error('password')
-                        <span class="error-text">{{ $message }}</span>
-                    @enderror
-                </div>
-                <button type="submit" class="btn btn-primary">Sign In as Adviser</button>
-            </form>
-        </div>
-
-        <div id="student-form" class="login-form">
-            <form method="POST" action="{{ route('login.post') }}">
-                @csrf
-                <div class="form-group">
-                    <label for="student-email">Email Address</label>
-                    <input type="email" id="student-email" name="username" placeholder="Enter student email" 
-                           value="{{ old('username') }}" required>
-                    @error('username')
-                        <span class="error-text">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label for="student-password">Password</label>
-                    <input type="password" id="student-password" name="password" placeholder="Enter student password" required>
-                    @error('password')
-                        <span class="error-text">{{ $message }}</span>
-                    @enderror
-                </div>
-                <button type="submit" class="btn btn-primary">Sign In as Student</button>
-            </form>
-        </div>
-
-        <div class="login-footer">
-            <p>Don't have an account? <a href="{{ route('register') }}">Sign up first</a></p>
-            <p><a href="#" style="font-style: italic; text-decoration: underline;">I forgot my password</a></p>
+    <!-- Role Selection -->
+    <div class="mb-6">
+        <h3 class="text-lg font-semibold text-slate-700 mb-4 text-center">Select Your Role</h3>
+        <div class="grid grid-cols-3 gap-3">
+            <button type="button" class="role-btn p-4 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="clinic_staff">
+                <div class="text-2xl mb-2">🏥</div>
+                <div class="text-sm font-medium text-slate-700">Clinic Staff</div>
+            </button>
+            <button type="button" class="role-btn p-4 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="student">
+                <div class="text-2xl mb-2">🎓</div>
+                <div class="text-sm font-medium text-slate-700">Student</div>
+            </button>
+            <button type="button" class="role-btn p-4 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="adviser">
+                <div class="text-2xl mb-2">👩‍🏫</div>
+                <div class="text-sm font-medium text-slate-700">Adviser</div>
+            </button>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const roleButtons = document.querySelectorAll('.role-btn');
-            const loginForms = document.querySelectorAll('.login-form');
+    <!-- Login Form -->
+    <form method="POST" action="{{ route('login.post') }}" class="space-y-6 login-form">
+        @csrf
+        <input type="hidden" name="role" id="role" value="">
+        <div>
+            <label for="username" class="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+            <input type="email" id="username" name="username" value="{{ old('username') }}" required
+                   class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                   placeholder="Enter your email">
+            @error('username')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
 
-            // Store original button texts
-            const buttonTexts = {
-                'clinic_staff-form': 'Sign In as Clinic Staff', 
-                'adviser-form': 'Sign In as Adviser',
-                'student-form': 'Sign In as Student'
-            };
+        <div>
+            <label for="password" class="block text-sm font-medium text-slate-700 mb-2">Password</label>
+            <input type="password" id="password" name="password" required
+                   class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                   placeholder="Enter your password">
+            @error('password')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
 
-            roleButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const selectedRole = this.dataset.role;
-                    
-                    // Expand the login container
-                    const loginContainer = document.querySelector('.login-container');
-                    loginContainer.classList.add('expanded');
-                    
-                    // Remove active class from all buttons
-                    roleButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    
-                    // Hide all forms
-                    loginForms.forEach(form => form.classList.remove('active'));
-                    
-                    // Show selected form
-                    const selectedForm = document.getElementById(selectedRole + '-form');
-                    if (selectedForm) {
-                        selectedForm.classList.add('active');
-                        
-                        // Reset button text when switching forms
-                        const submitBtn = selectedForm.querySelector('.btn-primary');
-                        if (submitBtn && buttonTexts[selectedRole + '-form']) {
-                            submitBtn.innerHTML = buttonTexts[selectedRole + '-form'];
-                            submitBtn.disabled = false;
-                        }
-                    }
-                    
-                    // Show login footer when role is selected
-                    const loginFooter = document.querySelector('.login-footer');
-                    if (loginFooter) {
-                        loginFooter.style.display = 'block';
-                    }
-                });
-            });
+        <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 btn-primary">
+            <span class="inline-block mr-2">🔓</span>Sign In
+        </button>
+    </form>
 
-            // Auto-dismiss alerts after 5 seconds
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    alert.style.opacity = '0';
-                    alert.style.transform = 'translateY(-20px)';
-                    setTimeout(() => {
-                        alert.remove();
-                    }, 300);
-                }, 5000);
-            });
+    <div class="mt-6 text-center space-y-2">
+        <p class="text-sm text-slate-600">
+            Don't have an account?
+            <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-800 font-medium">Sign up first</a>
+        </p>
+        <p class="text-sm">
+            <a href="#" class="text-slate-500 hover:text-slate-700 italic underline">I forgot my password</a>
+        </p>
+    </div>
+</div>
 
-            // Add shake animation to form on error
-            const errorAlert = document.querySelector('.alert-error');
-            if (errorAlert) {
-                const activeForm = document.querySelector('.login-form.active');
-                if (activeForm) {
-                    activeForm.style.animation = 'shake 0.5s ease-in-out';
-                    setTimeout(() => {
-                        activeForm.style.animation = '';
-                    }, 500);
-                }
-            }
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const roleButtons = document.querySelectorAll('.role-btn');
+    const formElement = document.querySelector('.login-form');
+    const submitBtn = document.querySelector('.btn-primary');
+    const originalText = submitBtn.innerHTML;
 
-            // Add form validation feedback with proper reset
-            const forms = document.querySelectorAll('form');
-            forms.forEach(form => {
-                const submitBtn = form.querySelector('.btn-primary');
-                const formId = form.parentElement.id;
-                const originalText = buttonTexts[formId] || 'Sign In';
-                
-                // Ensure button starts with correct text
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-                
-                form.addEventListener('submit', function(e) {
-                    // Only show loading if form inputs are filled
-                    const emailInput = form.querySelector('input[name="username"]');
-                    const passwordInput = form.querySelector('input[name="password"]');
-                    
-                    if (emailInput.value.trim() && passwordInput.value.trim()) {
-                        submitBtn.innerHTML = '<span style="display: inline-block; width: 16px; height: 16px; border: 2px solid #ffffff; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 8px;"></span>Signing In...';
-                        submitBtn.disabled = true;
-                        
-                        // Reset button after 8 seconds as fallback (in case of network issues)
-                        setTimeout(() => {
-                            submitBtn.innerHTML = originalText;
-                            submitBtn.disabled = false;
-                        }, 8000);
-                    }
-                });
-            });
-
-            // Reset all buttons on page load (in case of refresh after error)
-            Object.keys(buttonTexts).forEach(formId => {
-                const form = document.getElementById(formId);
-                if (form) {
-                    const submitBtn = form.querySelector('.btn-primary');
-                    if (submitBtn) {
-                        submitBtn.innerHTML = buttonTexts[formId];
-                        submitBtn.disabled = false;
-                    }
-                }
-            });
+    // Role selection
+    roleButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const role = this.dataset.role;
+            roleButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            submitBtn.innerHTML = `Sign In as ${this.querySelector('.role-name').textContent}`;
         });
-    </script>
+    });
+
+    // Form submission with role
+    formElement.addEventListener('submit', function(e){
+        const activeRoleBtn = document.querySelector('.role-btn.active');
+        if(!activeRoleBtn){
+            e.preventDefault();
+            alert('Please select a role first.');
+            return;
+        }
+
+        const email = formElement.querySelector('input[name="username"]');
+        const password = formElement.querySelector('input[name="password"]');
+        if(email.value.trim() && password.value.trim()){
+            const roleInput = formElement.querySelector('input[name="role"]');
+            roleInput.value = activeRoleBtn.dataset.role;
+
+            // Loading spinner
+            submitBtn.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;"></span>Signing In...';
+            submitBtn.disabled = true;
+            setTimeout(()=>{ submitBtn.innerHTML=originalText; submitBtn.disabled=false; },8000);
+        }
+    });
+
+    // Alerts auto-dismiss
+    document.querySelectorAll('.alert').forEach(alert => { setTimeout(()=>{ alert.remove(); },5000); });
+
+    // Shake on error
+    const errorAlert = document.querySelector('.alert-error');
+    if(errorAlert){
+        formElement.style.animation='shake 0.5s ease-in-out';
+        setTimeout(()=>{ formElement.style.animation=''; },500);
+    }
+});
+</script>
 </body>
 </html>
+

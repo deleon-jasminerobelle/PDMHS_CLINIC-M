@@ -273,7 +273,7 @@
                         </div>
                         <div class="info-item">
                             <div class="info-label">Gender</div>
-                            <div class="info-value">{{ ucfirst($student->sex ?? 'N/A') }}</div>
+                            <div class="info-value">{{ ucfirst($student->gender ?? 'N/A') }}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Blood Type</div>

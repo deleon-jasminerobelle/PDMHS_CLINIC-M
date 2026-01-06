@@ -310,7 +310,7 @@
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="newVisitForm" method="POST" action="{{ route('clinic-staff.visits.store') }}">
+                <form id="newVisitForm" method="POST" action="{{ route('clinic-staff.visits-store') }}">
                     @csrf
                     <div class="modal-body">
                         <!-- Student Information Section -->
@@ -712,7 +712,7 @@
         function processQRData(qrData) {
             showQRStatus('Processing QR code...', 'success');
 
-            fetch('{{ route("qr-process") }}', {
+            fetch('{{ route("clinic-staff.qr-process") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

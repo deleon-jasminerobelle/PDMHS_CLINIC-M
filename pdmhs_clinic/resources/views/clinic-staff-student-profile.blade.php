@@ -392,7 +392,7 @@
                 </div>
                 <div class="info-item">
                     <div class="info-label">Emergency Contact</div>
-                    <div class="info-value">{{ $student->emergency_contact ?? 'N/A' }}</div>
+                    <div class="info-value">{{ $student->emergency_contact_name ?? 'N/A' }}</div>
                 </div>
             </div>
         </div>
