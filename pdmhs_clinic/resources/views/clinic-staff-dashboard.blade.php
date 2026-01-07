@@ -61,7 +61,8 @@
         }
 
         .navbar-brand {
-            font-size: 1.5rem;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 20px;
             font-weight: 700;
             color: var(--primary);
             text-decoration: none;
@@ -78,9 +79,11 @@
         }
 
         .nav-link {
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
             color: var(--dark);
             text-decoration: none;
-            font-weight: 500;
             transition: all 0.3s ease;
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;

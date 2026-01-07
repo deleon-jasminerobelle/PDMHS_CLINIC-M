@@ -376,26 +376,57 @@ class ClinicStaffController extends Controller
         try {
             $user = Auth::user();
             if ($user->role !== 'clinic_staff') {
-                return redirect()->back()->with('error', 'Access denied.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied.'
+                ], 403);
             }
 
             $request->validate([
-                'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
             ]);
 
             if ($request->hasFile('profile_picture')) {
+                // Delete old profile picture if exists
+                if ($user->profile_picture && file_exists(public_path('uploads/profiles/' . $user->profile_picture))) {
+                    unlink(public_path('uploads/profiles/' . $user->profile_picture));
+                }
+
                 $file = $request->file('profile_picture');
                 $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+                
+                // Ensure directory exists
+                if (!file_exists(public_path('uploads/profiles'))) {
+                    mkdir(public_path('uploads/profiles'), 0755, true);
+                }
+                
                 $file->move(public_path('uploads/profiles'), $filename);
 
-                $user->update(['profile_picture' => $filename]);
+                $user->update(['profile_picture' => 'uploads/profiles/' . $filename]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Profile picture updated successfully!',
+                    'profile_picture_url' => asset('uploads/profiles/' . $filename)
+                ]);
             }
 
-            return redirect()->back()->with('success', 'Profile picture updated successfully!');
+            return response()->json([
+                'success' => false,
+                'message' => 'No file uploaded.'
+            ], 400);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid file. Please upload a valid image (JPEG, PNG, JPG, GIF) under 5MB.'
+            ], 422);
         } catch (\Exception $e) {
             Log::error('Upload Profile Picture Error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Error uploading profile picture.');
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while uploading the profile picture.'
+            ], 500);
         }
     }
 

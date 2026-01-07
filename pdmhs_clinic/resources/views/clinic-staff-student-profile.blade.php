@@ -28,13 +28,13 @@
         }
 
         .navbar-nav .nav-link {
-            font-family: 'Epilogue', sans-serif !important;
-            font-size: 25px !important;
-            font-weight: 600 !important;
+            font-family: 'Albert Sans', sans-serif !important;
+            font-size: 20px !important;
+            font-weight: 700 !important;
         }
         
         .dropdown-menu .dropdown-item {
-            font-family: 'Epilogue', sans-serif !important;
+            font-family: 'Albert Sans', sans-serif !important;
             font-size: 20px !important;
             font-weight: 500 !important;
         }
