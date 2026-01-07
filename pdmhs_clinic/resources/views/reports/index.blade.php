@@ -182,18 +182,18 @@
         <div class="filter-section">
             <form method="GET" action="{{ route('clinic-staff.reports') }}">
                 <div class="row align-items-end">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">Date Range</label>
                         <input type="date" name="start_date" class="form-control" value="{{ $startDate }}">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label text-white">.</label>
                         <div class="d-flex align-items-center">
                             <span class="mx-2">to</span>
                             <input type="date" name="end_date" class="form-control" value="{{ $endDate }}">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">Grade Level</label>
                         <select name="grade_level" class="form-select">
                             <option value="all" {{ $gradeLevel == 'all' ? 'selected' : '' }}>All Grades</option>
@@ -205,39 +205,28 @@
                             <option value="12" {{ $gradeLevel == '12' ? 'selected' : '' }}>Grade 12</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-search me-2"></i>Generate Report
-                        </button>
-                    </div>
                 </div>
             </form>
         </div>
 
         <!-- Statistics Cards -->
         <div class="row mb-4">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="stats-card text-center">
                     <div class="stats-number">{{ $totalVisits }}</div>
                     <div class="stats-label">Total Visits</div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="stats-card text-center">
                     <div class="stats-number">{{ $chronicStudents }}</div>
                     <div class="stats-label">Chronic Students</div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="stats-card text-center">
                     <div class="stats-number">{{ $emergencyCases }}</div>
                     <div class="stats-label">Emergency Cases</div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="stats-card text-center">
-                    <div class="stats-number">{{ $hospitalReferrals }}</div>
-                    <div class="stats-label">Hospital Referrals</div>
                 </div>
             </div>
         </div>
@@ -272,22 +261,7 @@
             </div>
         </div>
 
-        <!-- Export Section -->
-        <div class="chart-container">
-            <h5 class="mb-3">Export Report</h5>
-            <div class="row">
-                <div class="col-md-6">
-                    <button class="btn btn-outline-primary w-100" onclick="exportPDF()">
-                        <i class="fas fa-file-pdf me-2"></i>Export as PDF
-                    </button>
-                </div>
-                <div class="col-md-6">
-                    <button class="btn btn-outline-primary w-100" onclick="exportExcel()">
-                        <i class="fas fa-file-excel me-2"></i>Export as Excel
-                    </button>
-                </div>
-            </div>
-        </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -355,43 +329,7 @@
         });
         @endif
 
-        function exportPDF() {
-            fetch('{{ route("clinic-staff.reports-export-pdf") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    start_date: '{{ $startDate }}',
-                    end_date: '{{ $endDate }}',
-                    grade_level: '{{ $gradeLevel }}'
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-            });
-        }
 
-        function exportExcel() {
-            fetch('{{ route("clinic-staff.reports-export-excel") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    start_date: '{{ $startDate }}',
-                    end_date: '{{ $endDate }}',
-                    grade_level: '{{ $gradeLevel }}'
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-            });
-        }
     </script>
 </body>
 </html>

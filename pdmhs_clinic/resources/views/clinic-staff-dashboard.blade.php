@@ -184,13 +184,13 @@
             </a>
             <div class="navbar-nav me-auto">
                 <a class="nav-link active" href="{{ route('clinic-staff.dashboard') }}">
-                    Dashboard
+                    <i></i>Dashboard
                 </a>
                 <a class="nav-link" href="{{ route('clinic-staff.students') }}">
-                    Students
+                    <i ></i>Students
                 </a>
                 <a class="nav-link" href="{{ route('clinic-staff.visits') }}">
-                    Visits
+                    <i ></i>Visits
                 </a>
                 <a class="nav-link" href="{{ route('scanner') }}">
                     Scanner
@@ -275,39 +275,6 @@
                 <div class="stat-card stat-card-purple d-flex flex-column justify-content-center" style="min-height: 120px;">
                     <h2>{{ $pendingVisits }}</h2>
                     <p>Pending Visits</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="section-card">
-                    <div class="section-header">
-                        <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
-                    </div>
-                    <div class="section-content">
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <a href="{{ route('clinic-staff.visits') }}" class="btn btn-action w-100 text-decoration-none">
-                                    <i class="fas fa-notes-medical mb-2"></i>
-                                    <div>Medical Visits</div>
-                                </a>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <a href="{{ route('clinic-staff.students') }}" class="btn btn-action w-100 text-decoration-none">
-                                    <i class="fas fa-search mb-2"></i>
-                                    <div>Find Student</div>
-                                </a>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <a href="{{ route('clinic-staff.profile') }}" class="btn btn-action w-100 text-decoration-none">
-                                    <i class="fas fa-user-cog mb-2"></i>
-                                    <div>My Profile</div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

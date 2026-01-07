@@ -103,8 +103,6 @@ Route::middleware(['auth', 'clinic_staff'])
         Route::post('/visits', [ClinicStaffController::class, 'storeVisit'])->name('visits-store');
         Route::post('/visits/general', [ClinicStaffController::class, 'storeGeneralVisit'])->name('visits-store-general');
         Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
-        Route::post('/reports/export-pdf', [ReportsController::class, 'exportPdf'])->name('reports-export-pdf');
-        Route::post('/reports/export-excel', [ReportsController::class, 'exportExcel'])->name('reports-export-excel');
         Route::get('/profile', [ClinicStaffController::class, 'profile'])->name('profile');
         Route::put('/profile', [ClinicStaffController::class, 'updateProfile'])->name('profile-update');
         Route::put('/password', [ClinicStaffController::class, 'updatePassword'])->name('password-update');
