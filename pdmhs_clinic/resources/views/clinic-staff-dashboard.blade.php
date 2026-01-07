@@ -188,7 +188,8 @@
 
         /* Welcome Section */
         .welcome-section {
-            background: white;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
             border-radius: 1.5rem;
             padding: 2rem;
             margin-bottom: 2rem;
@@ -243,7 +244,8 @@
         }
 
         .stat-card {
-            background: white;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
             border-radius: 1rem;
             padding: 1.5rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -308,7 +310,8 @@
 
         /* Section Cards */
         .section-card {
-            background: white;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
             border-radius: 1.5rem;
             padding: 2rem;
             margin-bottom: 2rem;

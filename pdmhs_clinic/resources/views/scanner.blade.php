@@ -187,7 +187,8 @@
         }
 
         .page-header {
-            background: white;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 2rem;
             margin-bottom: 2rem;

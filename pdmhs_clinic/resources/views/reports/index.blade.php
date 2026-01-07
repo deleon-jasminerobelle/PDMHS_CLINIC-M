@@ -187,7 +187,8 @@
         }
 
         .stats-card {
-            background: white;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
@@ -208,14 +209,16 @@
             margin-top: 5px;
         }
         .chart-container {
-            background: white;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
             margin-bottom: 30px;
         }
         .filter-section {
-            background: white;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
@@ -314,7 +317,7 @@
         <!-- Page Header -->
         <div class="row mb-4">
             <div class="col-12">
-                <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%); backdrop-filter: blur(10px); border-radius: 15px; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
                     <h1 class="page-title" style="color: #1f2937; margin-bottom: 0.5rem;">Reports & Analytics</h1>
                     <p class="page-subtitle" style="color: #6c757d; margin-bottom: 0;">Generate and export clinic reports</p>
                 </div>
