@@ -186,11 +186,8 @@
                 <a class="nav-link active" href="{{ route('adviser.dashboard') }}">
                     <i></i>Dashboard
                 </a>
-                <a class="nav-link" href="#" onclick="showTab('alerts')">
-                    <i></i>Alerts
-                </a>
-                <a class="nav-link" href="#" onclick="showTab('health-status')">
-                    <i></i>Health Status
+                <a class="nav-link" href="{{ route('adviser.scanner') }}">
+                    <i></i>Scanner
                 </a>
             </div>
             <div class="navbar-nav ms-auto">
@@ -302,7 +299,7 @@
                                                         {{ $student->grade_level ?? 'N/A' }}<br>
                                                         Grade {{ $student->grade_level ?? 'N/A' }} - {{ $student->section ?? 'N/A' }}
                                                     </p>
-                                                    <button class="btn btn-sm btn-primary">View Profile</button>
+                                                    <a href="{{ route('adviser.student-profile', $student->id) }}" class="btn btn-sm btn-primary">View Profile</a>
                                                 </div>
                                             </div>
                                         @endforeach

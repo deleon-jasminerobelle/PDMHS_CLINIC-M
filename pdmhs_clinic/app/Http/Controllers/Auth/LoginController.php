@@ -135,6 +135,17 @@ class LoginController extends Controller
                     'contact_number' => $request->contact_number,
                 ]);
 
+                // Create adviser record if role is adviser
+                if ($role === 'adviser') {
+                    Adviser::create([
+                        'user_id' => $user->id,
+                        'first_name' => $request->first_name,
+                        'last_name' => $request->last_name,
+                        'contact_phone' => $request->contact_number,
+                        'is_active' => true,
+                    ]);
+                }
+
                 Log::info("New {$role} registered: {$user->name} (ID: {$user->id})");
             }
 

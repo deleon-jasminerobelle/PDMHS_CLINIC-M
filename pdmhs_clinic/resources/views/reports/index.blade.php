@@ -35,6 +35,11 @@
             font-size: 25px !important;
             font-weight: 600 !important;
         }
+
+        .navbar-nav .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+        }
         
         .dropdown-menu .dropdown-item {
             font-family: 'Epilogue', sans-serif !important;

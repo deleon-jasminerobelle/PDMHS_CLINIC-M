@@ -184,4 +184,9 @@ class Student extends Model
     {
         return ($this->has_allergies && !empty($this->allergies)) ? 'Yes' : 'None';
     }
+
+    public function getStudentIdAttribute()
+    {
+        return $this->lrn ?? $this->getFormattedStudentNumberAttribute();
+    }
 }

@@ -1,16 +1,35 @@
-# TODO: Fix Health Form Save Issues
+# Clinic Staff Navigation Icons Update
 
-## Issues Identified
-- grade_section validation regex is too strict: expects space after digits, but request has "12"
-- LRN field is null even when filled in request
-- Student save may be failing silently
-- User linking to student may be failing
-- Middleware blocks access because health_form_completed remains false
+## Overview
+Complete the navigation in all clinic staff pages by adding consistent FontAwesome icons to all navigation links.
 
-## Steps to Fix
-1. ✅ Update grade_section validation regex to be more flexible
-2. ✅ Add logging to check LRN value from request
-3. ✅ Add logging around student save operation
-4. ✅ Add logging around user save operation
-5. ✅ Add logging to check if student is found or created
-6. ✅ Test the fixes
+## Current Status
+- clinic-staff-dashboard.blade.php: Has some icons but missing for Students, Visits, Scanner, Reports
+- clinic-staff-visits.blade.php: Missing all icons
+- clinic-staff-students.blade.php: Missing all icons
+- clinic-staff-profile.blade.php: Missing all icons, also missing Scanner link
+- reports/index.blade.php: Missing all icons
+- scanner.blade.php: Missing all icons
+
+## Icon Mapping
+- Dashboard: fas fa-tachometer-alt
+- Students: fas fa-users
+- Visits: fas fa-notes-medical
+- Scanner: fas fa-qrcode
+- Reports: fas fa-chart-bar
+
+## Tasks
+- [ ] Update clinic-staff-dashboard.blade.php navigation icons
+- [ ] Update clinic-staff-visits.blade.php navigation icons
+- [ ] Update clinic-staff-students.blade.php navigation icons
+- [ ] Update clinic-staff-profile.blade.php navigation icons and add Scanner link
+- [ ] Update reports/index.blade.php navigation icons
+- [ ] Update scanner.blade.php navigation icons
+
+## Files to Edit
+1. pdmhs_clinic/resources/views/clinic-staff-dashboard.blade.php
+2. pdmhs_clinic/resources/views/clinic-staff-visits.blade.php
+3. pdmhs_clinic/resources/views/clinic-staff-students.blade.php
+4. pdmhs_clinic/resources/views/clinic-staff-profile.blade.php
+5. pdmhs_clinic/resources/views/reports/index.blade.php
+6. pdmhs_clinic/resources/views/scanner.blade.php

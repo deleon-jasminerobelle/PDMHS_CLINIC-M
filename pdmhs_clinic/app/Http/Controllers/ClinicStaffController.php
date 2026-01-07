@@ -147,6 +147,60 @@ class ClinicStaffController extends Controller
     }
 
     /**
+     * Create Visit Form (General)
+     */
+    public function createVisit()
+    {
+        try {
+            $user = Auth::user();
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            // Initialize variables for general visit creation
+            $currentDateTime = now()->format('Y-m-d\TH:i');
+            $recentVisits = collect(); // Empty collection for general visits
+            $latestVitals = null; // No latest vitals for general visits
+            $age = null; // No age for general visits
+            $allergies = collect(); // Empty collection for general visits
+
+            return view('clinic-visit-create', compact('user', 'currentDateTime', 'recentVisits', 'latestVitals', 'age', 'allergies'));
+
+        } catch (\Exception $e) {
+            Log::error('Create Visit Error: ' . $e->getMessage());
+            return redirect()->route('clinic-staff.dashboard')->with('error', 'Unable to load visit creation form.');
+        }
+    }
+
+    /**
+     * Create Student Visit Form
+     */
+    public function createStudentVisit($id)
+    {
+        try {
+            $user = Auth::user();
+            if ($user->role !== 'clinic_staff') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            $student = Student::findOrFail($id);
+
+            // Get student health data using the trait
+            $currentDateTime = now()->format('Y-m-d\TH:i');
+            $recentVisits = $this->getRecentVisits($student->id);
+            $latestVitals = $this->getLatestVitals($student->id);
+            $age = $this->calculateAge($student->birth_date);
+            $allergies = $this->getAllergies($student->id);
+
+            return view('clinic-visit-create', compact('user', 'student', 'currentDateTime', 'recentVisits', 'latestVitals', 'age', 'allergies'));
+
+        } catch (\Exception $e) {
+            Log::error('Create Student Visit Error: ' . $e->getMessage());
+            return redirect()->route('clinic-staff.students')->with('error', 'Unable to load visit creation form.');
+        }
+    }
+
+    /**
      * Add Student Visit
      */
     public function addStudentVisit(Request $request, $id)
@@ -411,18 +465,32 @@ class ClinicStaffController extends Controller
     {
         try {
             $user = Auth::user();
-            if ($user->role !== 'clinic_staff') {
+            if (!in_array($user->role, ['clinic_staff', 'adviser'])) {
                 return response()->json(['success' => false, 'message' => 'Access denied'], 403);
             }
 
             $validated = $request->validate([
-                'qr_data' => 'required|string'
+                'qr_data' => 'required|string',
+                'source' => 'nullable|string|in:live_scan,upload'
             ]);
 
-            // Assuming QR data contains student ID
-            $studentId = $validated['qr_data'];
+            // Parse QR data as JSON
+            $qrData = json_decode($validated['qr_data'], true);
 
-            $student = Student::with('user')->where('student_id', $studentId)->first();
+            if (!$qrData || !isset($qrData['student_id'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid QR code format'
+                ], 400);
+            }
+
+            $studentId = $qrData['student_id'];
+
+            // Find student by LRN first, then by formatted student ID if LRN doesn't match
+            $student = Student::with('user')
+                ->where('lrn', $studentId)
+                ->orWhereRaw("LPAD(id, 6, '0') = ?", [$studentId])
+                ->first();
 
             if (!$student) {
                 return response()->json([
@@ -430,6 +498,31 @@ class ClinicStaffController extends Controller
                     'message' => 'Student not found'
                 ], 404);
             }
+
+            // For clinic staff, if QR was uploaded (not live scanned), create a new clinic visit
+            if ($user->role === 'clinic_staff' && ($validated['source'] ?? null) === 'upload') {
+                $visit = new ClinicVisit([
+                    'student_id' => $student->id,
+                    'visit_date' => now(),
+                    'visit_type' => 'QR Scan Check-in',
+                    'chief_complaint' => 'QR code scanned for clinic visit',
+                    'notes' => 'Automatically created from QR code upload',
+                    'status' => 'pending',
+                    'staff_id' => $user->id,
+                    'requires_followup' => false
+                ]);
+
+                $visit->save();
+
+                Log::info('Clinic visit created from QR upload', [
+                    'student_id' => $student->id,
+                    'staff_id' => $user->id,
+                    'visit_id' => $visit->id
+                ]);
+            }
+
+            // Determine redirect URL based on user role
+            $redirectRoute = $user->role === 'adviser' ? 'adviser.student-profile' : 'clinic-staff.student-profile';
 
             return response()->json([
                 'success' => true,
@@ -440,7 +533,8 @@ class ClinicStaffController extends Controller
                     'grade_level' => $student->grade_level,
                     'section' => $student->section
                 ],
-                'redirect_url' => route('clinic-staff.student-profile', $student->id)
+                'redirect_url' => route($redirectRoute, $student->id),
+                'visit_created' => ($user->role === 'clinic_staff' && ($validated['source'] ?? null) === 'upload') ? true : false
             ]);
 
         } catch (\Exception $e) {

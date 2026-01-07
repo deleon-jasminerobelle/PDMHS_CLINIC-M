@@ -215,6 +215,7 @@
                 <a class="nav-link" href="{{ route('clinic-staff.reports') }}">
                     Reports
                 </a>
+                
             </div>
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
@@ -262,11 +263,17 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h1 class="page-title">QR Code Scanner</h1>
-                    <p class="page-subtitle">Scan student QR codes for quick identification</p>
+                    <p class="page-subtitle">Scan or upload student QR codes for quick identification</p>
                 </div>
-                <button class="btn btn-primary btn-lg" onclick="startScanning()">
-                    <i class="fas fa-qrcode me-2"></i>Start Scanner
-                </button>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-lg" onclick="startScanning()">
+                        <i class="fas fa-qrcode me-2"></i>Start Scanner
+                    </button>
+                    <button class="btn btn-outline-primary btn-lg" onclick="document.getElementById('qr-upload').click()">
+                        <i class="fas fa-upload me-2"></i>Upload QR
+                    </button>
+                    <input type="file" id="qr-upload" accept="image/*" style="display: none;" onchange="processUploadedQR(event)">
+                </div>
             </div>
         </div>
 
@@ -296,8 +303,8 @@
         <div class="instructions">
             <h6><i class="fas fa-info-circle me-2"></i>How to Use the QR Scanner</h6>
             <ol>
-                <li>Click "Start Scanner" to activate your camera</li>
-                <li>Position the student's QR code within the highlighted frame</li>
+                <li><strong>Live Scanning:</strong> Click "Start Scanner" to activate your camera, then position the student's QR code within the highlighted frame</li>
+                <li><strong>Upload QR Code:</strong> Click "Upload QR" to select a QR code image file from your device</li>
                 <li>Wait for automatic detection and student identification</li>
                 <li>The system will automatically redirect to the student's profile</li>
                 <li>If scanning fails, try manual search in the Students section</li>
@@ -318,6 +325,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/@zxing/library@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script>
         // Global variables
         let qrCodeReader;
@@ -335,6 +343,81 @@
 
         function startScanning() {
             document.getElementById('start-btn').click();
+        }
+
+        async function processUploadedQR(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            console.log('Processing uploaded QR code file:', file);
+            showStatus('Processing uploaded QR code...', 'success');
+
+            try {
+                // Create an image element to load the file
+                const img = new Image();
+
+                img.onload = function() {
+                    console.log('Image loaded, dimensions:', img.width, 'x', img.height);
+                    try {
+                        // Create canvas to get image data
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        // Set canvas size to image size
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+
+                        // Draw image to canvas
+                        ctx.drawImage(img, 0, 0);
+
+                        // Get image data
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        console.log('Image data extracted, size:', imageData.width, 'x', imageData.height);
+
+                        // Check if jsQR is available
+                        if (typeof jsQR === 'undefined') {
+                            console.error('jsQR library not loaded');
+                            showStatus('QR decoding library not available. Please refresh the page.', 'error');
+                            return;
+                        }
+
+                        // Use jsQR to decode the QR code
+                        console.log('Attempting to decode QR code with jsQR...');
+                        const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+                        if (code) {
+                            console.log('QR code decoded successfully:', code.data);
+                            processQRData(code.data, 'upload');
+                        } else {
+                            console.log('No QR code found in image');
+                            showStatus('No QR code found in the uploaded image. Please ensure the image contains a clear QR code.', 'error');
+                        }
+                    } catch (decodeError) {
+                        console.error('QR decode error:', decodeError);
+                        showStatus('Unable to decode QR code from image. Please ensure it contains a valid QR code.', 'error');
+                    }
+                };
+
+                img.onerror = function() {
+                    console.error('Error loading image');
+                    showStatus('Error loading image. Please try a different file.', 'error');
+                };
+
+                // Load the image from the file
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    console.log('File loaded as data URL');
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+            } catch (error) {
+                console.error('Error processing uploaded QR:', error);
+                showStatus('Error processing uploaded QR code', 'error');
+            }
+
+            // Reset the file input
+            event.target.value = '';
         }
 
         function showStatus(message, type) {
@@ -380,17 +463,18 @@
             }
         }
 
-        function processQRData(qrData) {
+        function processQRData(qrData, source = 'live_scan') {
             showStatus('Processing QR code...', 'success');
 
-            fetch('{{ route("clinic-staff.qr-process") }}', {
+            fetch('{{ route("qr-process") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({
-                    qr_data: qrData
+                    qr_data: qrData,
+                    source: source
                 })
             })
             .then(response => response.json())
