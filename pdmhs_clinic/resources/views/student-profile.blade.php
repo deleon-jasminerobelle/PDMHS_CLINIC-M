@@ -561,8 +561,8 @@
 
                 <!-- Additional Actions -->
                 <div class="form-section">
-                    <div class="text-center">
-                        <button type="button" class="btn btn-password btn-lg me-4" onclick="showPasswordModal()">
+                    <div class="text-center d-flex gap-4 justify-content-center">
+                        <button type="button" class="btn btn-password btn-lg" onclick="showPasswordModal()">
                             <i class="fas fa-key me-2"></i>Change Password
                         </button>
                         <button type="button" class="btn btn-qr btn-lg" onclick="showQRModal()">

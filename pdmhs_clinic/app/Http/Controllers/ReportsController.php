@@ -72,15 +72,5 @@ class ReportsController extends Controller
         ));
     }
 
-    public function exportPdf(Request $request)
-    {
-        // Implementation for PDF export
-        return response()->json(['message' => 'PDF export functionality coming soon']);
-    }
 
-    public function exportExcel(Request $request)
-    {
-        // Implementation for Excel export
-        return response()->json(['message' => 'Excel export functionality coming soon']);
-    }
 }
