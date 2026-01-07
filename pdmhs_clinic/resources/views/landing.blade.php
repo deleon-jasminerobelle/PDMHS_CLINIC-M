@@ -189,6 +189,736 @@
             transform: translateY(-3px);
         }
 
+        .btn-sm {
+            padding: 0.6rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Health Tips Carousel */
+        .health-tips {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        .tips-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .carousel {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 60px;
+        }
+
+        .carousel-track {
+            overflow: hidden;
+            position: relative;
+            height: 300px;
+        }
+
+        .tip-card {
+            position: absolute;
+            width: 100%;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .tip-card.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .tip-card.prev {
+            transform: translateX(-100%);
+        }
+
+        .tip-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .tip-card h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .tip-card p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--gradient);
+            color: var(--white);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 8px 24px rgba(30, 64, 175, 0.3);
+        }
+
+        .carousel-btn.prev {
+            left: 0;
+        }
+
+        .carousel-btn.next {
+            right: 0;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            width: 30px;
+            border-radius: 6px;
+        }
+
+        /* Educational Articles */
+        .educational-articles {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        .articles-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .article-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+        }
+
+        .article-image {
+            background: var(--gradient);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 4rem;
+        }
+
+        .article-content {
+            padding: 2rem;
+        }
+
+        .article-category {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .article-content h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--dark);
+        }
+
+        .article-content p {
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .read-more {
+            color: var(--primary);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+        }
+
+        .article-card:hover .read-more {
+            gap: 1rem;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+        }
+
+        .how-it-works-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            position: relative;
+        }
+
+        .step-card {
+            background: var(--white);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 16px 48px rgba(30, 64, 175, 0.2);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1.5rem auto 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover .step-icon {
+            background: var(--gradient);
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .step-icon i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover .step-icon i {
+            color: var(--white);
+        }
+
+        .step-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .step-card p {
+            color: var(--gray);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .step-arrow {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--primary);
+            opacity: 0.3;
+        }
+
+        .step-card:last-child .step-arrow {
+            display: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 24px;
+            max-width: 950px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.4s ease;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(30, 64, 175, 0.1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 24px;
+            top: 24px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--light);
+            z-index: 10;
+            border: 2px solid transparent;
+        }
+
+        .close-modal:hover {
+            background: #ef4444;
+            color: var(--white);
+            transform: rotate(90deg);
+            border-color: #dc2626;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .modal-body {
+            padding: 0;
+        }
+
+        .modal-header-section {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            padding: 3.5rem 4rem 3rem;
+            text-align: center;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .modal-icon {
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .modal-icon i {
+            font-size: 3rem;
+            color: var(--white);
+        }
+
+        .modal-header-section h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+            line-height: 1.3;
+        }
+
+        .modal-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .modal-intro {
+            padding: 2.5rem 4rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+        }
+
+        .modal-intro p {
+            font-size: 1.15rem;
+            color: #475569;
+            line-height: 1.8;
+            margin: 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .modal-features {
+            padding: 3rem 4rem;
+            display: grid;
+            gap: 1.8rem;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: #4f46e5;
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.15);
+        }
+
+        .feature-icon-small {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .feature-icon-small i {
+            font-size: 1.4rem;
+            color: var(--white);
+        }
+
+        .feature-text h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.4rem;
+        }
+
+        .feature-text p {
+            font-size: 1rem;
+            color: #64748b;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .modal-mission {
+            padding: 3rem 4rem;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            text-align: center;
+            border-top: 4px solid #f59e0b;
+            border-bottom: 4px solid #f59e0b;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-mission::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="2" fill="%23f59e0b" opacity="0.1"/><circle cx="90" cy="20" r="3" fill="%23f59e0b" opacity="0.1"/><circle cx="50" cy="90" r="2" fill="%23f59e0b" opacity="0.1"/></svg>');
+            pointer-events: none;
+        }
+
+        .mission-icon {
+            font-size: 4rem;
+            margin-bottom: 1.2rem;
+            display: inline-block;
+            animation: glow 2s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(245, 158, 11, 0.3));
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 4px 8px rgba(245, 158, 11, 0.3));
+            }
+            50% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 8px 16px rgba(245, 158, 11, 0.5));
+            }
+        }
+
+        .modal-mission h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #92400e;
+            margin-bottom: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .modal-mission h3::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+            margin: 0.8rem auto 0;
+            border-radius: 2px;
+        }
+
+        .modal-mission p {
+            font-size: 1.1rem;
+            color: #78350f;
+            line-height: 1.8;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .modal-benefits {
+            padding: 3rem 4rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+
+        .benefits-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .benefits-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #4f46e5, transparent);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            border-color: #4f46e5;
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px rgba(79, 70, 229, 0.2);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .benefit-card h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.8rem;
+        }
+
+        .benefit-card p {
+            font-size: 0.95rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .modal-stats {
+            padding: 3rem 4rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            background: var(--white);
+            border-radius: 0 0 24px 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.6rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-body p {
+            font-size: 1.05rem;
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 1.3rem;
+        }
+
+        .modal-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+            margin: 2rem 0;
+        }
+
+        .modal-highlight {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border-left: 4px solid #4f46e5;
+            margin: 1.5rem 0;
+        }
+
+        .modal-highlight p {
+            margin-bottom: 0;
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        /* Scrollbar styling for modal */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 0 24px 24px 0;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
 
 
         /* Features Section */
@@ -271,51 +1001,6 @@
             line-height: 1.6;
         }
 
-        /* About Section */
-        .about {
-            padding: 5rem 2rem;
-            background: var(--white);
-        }
-
-        .about-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .about-content h2 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .about-content p {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--gray);
-            margin-bottom: 1.5rem;
-            line-height: 1.7;
-        }
-
-        .about-image {
-            background: var(--gradient);
-            border-radius: 20px;
-            height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 4rem;
-        }
-
-
-
         /* Responsive Design */
         @media (max-width: 768px) {
             .nav-links {
@@ -336,13 +1021,40 @@
                 align-items: center;
             }
 
-            .about-container {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
             .section-header h2 {
                 font-size: 2rem;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .step-arrow {
+                display: none;
+            }
+
+            .modal-content {
+                width: 98%;
+                max-height: 95vh;
+            }
+
+            .modal-header-section,
+            .modal-intro,
+            .modal-features,
+            .modal-mission,
+            .modal-benefits {
+                padding: 2rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .modal-stats {
+                padding: 2rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
             }
         }
 
@@ -369,7 +1081,7 @@
             </a>
             <ul class="nav-links">
                 <li><a href="{{ route('home') }}">Home</a></li>
-                <li><a href="#about">About</a></li>
+                <li><a href="#" onclick="openAboutModal(); return false;">About</a></li>
                 <li><a href="{{ route('register') }}">Sign Up</a></li>
                 <li><a href="{{ route('login') }}">Login</a></li>
             </ul>
@@ -386,7 +1098,296 @@
         </div>
     </section>
 
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="how-it-works-container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Simple, fast, and efficient clinic management in 4 easy steps</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card fade-in">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>Student Scans QR Code</h3>
+                    <p>Students present their unique QR code at the clinic entrance for instant identification.</p>
+                    <div class="step-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                <div class="step-card fade-in">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-laptop-medical"></i>
+                    </div>
+                    <h3>View Health Records</h3>
+                    <p>Clinic staff instantly access complete health profiles, medical history, and allergies.</p>
+                    <div class="step-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                <div class="step-card fade-in">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h3>Record & Update Data</h3>
+                    <p>Log clinic visits, update vital signs, and add new health information in real-time.</p>
+                    <div class="step-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                <div class="step-card fade-in">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Parents Get Notified</h3>
+                    <p>Automated notifications sent to parents about clinic visits and health updates.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Educational Articles -->
+    <section class="educational-articles">
+        <div class="articles-container">
+            <div class="section-header">
+                <h2>Educational Articles</h2>
+                <p>Learn more about health and wellness from trusted sources</p>
+            </div>
+            <div class="articles-grid">
+                <a href="https://www.who.int/health-topics/adolescent-health" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">WHO</span>
+                        <h3>Adolescent Health</h3>
+                        <p>Comprehensive guide to teenage health and development from the World Health Organization.</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="https://www.cdc.gov/healthyschools/nutrition/index.htm" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-apple-alt"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">CDC</span>
+                        <h3>Nutrition for Students</h3>
+                        <p>Essential nutrition information for healthy growth and academic success.</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="https://www.nimh.nih.gov/health/topics/child-and-adolescent-mental-health" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">NIMH</span>
+                        <h3>Mental Health Matters</h3>
+                        <p>Understanding and supporting adolescent mental health and wellbeing.</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="https://www.cdc.gov/physicalactivity/basics/children/index.htm" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">CDC</span>
+                        <h3>Physical Activity Guidelines</h3>
+                        <p>How much physical activity do children and adolescents need?</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="https://www.sleepfoundation.org/teens-and-sleep" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">Sleep Foundation</span>
+                        <h3>Sleep & Teens</h3>
+                        <p>Why sleep is crucial for teenage health, growth, and academic performance.</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="https://www.cdc.gov/healthyweight/children/index.html" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-weight"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">CDC</span>
+                        <h3>Healthy Weight</h3>
+                        <p>Tips and resources for maintaining a healthy weight during adolescence.</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="https://www.cdc.gov/vaccines/parents/teens/index.html" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-syringe"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">CDC</span>
+                        <h3>Vaccines for Teens</h3>
+                        <p>Important information about immunizations and vaccines recommended for teenagers.</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="https://www.who.int/news-room/fact-sheets/detail/physical-activity" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">WHO</span>
+                        <h3>Benefits of Exercise</h3>
+                        <p>Discover how regular physical activity improves overall health and wellbeing.</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="https://www.cdc.gov/healthyschools/bam/index.htm" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">CDC</span>
+                        <h3>Body & Mind</h3>
+                        <p>Interactive resources about diseases, nutrition, physical activity, and safety for students.</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="https://www.who.int/news-room/fact-sheets/detail/mental-health-strengthening-our-response" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-head-side-virus"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">WHO</span>
+                        <h3>Mental Health Awareness</h3>
+                        <p>Understanding mental health disorders and how to seek help and support.</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="https://www.cdc.gov/handwashing/when-how-handwashing.html" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-hands-wash"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">CDC</span>
+                        <h3>Hand Hygiene</h3>
+                        <p>When and how to wash your hands properly to prevent the spread of germs.</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" target="_blank" class="article-card fade-in">
+                    <div class="article-image">
+                        <i class="fas fa-carrot"></i>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-category">WHO</span>
+                        <h3>Healthy Diet Facts</h3>
+                        <p>Key facts about maintaining a healthy diet for optimal growth and development.</p>
+                        <span class="read-more">Read More <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Daily Health Tips Carousel -->
+    <section class="health-tips">
+        <div class="tips-container">
+            <div class="section-header">
+                <h2>Daily Health Tips</h2>
+                <p>Stay healthy with our expert wellness advice</p>
+            </div>
+            <div class="carousel">
+                <button class="carousel-btn prev" onclick="moveCarousel(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="carousel-track">
+                    <div class="tip-card active">
+                        <div class="tip-icon">💧</div>
+                        <h3>Stay Hydrated</h3>
+                        <p>Drink at least 8 glasses of water daily to maintain optimal body function and energy levels.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">🥗</div>
+                        <h3>Eat Balanced Meals</h3>
+                        <p>Include fruits, vegetables, proteins, and whole grains in your diet for complete nutrition.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">😴</div>
+                        <h3>Get Enough Sleep</h3>
+                        <p>Aim for 7-9 hours of quality sleep each night to support physical and mental health.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">🏃</div>
+                        <h3>Exercise Regularly</h3>
+                        <p>Engage in at least 30 minutes of physical activity daily to boost your immune system.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">🧘</div>
+                        <h3>Manage Stress</h3>
+                        <p>Practice mindfulness, meditation, or deep breathing to reduce stress and anxiety.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">🧼</div>
+                        <h3>Practice Good Hygiene</h3>
+                        <p>Wash your hands frequently with soap and water for at least 20 seconds to prevent illness.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">🌞</div>
+                        <h3>Get Sunlight Exposure</h3>
+                        <p>Spend 10-15 minutes in sunlight daily for vitamin D production and improved mood.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">📱</div>
+                        <h3>Limit Screen Time</h3>
+                        <p>Take regular breaks from screens to reduce eye strain and improve sleep quality.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">🍎</div>
+                        <h3>Eat Healthy Snacks</h3>
+                        <p>Choose nutritious snacks like fruits, nuts, and yogurt instead of processed foods.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">🚭</div>
+                        <h3>Avoid Harmful Substances</h3>
+                        <p>Stay away from smoking, vaping, alcohol, and drugs to protect your health and future.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">👥</div>
+                        <h3>Build Social Connections</h3>
+                        <p>Maintain healthy relationships with friends and family for emotional support and wellbeing.</p>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">🦷</div>
+                        <h3>Maintain Oral Hygiene</h3>
+                        <p>Brush teeth twice daily and floss regularly to prevent cavities and gum disease.</p>
+                    </div>
+                </div>
+                <button class="carousel-btn next" onclick="moveCarousel(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="carousel-dots">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot" onclick="currentSlide(4)"></span>
+                <span class="dot" onclick="currentSlide(5)"></span>
+                <span class="dot" onclick="currentSlide(6)"></span>
+                <span class="dot" onclick="currentSlide(7)"></span>
+                <span class="dot" onclick="currentSlide(8)"></span>
+                <span class="dot" onclick="currentSlide(9)"></span>
+                <span class="dot" onclick="currentSlide(10)"></span>
+                <span class="dot" onclick="currentSlide(11)"></span>
+            </div>
+        </div>
+    </section>
 
     <!-- Features Section -->
     <section class="features">
@@ -395,17 +1396,17 @@
             <div class="features-grid">
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-file-medical"></i>
+                        <i class="fas fa-qrcode"></i>
                     </div>
-                    <h3>Comprehensive Student Health Records</h3>
-                    <p>Maintain complete digital health profiles for every PDMHS student with secure storage of medical history, allergies, medications, and vital signs. Instant access for authorized clinic staff and seamless record updates.</p>
+                    <h3>QR Code Student Identification</h3>
+                    <p>Instant student identification using QR codes for fast and accurate clinic check-ins. Streamlined process that reduces wait times and improves clinic workflow efficiency.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-calendar-check"></i>
+                        <i class="fas fa-file-medical-alt"></i>
                     </div>
-                    <h3>Smart Visit Management</h3>
-                    <p>Streamlined clinic visit tracking with QR code student identification, real-time visit logging, and automated parent notifications. Efficient workflow for busy school clinic operations.</p>
+                    <h3>Digital Health Records</h3>
+                    <p>Comprehensive digital health profiles with secure storage of medical history, allergies, medications, and vital signs. Quick access to critical health information when needed most.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
@@ -439,22 +1440,157 @@
         </div>
     </section>
 
-    <!-- About Section -->
-    <section class="about" id="about">
-        <div class="about-container">
-            <div class="about-content fade-in">
-                <h2>Transforming Healthcare at PDMHS</h2>
-                <p>The PDMHS Clinic Management System represents a revolutionary approach to student healthcare in educational environments. Designed specifically for the unique needs of our school community, this comprehensive platform streamlines every aspect of clinic operations while maintaining the highest standards of care.</p>
-                <p>Our innovative system empowers clinic staff with cutting-edge tools for efficient patient management, enables students to access their health information seamlessly, and provides administrators with valuable insights into campus health trends. From QR code-based student identification to automated parent notifications, every feature is crafted to enhance the healthcare experience.</p>
-                <p>At PDMHS, we believe that technology should serve humanity. That's why our clinic system prioritizes user experience, data security, and clinical efficiency - ensuring that healthcare providers can focus on what matters most: the health and wellbeing of our students.</p>
-            </div>
-            <div class="about-image fade-in">
-                <i class="fas fa-hospital"></i>
+    <!-- About Modal -->
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAboutModal()">&times;</span>
+            <div class="modal-body">
+                <div class="modal-header-section">
+                    <div class="modal-icon">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <h2>Transforming Healthcare at PDMHS</h2>
+                </div>
+                
+                <div class="modal-intro">
+                    <p>The PDMHS Clinic Management System is an innovative solution that enhances the delivery of healthcare services in the school environment. Built to support efficient clinic operations, it enables secure health record management, fast student identification through QR codes, and data-driven insights to promote better student health and safety.</p>
+                </div>
+                
+                <div class="modal-features">
+                    <div class="feature-item">
+                        <div class="feature-icon-small">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>QR Code Technology</h4>
+                            <p>Lightning-fast student identification with secure QR codes. Scan and access complete health profiles in seconds, eliminating manual searches and reducing wait times.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon-small">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Centralized Health Records</h4>
+                            <p>Complete digital health profiles including medical history, allergies, medications, immunizations, and vital signs - all in one secure location accessible to authorized staff.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon-small">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Advanced Analytics</h4>
+                            <p>Real-time insights into campus health trends, visit patterns, and incident tracking. Generate comprehensive reports to improve health programs and resource allocation.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon-small">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Enterprise-Grade Security</h4>
+                            <p>Bank-level encryption, role-based access controls, complete audit trails, and HIPAA-compliant data protection to safeguard sensitive student health information.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon-small">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Automated Notifications</h4>
+                            <p>Instant parent alerts for clinic visits, health updates, and medication reminders. Keep families informed and engaged in their child's health journey.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon-small">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Multi-Device Access</h4>
+                            <p>Responsive design works seamlessly on desktop, tablet, and smartphone. Access student records from anywhere on campus with internet connectivity.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon-small">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Real-Time Updates</h4>
+                            <p>Instant synchronization across all devices. Updates made by any staff member are immediately available to all authorized users.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon-small">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Streamlined Workflow</h4>
+                            <p>Intuitive interface designed for busy clinic staff. Reduce paperwork, minimize errors, and spend more time caring for students.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-mission">
+                    <div class="mission-icon">💡</div>
+                    <h3>Our Mission</h3>
+                    <p>Empowering healthcare providers with cutting-edge technology while prioritizing user experience, data security, and clinical efficiency - ensuring focus on what matters most: the health and wellbeing of our students.</p>
+                </div>
+                
+                <div class="modal-benefits">
+                    <h3 class="benefits-title">Why Schools Choose Our System</h3>
+                    <div class="benefits-grid">
+                        <div class="benefit-card">
+                            <div class="benefit-icon">⚡</div>
+                            <h4>Increased Efficiency</h4>
+                            <p>Reduce clinic visit processing time by 70% with instant QR code identification and digital records.</p>
+                        </div>
+                        <div class="benefit-card">
+                            <div class="benefit-icon">📊</div>
+                            <h4>Better Decision Making</h4>
+                            <p>Data-driven insights help administrators make informed decisions about health programs and resources.</p>
+                        </div>
+                        <div class="benefit-card">
+                            <div class="benefit-icon">🔒</div>
+                            <h4>Enhanced Compliance</h4>
+                            <p>Meet all regulatory requirements with automated tracking, audit trails, and secure data management.</p>
+                        </div>
+                        <div class="benefit-card">
+                            <div class="benefit-icon">👨‍👩‍👧‍👦</div>
+                            <h4>Parent Engagement</h4>
+                            <p>Keep parents informed and involved with automated notifications and transparent health tracking.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Secure & Encrypted</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">System Access</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime Guarantee</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">70%</div>
+                        <div class="stat-label">Time Saved</div>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
-
-
+    </div>
 
     <script>
         // Navbar scroll effect
@@ -504,6 +1640,70 @@
         setTimeout(() => {
             document.querySelector('.hero .fade-in').classList.add('visible');
         }, 300);
+
+        // Carousel functionality
+        let currentIndex = 0;
+        const tips = document.querySelectorAll('.tip-card');
+        const dots = document.querySelectorAll('.dot');
+
+        function showSlide(index) {
+            tips.forEach((tip, i) => {
+                tip.classList.remove('active', 'prev');
+                if (i === index) {
+                    tip.classList.add('active');
+                } else if (i < index) {
+                    tip.classList.add('prev');
+                }
+            });
+
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+
+            currentIndex = index;
+        }
+
+        function moveCarousel(direction) {
+            let newIndex = currentIndex + direction;
+            if (newIndex < 0) newIndex = tips.length - 1;
+            if (newIndex >= tips.length) newIndex = 0;
+            showSlide(newIndex);
+        }
+
+        function currentSlide(index) {
+            showSlide(index);
+        }
+
+        // Auto-advance carousel every 5 seconds
+        setInterval(() => {
+            moveCarousel(1);
+        }, 5000);
+
+        // Modal functions
+        function openAboutModal() {
+            document.getElementById('aboutModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAboutModal() {
+            document.getElementById('aboutModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('aboutModal');
+            if (event.target === modal) {
+                closeAboutModal();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeAboutModal();
+            }
+        });
     </script>
 </body>
 </html>

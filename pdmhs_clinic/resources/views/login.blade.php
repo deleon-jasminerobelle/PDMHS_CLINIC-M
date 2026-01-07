@@ -54,12 +54,12 @@
     </style>
 </head>
 <body class="font-poppins text-slate-900 min-h-screen flex items-center justify-center overflow-x-hidden" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-<div class="bg-white rounded-2xl shadow-2xl p-8 w-full relative" style="max-width: 455px;">
+<div class="bg-white rounded-2xl shadow-2xl p-12 w-full relative" style="max-width: 700px; min-height: 800px;">
     <div class="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style="background: #4f46e5;"></div>
 
     <div class="text-center mb-8">
-        <h1 class="text-3xl font-albert font-bold mb-2" style="color: #4f46e5;">Welcome Back</h1>
-        <p class="text-slate-600">Sign in to your PDMHS account</p>
+        <h1 class="font-albert font-bold mb-2" style="color: #4f46e5; font-size: 40px;">Welcome Back</h1>
+        <p class="text-slate-600 text-base">Sign in to your PDMHS account</p>
     </div>
 
     @if (session('success'))
@@ -101,25 +101,25 @@
 
     <!-- Role Selection -->
     <div class="mb-6">
-        <h3 class="text-lg font-semibold text-slate-700 mb-4 text-center">Select Your Role</h3>
-        <div class="grid grid-cols-3 gap-3">
-            <button type="button" class="role-btn p-4 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="clinic_staff">
-                <div class="mb-2 flex justify-center">
-                    <img src="{{ asset('assets/medical.png') }}" alt="Clinic Staff" class="w-10 h-10 role-icon">
+        <h3 class="text-xl font-semibold text-slate-700 mb-5 text-center">Select Your Role</h3>
+        <div class="grid grid-cols-3 gap-4">
+            <button type="button" class="role-btn p-5 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="clinic_staff">
+                <div class="mb-3 flex justify-center">
+                    <img src="{{ asset('assets/medical.png') }}" alt="Clinic Staff" class="w-12 h-12 role-icon">
                 </div>
-                <div class="text-sm font-medium text-slate-700">Clinic Staff</div>
+                <div class="font-semibold text-slate-700" style="font-size: 20px;">Clinic Staff</div>
             </button>
-            <button type="button" class="role-btn p-4 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="student">
-                <div class="mb-2 flex justify-center">
-                    <img src="{{ asset('assets/student.png') }}" alt="Student" class="w-10 h-10 role-icon">
+            <button type="button" class="role-btn p-5 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="student">
+                <div class="mb-3 flex justify-center">
+                    <img src="{{ asset('assets/student.png') }}" alt="Student" class="w-12 h-12 role-icon">
                 </div>
-                <div class="text-sm font-medium text-slate-700">Student</div>
+                <div class="font-semibold text-slate-700" style="font-size: 20px;">Student</div>
             </button>
-            <button type="button" class="role-btn p-4 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="adviser">
-                <div class="mb-2 flex justify-center">
-                    <img src="{{ asset('assets/teacher.png') }}" alt="Adviser" class="w-10 h-10 role-icon">
+            <button type="button" class="role-btn p-5 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="adviser">
+                <div class="mb-3 flex justify-center">
+                    <img src="{{ asset('assets/teacher.png') }}" alt="Adviser" class="w-12 h-12 role-icon">
                 </div>
-                <div class="text-sm font-medium text-slate-700">Adviser</div>
+                <div class="font-semibold text-slate-700" style="font-size: 20px;">Adviser</div>
             </button>
         </div>
     </div>
@@ -129,9 +129,9 @@
         @csrf
         <input type="hidden" name="role" id="role" value="">
         <div>
-            <label for="username" class="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+            <label for="username" class="block text-base font-medium text-slate-700 mb-2">Email Address</label>
             <input type="email" id="username" name="username" value="{{ old('username') }}" required
-                   class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                   class="w-full px-4 py-3.5 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                    placeholder="Enter your email">
             @error('username')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -139,16 +139,16 @@
         </div>
 
         <div>
-            <label for="password" class="block text-sm font-medium text-slate-700 mb-2">Password</label>
+            <label for="password" class="block text-base font-medium text-slate-700 mb-2">Password</label>
             <input type="password" id="password" name="password" required
-                   class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                   class="w-full px-4 py-3.5 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                    placeholder="Enter your password">
             @error('password')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
             @enderror
         </div>
 
-        <button type="submit" class="w-full text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 btn-primary" style="background: #4f46e5; box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);">
+        <button type="submit" class="w-full text-white font-semibold py-3.5 px-4 text-base rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 btn-primary" style="background: #4f46e5; box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);">
             Sign In
         </button>
     </form>
