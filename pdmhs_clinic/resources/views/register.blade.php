@@ -28,7 +28,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom right, #f8fafc, #e0f2fe);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             color: var(--dark);
             line-height: 1.6;
             min-height: 100vh;
@@ -70,9 +71,7 @@
             font-size: 40px;
             font-weight: 900;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #4f46e5;
         }
 
         .register-header p {
@@ -246,14 +245,15 @@
         }
 
         .btn-primary {
-            background: var(--gradient);
+            background: #4f46e5;
             color: var(--white);
-            box-shadow: 0 8px 24px rgba(30, 64, 175, 0.3);
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
         }
 
         .btn-primary:hover {
+            background: #4338ca;
             transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(30, 64, 175, 0.4);
+            box-shadow: 0 12px 32px rgba(79, 70, 229, 0.4);
         }
 
         .register-footer {
