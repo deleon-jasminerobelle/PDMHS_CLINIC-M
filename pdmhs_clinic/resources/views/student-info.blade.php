@@ -5,270 +5,703 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Student Information</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --primary: #1e40af;
-            --primary-dark: #1e3a8a;
-            --secondary: #3b82f6;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --light: #f3f4f6;
+            --dark: #1f2937;
         }
-        
-        .navbar.bg-primary {
-            background: var(--gradient) !important;
-            padding: 1rem 0 !important;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
+
         body {
-            background-color: #f8f9fa;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 2rem;
         }
-        
-        .navbar-brand {
-            font-weight: 600;
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
-        
-        .navbar-nav .nav-link {
-            font-family: 'Epilogue', sans-serif !important;
-            font-size: 25px !important;
-            font-weight: 600 !important;
+
+        .navbar.scrolled {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-        
-        .page-container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .main-container {
-            max-width: 900px;
+
+        .navbar-container {
+            max-width: 1400px;
             margin: 0 auto;
-        }
-        
-        .page-header {
+            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
         }
-        
-        .page-title {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 800;
-            font-size: 25px;
-            color: #2c3e50;
-            margin: 0;
-        }
-        
-        .back-btn {
-            background: var(--gradient);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
             text-decoration: none;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 0.5rem;
-            transition: opacity 0.2s ease;
         }
-        
-        .back-btn:hover {
-            opacity: 0.9;
-            color: white;
+
+        .navbar-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--dark);
             text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        
-        .read-only-badge {
-            background: var(--gradient);
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary);
             color: white;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 20px;
-            font-weight: 700;
+            transform: translateY(-2px);
         }
-        
-        .info-section {
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
             background: white;
-            border-radius: 12px;
+            border: 2px solid var(--light);
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1001;
+        }
+
+        .user-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-btn.active {
+            border-color: var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .user-btn:hover .user-avatar {
+            border-color: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .user-avatar-default {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .user-btn:hover .user-avatar-default {
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .dropdown-arrow {
+            transition: all 0.3s ease;
+            color: #6b7280;
+        }
+
+        .user-btn.active .dropdown-arrow {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            border: 1px solid var(--light);
+            overflow: hidden;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .dropdown-header {
+            padding: 1rem 1.25rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-header .user-name {
+            color: white;
+            font-size: 1rem;
+            max-width: none;
+            margin-bottom: 0.25rem;
+        }
+
+        .dropdown-header .user-role {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.8rem;
+        }
+
+        .dropdown-item {
+            padding: 0.875rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--light);
+            position: relative;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, var(--light), rgba(79, 70, 229, 0.05));
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .dropdown-item:hover i {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .dropdown-item i {
+            width: 18px;
+            text-align: center;
+            transition: all 0.2s ease;
+            color: #6b7280;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--light);
+            margin: 0.5rem 0;
+        }
+
+        .dropdown-item.logout {
+            color: var(--danger);
+        }
+
+        .dropdown-item.logout:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .dropdown-item.logout i {
+            color: var(--danger);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: white;
+            border-radius: 1.5rem;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            animation: slideDown 0.5s ease;
         }
-        
+
+        .profile-pic-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-pic-default-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            border: 4px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-content h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-content p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.5s ease;
+        }
+
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
         }
-        
+
         .section-title {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 800;
-            font-size: 25px;
-            color: #2c3e50;
-            margin: 0;
-        }
-        
-        .edit-btn {
-            background: var(--gradient);
-            color: white;
-            border: none;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 20px;
+            font-size: 1.5rem;
             font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
             cursor: pointer;
         }
-        
-        .edit-btn:hover {
-            opacity: 0.9;
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
         }
-        
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Form Styles */
         .form-row {
-            display: flex;
-            gap: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .form-group {
-            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
-        
+
         .form-label {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 15px;
-            font-weight: 500;
-            color: #000000;
-            margin-bottom: 0.5rem;
-        }
-        
-        .table th,
-        .table td {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 15px;
-            color: #000000;
-            vertical-align: middle;
-        }
-        
-        .table th {
             font-weight: 600;
-            background-color: #f8f9fa;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
-        
-        .table td {
-            font-weight: 400;
-        }
-        
+
         .form-control {
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
             padding: 0.75rem;
+            border: 2px solid var(--light);
+            border-radius: 0.5rem;
             font-size: 0.95rem;
-            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+            background: white;
         }
-        
+
         .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-            background-color: white;
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
-        
+
         .form-control[readonly] {
-            background-color: #f8f9fa;
-            color: #6c757d;
+            background: var(--light);
+            color: #6b7280;
+            cursor: not-allowed;
         }
-        
+
         .textarea-large {
             min-height: 100px;
             resize: vertical;
         }
-        
-        .form-check-label {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 15px;
-            font-weight: 500;
-            color: #000000;
+
+        /* Table Styles */
+        .table {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        
+
+        .table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .table td {
+            padding: 1rem;
+            border: none;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background: var(--light);
+        }
+
+        .table tbody tr:hover {
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        /* Checkbox and Radio Styles */
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-check-input {
+            width: 1.2rem;
+            height: 1.2rem;
+            border: 2px solid var(--light);
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-check-input:checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .form-check-input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .form-check-label {
+            font-weight: 500;
+            color: var(--dark);
+            cursor: pointer;
+            margin: 0;
+        }
+
+        /* Badge Styles */
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .badge-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .badge-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .badge-info {
+            background: var(--info);
+            color: white;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .form-row {
+            .navbar-menu {
+                display: none;
+            }
+
+            .welcome-section {
                 flex-direction: column;
+                text-align: center;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
                 gap: 1rem;
             }
-            
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
+
+            .table-responsive {
+                font-size: 0.85rem;
             }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
             <a class="navbar-brand" href="{{ route('student.dashboard') }}">
+                <i class="fas fa-clinic-medical"></i>
+                PDMHS Clinic
             </a>
-            <div class="navbar-nav me-auto">
-                <a class="nav-link" href="{{ route('student.dashboard') }}">
-                    Dashboard
-                </a>
-                <a class="nav-link" href="{{ route('student.medical') }}">
-                    My Medical
-                </a>
-            </div>
-            <div class="navbar-nav ms-auto">
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user me-1"></i>
-                        {{ $user->name }}
+
+            <ul class="navbar-menu">
+                <li><a class="nav-link" href="{{ route('student.dashboard') }}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a class="nav-link active" href="{{ route('student.medical') }}"><i class="fas fa-notes-medical"></i>My Medical</a></li>
+            </ul>
+
+            <div class="user-dropdown">
+                <button class="user-btn" id="userBtn" onclick="toggleDropdown()">
+                    @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
+                        <img src="{{ asset($user->profile_picture) }}" alt="Profile" class="user-avatar">
+                    @else
+                        <div class="user-avatar-default">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </div>
+                    @endif
+                    <div class="user-info">
+                        <span class="user-name">{{ $user->name }}</span>
+                        <span class="user-role">Student</span>
+                    </div>
+                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+                </button>
+
+                <div class="dropdown-menu" id="userDropdown">
+                    <div class="dropdown-header">
+                        <div class="user-name">{{ $user->name }}</div>
+                        <div class="user-role">{{ $user->email }}</div>
+                    </div>
+                    <a class="dropdown-item" href="{{ route('student.profile') }}">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Profile Settings</span>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </li>
-                    </ul>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item logout" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="page-container">
-        <!-- Back Button -->
-        <div class="mb-3">
-            <a href="{{ route('student.medical') }}" class="back-btn">
-                <i class="fas fa-arrow-left"></i>
-                Back to Medical Records
-            </a>
+    <div class="container">
+        <!-- Success/Error Messages -->
+        @if(session('success'))
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <strong>Success!</strong> {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Error!</strong> {{ session('error') }}
+            </div>
+        @endif
+
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
+                <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-pic-large">
+            @else
+                <div class="profile-pic-default-large">
+                    <i class="fas fa-user"></i>
+                </div>
+            @endif
+            <div class="welcome-content">
+                <h1>Student Information</h1>
+                <p>View your complete personal and medical information</p>
+            </div>
         </div>
 
-        <!-- Main Container -->
-        <div class="main-container">
-            <!-- Page Header -->
-            <div class="page-header">
-                <h1 class="page-title">Student Information</h1>
-                <span class="read-only-badge">Read Only</span>
+        <!-- Student Information Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-user-graduate"></i>
+                    Student Information
+                </h2>
             </div>
 
-        <!-- Student Information Section -->
-        <div class="info-section">
             <form>
                 <div class="form-row">
                     <div class="form-group">
@@ -310,10 +743,16 @@
         </div>
 
         <!-- Contact Information Section -->
-        <div class="info-section">
+        <div class="section-card">
             <div class="section-header">
-                <h2 class="section-title">Contact Information</h2>
-                <button class="edit-btn" onclick="alert('Edit functionality coming soon!')">Edit</button>
+                <h2 class="section-title">
+                    <i class="fas fa-address-book"></i>
+                    Contact Information
+                </h2>
+                <button class="btn btn-outline" onclick="alert('Edit functionality coming soon!')">
+                    <i class="fas fa-edit"></i>
+                    Edit
+                </button>
             </div>
             
             <form>
@@ -345,10 +784,12 @@
         </div>
 
         <!-- Medical History Section -->
-        <div class="info-section">
+        <div class="section-card">
             <div class="section-header">
-                <h2 class="section-title">Medical History (For Learners)</h2>
-                <span class="read-only-badge">Read Only</span>
+                <h2 class="section-title">
+                    <i class="fas fa-history"></i>
+                    Medical History (For Learners)
+                </h2>
             </div>
             
             <form>
@@ -416,8 +857,8 @@
                     <div class="mt-4">
                         <label class="form-label fw-bold">Known Allergies:</label>
                         <div class="d-flex gap-2 mt-2">
-                            <span class="badge bg-danger fs-6 px-3 py-2">Peanuts</span>
-                            <span class="badge bg-warning text-dark fs-6 px-3 py-2">Shellfish</span>
+                            <span class="badge badge-danger">Peanuts</span>
+                            <span class="badge badge-warning">Shellfish</span>
                         </div>
                     </div>
                 </div>
@@ -558,15 +999,18 @@
         </div>
 
         <!-- Vaccination History Section -->
-        <div class="info-section">
+        <div class="section-card">
             <div class="section-header">
-                <h2 class="section-title">Vaccination History (Dates of Immunization)</h2>
-                <span class="read-only-badge">Read Only</span>
+                <h2 class="section-title">
+                    <i class="fas fa-syringe"></i>
+                    Vaccination History (Dates of Immunization)
+                </h2>
+                <span class="badge badge-info">Read Only</span>
             </div>
             
             <form>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table">
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 25%;">Vaccine</th>
@@ -655,10 +1099,12 @@
         </div>
 
         <!-- Emergency Medication Protocol Section -->
-        <div class="info-section">
+        <div class="section-card">
             <div class="section-header">
-                <h2 class="section-title">Emergency Medication Protocol</h2>
-                <span class="read-only-badge">Read Only</span>
+                <h2 class="section-title">
+                    <i class="fas fa-pills"></i>
+                    Emergency Medication Protocol
+                </h2>
             </div>
             
             <form>
@@ -707,5 +1153,33 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Dropdown toggle functionality
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            const userBtn = event.target.closest('.user-btn');
+
+            if (!userBtn && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 10) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
 </body>
 </html>

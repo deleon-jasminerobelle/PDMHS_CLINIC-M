@@ -36,6 +36,13 @@ class AdviserAssignmentSeeder extends Seeder
                 'grades' => [11, 12]
             ],
             [
+                'first_name' => 'Zyrah',
+                'last_name' => 'De Leon',
+                'email' => 'zyrah.deleon@pdmhs.edu.ph',
+                'strands' => ['STEM', 'ABM'], // Assign STEM and ABM students
+                'grades' => [11, 12]
+            ],
+            [
                 'first_name' => 'Nico',
                 'last_name' => 'Cruz',
                 'email' => 'nico.cruz@pdmhs.edu.ph',

@@ -197,25 +197,42 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('clinic-staff.dashboard') }}">
+            <a class="navbar-brand" href="{{ Auth::user()->role === 'adviser' ? route('adviser.dashboard') : route('clinic-staff.dashboard') }}">
             </a>
             <div class="navbar-nav me-auto">
-                <a class="nav-link" href="{{ route('clinic-staff.dashboard') }}">
-                    Dashboard
-                </a>
-                <a class="nav-link" href="{{ route('clinic-staff.students') }}">
-                    Students
-                </a>
-                <a class="nav-link" href="{{ route('clinic-staff.visits') }}">
-                    Visits
-                </a>
-                <a class="nav-link active" href="{{ route('scanner') }}">
-                    Scanner
-                </a>
-                <a class="nav-link" href="{{ route('clinic-staff.reports') }}">
-                    Reports
-                </a>
-                
+                @if(Auth::user()->role === 'adviser')
+                    <a class="nav-link" href="{{ route('adviser.dashboard') }}">
+                        Dashboard
+                    </a>
+                    <a class="nav-link" href="{{ route('adviser.my-students') }}">
+                        My Students
+                    </a>
+                    <a class="nav-link active" href="{{ route('adviser.scanner') }}">
+                        Scanner
+                    </a>
+                    <a class="nav-link" href="{{ route('adviser.profile') }}">
+                        Profile
+                    </a>
+                @else
+                    <a class="nav-link" href="{{ route('clinic-staff.dashboard') }}">
+                        Dashboard
+                    </a>
+                    <a class="nav-link" href="{{ route('clinic-staff.students') }}">
+                        Students
+                    </a>
+                    <a class="nav-link" href="{{ route('clinic-staff.visits') }}">
+                        Visits
+                    </a>
+                    <a class="nav-link active" href="{{ route('scanner') }}">
+                        Scanner
+                    </a>
+                    <a class="nav-link" href="{{ route('clinic-staff.reports') }}">
+                        Reports
+                    </a>
+                    <a class="nav-link" href="{{ route('clinic-staff.profile') }}">
+                        Profile
+                    </a>
+                @endif
             </div>
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
@@ -224,7 +241,7 @@
                         {{ Auth::user()->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('clinic-staff.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ Auth::user()->role === 'adviser' ? route('adviser.profile') : route('clinic-staff.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

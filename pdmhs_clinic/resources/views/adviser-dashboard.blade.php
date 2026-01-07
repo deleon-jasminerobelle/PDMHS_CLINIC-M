@@ -186,6 +186,9 @@
                 <a class="nav-link active" href="{{ route('adviser.dashboard') }}">
                     <i></i>Dashboard
                 </a>
+                <a class="nav-link" href="{{ route('adviser.my-students') }}">
+                    <i></i>My Students
+                </a>
                 <a class="nav-link" href="{{ route('adviser.scanner') }}">
                     <i></i>Scanner
                 </a>

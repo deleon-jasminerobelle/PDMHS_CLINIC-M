@@ -74,6 +74,7 @@ Route::middleware(['auth', 'adviser'])
     ->name('adviser.')
     ->group(function () {
         Route::get('/dashboard', [AdviserController::class, 'adviserDashboard'])->name('dashboard');
+        Route::get('/my-students', [AdviserController::class, 'myStudents'])->name('my-students');
         Route::get('/profile', [AdviserController::class, 'adviserProfile'])->name('profile');
         Route::put('/profile', [AdviserController::class, 'updateAdviserProfile'])->name('profile.update');
         Route::put('/password', [AdviserController::class, 'updateAdviserPassword'])->name('password.update');

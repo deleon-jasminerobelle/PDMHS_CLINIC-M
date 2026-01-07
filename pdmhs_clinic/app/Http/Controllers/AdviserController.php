@@ -71,6 +71,49 @@ class AdviserController extends Controller
     }
 
     /**
+     * Adviser My Students
+     */
+    public function myStudents()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        try {
+            if ($user->role !== 'adviser') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            // Load adviser with related students
+            $adviser = Adviser::where('user_id', $user->id)->with('students')->first();
+            $students = $adviser->students ?? collect();
+
+            $studentsData = $students->map(function ($student) {
+                $latestVitals = $this->getLatestVitalsForStudent($student);
+                $bmiData = $this->calculateBMI($latestVitals, $student);
+                $bmi = $bmiData['bmi'];
+                $bmiCategory = $bmiData['category'];
+                $allergies = $this->getAllergiesForStudent($student);
+                $clinicVisits = $this->getClinicVisitsForStudent($student);
+
+                return [
+                    'student' => $student,
+                    'latestVitals' => $latestVitals,
+                    'bmi' => $bmi,
+                    'bmiCategory' => $bmiCategory,
+                    'allergies' => $allergies,
+                    'clinicVisits' => $clinicVisits,
+                ];
+            });
+
+            return view('adviser-my-students', compact('studentsData', 'students', 'adviser', 'user'));
+
+        } catch (\Exception $e) {
+            Log::error('Adviser My Students Error: ' . $e->getMessage());
+            return redirect()->route('adviser.dashboard')->with('error', 'Unable to load students.');
+        }
+    }
+
+    /**
      * Adviser Profile
      */
     public function adviserProfile()

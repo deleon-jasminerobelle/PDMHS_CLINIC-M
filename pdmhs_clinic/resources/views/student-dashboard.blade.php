@@ -1,374 +1,870 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Student Dashboard</title>
+    <title>Student Dashboard - {{ $user->name }}</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --primary: #1e40af;
-            --primary-dark: #1e3a8a;
-            --secondary: #3b82f6;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --light: #f3f4f6;
+            --dark: #1f2937;
         }
 
-        .navbar.bg-primary {
-            background: var(--gradient) !important;
-            padding: 1rem 0 !important;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: #f8f9fa;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 2rem;
         }
 
-        .stat-card {
-            border-radius: 12px;
-            border: none;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            color: white;
-            font-weight: 500;
-            text-align: center;
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
 
-        .stat-card h2 {
-            font-size: 2.5rem;
-            font-weight: 300;
-            margin-bottom: 0.5rem;
+        .navbar.scrolled {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
-        .stat-card p {
-            margin: 0;
-            opacity: 0.9;
-            font-family: 'Roboto', sans-serif;
-            font-size: 25px;
-            font-weight: 700;
-        }
-
-        .stat-card-blue {
-            background: var(--gradient);
-        }
-
-        .stat-card-orange {
-            background: var(--gradient);
-        }
-
-        .stat-card-yellow {
-            background: var(--gradient);
-        }
-
-        .stat-card-purple {
-            background: var(--gradient);
-        }
-
-        .stat-card-green {
-            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
-            color: #333;
-        }
-
-        .stat-card-red {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            color: #333;
-        }
-
-        .section-card {
-            background: white;
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .section-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #eee;
-            font-weight: 600;
-            color: #6c757d;
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .section-header h5 {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 700;
-            font-size: 30px;
-            margin-bottom: 0;
-        }
-
-        .health-info-label {
-            font-family: 'Albert Sans', sans-serif !important;
-            font-weight: 700 !important;
-            font-size: 20px !important;
-        }
-
-        .empty-state-message {
-            font-family: 'Albert Sans', sans-serif !important;
-            font-style: italic !important;
-            font-size: 23px !important;
-        }
-
-        .section-content {
-            padding: 2rem;
-        }
-
         .navbar-brand {
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .navbar-nav .nav-link {
-            font-family: 'Epilogue', sans-serif !important;
-            font-size: 25px !important;
-            font-weight: 600 !important;
+        .navbar-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
         }
 
-        .dropdown-menu .dropdown-item {
-            font-family: 'Epilogue', sans-serif !important;
-            font-size: 20px !important;
-            font-weight: 500 !important;
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .welcome-header {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 800;
-            font-size: 30px;
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
         }
 
-        .profile-picture-container {
+        .user-dropdown {
             position: relative;
         }
 
-        .profile-picture {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        .user-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 2px solid var(--light);
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .default-avatar {
-            width: 150px;
-            height: 150px;
+        .user-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .user-avatar-default {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 120%;
+            right: 0;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--light);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            animation: slideDown 0.5s ease;
+        }
+
+        .profile-pic-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-pic-default-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-size: 3rem;
-            border: 4px solid #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            margin: 0 auto;
+            border: 4px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-content h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-content p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Health Info Grid */
+        .health-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .health-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .health-item:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .health-item-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .health-item:hover .health-item-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .health-item-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .health-item:hover .health-item-value {
+            color: white;
+        }
+
+        /* Allergies Grid */
+        .allergies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .allergy-badge {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border-left: 4px solid var(--warning);
+            background: #fef3c7;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .allergy-badge:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .allergy-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--warning);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .allergy-info strong {
+            display: block;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .allergy-info small {
+            color: #92400e;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--success);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: scaleIn 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 2px solid var(--light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--light);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .allergy-item {
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .allergy-item:hover {
+            border-color: var(--primary);
+        }
+
+        .allergy-item-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-menu {
+                display: none;
+            }
+
+            .welcome-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .health-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .allergies-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('student.dashboard') }}"></a>
-            <div class="navbar-nav me-auto">
-                <a class="nav-link active" href="{{ route('student.dashboard') }}">
-                    <i></i>Dashboard
-                </a>
-                <a class="nav-link" href="{{ route('student.medical') }}">
-                    <i></i>My Medical
-                </a>
-                <a class="nav-link" href="{{ route('health-form.index') }}">
-                    <i></i>Health Form
-                </a>
-            </div>
-            <div class="navbar-nav ms-auto">
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user me-1"></i> {{ $user->name }}
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" href="{{ route('student.dashboard') }}">
+                <i class="fas fa-heartbeat"></i>
+                PDMHS Clinic
+            </a>
+            <ul class="navbar-menu">
+                <li><a class="nav-link active" href="{{ route('student.dashboard') }}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a class="nav-link" href="{{ route('student.medical') }}"><i class="fas fa-notes-medical"></i>My Medical</a></li>
+                <li><a class="nav-link" href="{{ route('health-form.index') }}"><i class="fas fa-clipboard-list"></i>Health Form</a></li>
+            </ul>
+            <div class="user-dropdown">
+                <button class="user-btn" onclick="toggleDropdown()">
+                    @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
+                        <img src="{{ asset($user->profile_picture) }}" alt="Profile" class="user-avatar">
+                    @else
+                        <div class="user-avatar-default">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    @endif
+                    <span>{{ $user->name }}</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a class="dropdown-item" href="{{ route('student.profile') }}">
+                        <i class="fas fa-user-edit"></i>
+                        Profile
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('student.profile') }}"><i class="fas fa-user-edit me-2"></i>Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </li>
-                    </ul>
+                    <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <div class="container">
         <!-- Success/Error Messages -->
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert" style="font-family: 'Epilogue', sans-serif; font-size: 20px; font-weight: 500;">
-                <i class="fas fa-check-circle me-2"></i>
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
                 <strong>Success!</strong> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-                <i class="fas fa-exclamation-triangle me-2"></i>
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-triangle"></i>
                 <strong>Error!</strong> {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
-        <!-- Header with Profile Picture -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="section-card">
-                    <div class="section-content">
-                        <div class="row align-items-center">
-                            <div class="col-md-2 text-center">
-                                <div class="profile-picture-container">
-                                    @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
-                                        <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-picture">
-                                    @else
-                                        <div class="default-avatar">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-md-10">
-                                <h1 class="h3 mb-1 welcome-header">Welcome back, {{ $user->name }}!</h1>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
+                <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-pic-large">
+            @else
+                <div class="profile-pic-default-large">
+                    <i class="fas fa-user"></i>
                 </div>
+            @endif
+            <div class="welcome-content">
+                <h1>Welcome back, {{ $user->name }}!</h1>
+                <p>Here's your health overview for today</p>
             </div>
         </div>
 
         <!-- Health Statistics Cards -->
-        <div class="row mb-4">
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-blue d-flex flex-column justify-content-center" style="min-height: 120px;">
-                    <h2>{{ $bmi ?? '' }}</h2>
-                    <p>BMI</p>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                        <i class="fas fa-weight"></i>
+                    </div>
                 </div>
+                <div class="stat-value">{{ $bmi ?? 'N/A' }}</div>
+                <div class="stat-label">BMI</div>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-orange d-flex flex-column justify-content-center" style="min-height: 120px;">
-                    <h2>{{ $bloodType ?? '' }}</h2>
-                    <p>Blood Type</p>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, var(--danger), #ff6b6b);">
+                        <i class="fas fa-tint"></i>
+                    </div>
                 </div>
+                <div class="stat-value">{{ $bloodType ?? 'N/A' }}</div>
+                <div class="stat-label">Blood Type</div>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-yellow d-flex flex-column justify-content-center" style="min-height: 120px;">
-                    <h2>{{ isset($allergies) && $allergies && $allergies->count() > 0 ? $allergies->count() : '' }}</h2>
-                    <p>Allergies</p>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, var(--warning), #ffa726);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
                 </div>
+                <div class="stat-value">{{ isset($allergies) && $allergies && $allergies->count() > 0 ? $allergies->count() : '0' }}</div>
+                <div class="stat-label">Allergies</div>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-purple d-flex flex-column justify-content-center" style="min-height: 120px;">
-                    <h2>{{ isset($lastVisit) && $lastVisit ? $lastVisit->visit_date->format('M j') : '' }}</h2>
-                    <p>Last Visit</p>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, var(--info), #42a5f5);">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
                 </div>
+                <div class="stat-value">{{ isset($lastVisit) && $lastVisit ? $lastVisit->visit_date->format('M j') : 'N/A' }}</div>
+                <div class="stat-label">Last Visit</div>
             </div>
         </div>
 
         <!-- Health Information Section -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="section-card">
-                    <div class="section-header">
-                        <h5 class="mb-0"><i class="fas fa-heartbeat me-2"></i>Health Information</h5>
-                        <a href="{{ route('health-form.index') }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-edit me-1"></i>Edit
-                        </a>
+        <div class="section-card">
+            <div class="section-header">
+                <h5 class="section-title">
+                    <i class="fas fa-heartbeat"></i>
+                    Health Information
+                </h5>
+                <a href="{{ route('health-form.index') }}" class="btn btn-outline">
+                    <i class="fas fa-edit"></i>Edit
+                </a>
+            </div>
+            <div class="health-grid">
+                <div class="health-item">
+                    <div class="health-item-label">Height</div>
+                    <div class="health-item-value">{{ $latestVitals->height ? $latestVitals->height . ' cm' : 'Not Set' }}</div>
+                </div>
+                <div class="health-item">
+                    <div class="health-item-label">Weight</div>
+                    <div class="health-item-value">{{ $latestVitals->weight ? $latestVitals->weight . ' kg' : 'Not Set' }}</div>
+                </div>
+                <div class="health-item">
+                    <div class="health-item-label">Age</div>
+                    <div class="health-item-value">{{ $age ?? 'Not Set' }}</div>
+                </div>
+                <div class="health-item">
+                    <div class="health-item-label">BMI</div>
+                    <div class="health-item-value">
+                        {{ $bmi ? $bmi : 'Not Set' }}
+                        @if(isset($bmiCategory) && $bmiCategory)
+                            <small style="display: block; color: #6b7280; font-size: 0.8rem;">({{ $bmiCategory }})</small>
+                        @endif
                     </div>
-                    <div class="section-content">
-                        <div class="row">
-                            <div class="col-md-2 mb-3">
-                                <div class="text-center">
-                                    <h6 class="text-muted mb-1 health-info-label">Height</h6>
-                                    <h4 class="mb-0">{{ $latestVitals->height ? $latestVitals->height . ' cm' : 'Not Set' }}</h4>
-                                </div>
-                            </div>
-                            <div class="col-md-2 mb-3">
-                                <div class="text-center">
-                                    <h6 class="text-muted mb-1 health-info-label">Weight</h6>
-                                    <h4 class="mb-0">{{ $latestVitals->weight ? $latestVitals->weight . ' kg' : 'Not Set' }}</h4>
-                                </div>
-                            </div>
-                            <div class="col-md-2 mb-3">
-                                <div class="text-center">
-                                    <h6 class="text-muted mb-1 health-info-label">Age</h6>
-                                    <h4 class="mb-0">{{ $age ?? 'Not Set' }}</h4>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="text-center">
-                                    <h6 class="text-muted mb-1 health-info-label">BMI</h6>
-                                    <h4 class="mb-0">{{ $bmi ? $bmi : 'Not Set' }}</h4>
-                                    @if(isset($bmiCategory) && $bmiCategory)
-                                        <small class="text-muted">({{ $bmiCategory }})</small>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="text-center">
-                                    <h6 class="text-muted mb-1 health-info-label">Blood Type</h6>
-                                    <h4 class="mb-0">{{ $bloodType ? $bloodType : 'Not Set' }}</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+                <div class="health-item">
+                    <div class="health-item-label">Blood Type</div>
+                    <div class="health-item-value">{{ $bloodType ? $bloodType : 'Not Set' }}</div>
                 </div>
             </div>
         </div>
 
         <!-- Known Allergies -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="section-card">
-                    <div class="section-header">
-                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Known Allergies</h5>
-                        <button class="btn btn-sm btn-outline-primary" onclick="editAllergies()">
-                            <i class="fas fa-edit me-1"></i>Edit
-                        </button>
-                    </div>
-                    <div class="section-content">
-                        @if(isset($allergies) && $allergies && $allergies->count() > 0)
-                            <div class="row">
-                                @foreach($allergies as $allergy)
-                                    <div class="col-md-4 col-sm-6 mb-3">
-                                        <div class="alert alert-info mb-0 d-flex align-items-center" style="padding: 12px; border-radius: 8px;">
-                                            <i class="fas fa-exclamation-circle me-2"></i>
-                                            <div>
-                                                <strong>{{ $allergy->allergy_name ?? 'Unknown' }}</strong>
-                                                <br><small>Severity: {{ $allergy->severity ?? 'Unknown' }}</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
+        <div class="section-card">
+            <div class="section-header">
+                <h5 class="section-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Known Allergies
+                </h5>
+                <button class="btn btn-outline" onclick="openAllergiesModal()">
+                    <i class="fas fa-edit"></i>Edit
+                </button>
+            </div>
+            @if(isset($allergies) && $allergies && $allergies->count() > 0)
+                <div class="allergies-grid">
+                    @foreach($allergies as $allergy)
+                        <div class="allergy-badge">
+                            <div class="allergy-icon">
+                                <i class="fas fa-exclamation-circle"></i>
                             </div>
-                        @else
-                            <div class="text-center py-4">
-                                <i class="fas fa-check-circle text-success mb-2" style="font-size: 2rem;"></i>
-                                <p class="text-muted mb-0 empty-state-message">No known allergies recorded</p>
+                            <div class="allergy-info">
+                                <strong>{{ $allergy->allergy_name ?? 'Unknown' }}</strong>
+                                <small>Severity: {{ $allergy->severity ?? 'Unknown' }}</small>
                             </div>
-                        @endif
-                    </div>
+                        </div>
+                    @endforeach
                 </div>
-            </div>
-        </div>
-
-        <!-- Immunization Records -->
-        <div class="row mb-4">
-            <div class="col-12">
-            </div>
+            @else
+                <div class="empty-state">
+                    <i class="fas fa-check-circle"></i>
+                    <p>No known allergies recorded</p>
+                </div>
+            @endif
         </div>
     </div>
 

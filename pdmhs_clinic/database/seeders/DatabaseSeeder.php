@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             StudentSeeder::class,
             AdviserSeeder::class,
+            ZyrahStudentsSeeder::class,
+            AdviserAssignmentSeeder::class,
             ImmunizationSeeder::class,
             ClinicVisitSeeder::class,
             HealthIncidentSeeder::class,
