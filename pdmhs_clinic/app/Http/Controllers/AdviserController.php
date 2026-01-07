@@ -221,5 +221,41 @@ class AdviserController extends Controller
             return response()->json(['success'=>false,'message'=>'Error uploading profile picture.'],500);
         }
     }
+
+    /**
+     * View Student Profile
+     */
+    public function viewStudentProfile($id)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        try {
+            if ($user->role !== 'adviser') {
+                return redirect()->route('login')->with('error', 'Access denied.');
+            }
+
+            $student = Student::with('user')->findOrFail($id);
+
+            // Get student health data using the trait
+            $latestVitals = $this->getLatestVitalsForStudent($student);
+            $bmiData = $this->calculateBMI($latestVitals, $student);
+            $allergies = $this->getAllergiesForStudent($student);
+            $clinicVisits = $this->getClinicVisitsForStudent($student);
+
+            return view('adviser-student-profile', compact(
+                'user',
+                'student',
+                'latestVitals',
+                'bmiData',
+                'allergies',
+                'clinicVisits'
+            ));
+
+        } catch (\Exception $e) {
+            Log::error('Adviser View Student Profile Error: ' . $e->getMessage());
+            return redirect()->route('adviser.dashboard')->with('error', 'Unable to load student profile.');
+        }
+    }
 }
 

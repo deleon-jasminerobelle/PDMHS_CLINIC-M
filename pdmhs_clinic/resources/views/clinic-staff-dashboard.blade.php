@@ -184,13 +184,13 @@
             </a>
             <div class="navbar-nav me-auto">
                 <a class="nav-link active" href="{{ route('clinic-staff.dashboard') }}">
-                    <i></i>Dashboard
+                    Dashboard
                 </a>
                 <a class="nav-link" href="{{ route('clinic-staff.students') }}">
-                    <i ></i>Students
+                    Students
                 </a>
                 <a class="nav-link" href="{{ route('clinic-staff.visits') }}">
-                    <i ></i>Visits
+                    Visits
                 </a>
                 <a class="nav-link" href="{{ route('scanner') }}">
                     Scanner
@@ -288,25 +288,19 @@
                     </div>
                     <div class="section-content">
                         <div class="row">
-                            <div class="col-md-3 mb-3">
-                                <button class="btn btn-action w-100" onclick="alert('New Visit functionality coming soon!')">
-                                    <i class="fas fa-plus-circle mb-2"></i>
-                                    <div>New Visit</div>
-                                </button>
+                            <div class="col-md-4 mb-3">
+                                <a href="{{ route('clinic-staff.visits') }}" class="btn btn-action w-100 text-decoration-none">
+                                    <i class="fas fa-notes-medical mb-2"></i>
+                                    <div>Medical Visits</div>
+                                </a>
                             </div>
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <a href="{{ route('clinic-staff.students') }}" class="btn btn-action w-100 text-decoration-none">
                                     <i class="fas fa-search mb-2"></i>
                                     <div>Find Student</div>
                                 </a>
                             </div>
-                            <div class="col-md-3 mb-3">
-                                <button class="btn btn-action w-100" onclick="alert('Generate Report functionality coming soon!')">
-                                    <i class="fas fa-file-alt mb-2"></i>
-                                    <div>Generate Report</div>
-                                </button>
-                            </div>
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <a href="{{ route('clinic-staff.profile') }}" class="btn btn-action w-100 text-decoration-none">
                                     <i class="fas fa-user-cog mb-2"></i>
                                     <div>My Profile</div>

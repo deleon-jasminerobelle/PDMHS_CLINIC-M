@@ -712,7 +712,7 @@
         function processQRData(qrData) {
             showQRStatus('Processing QR code...', 'success');
 
-            fetch('{{ route("clinic-staff.qr-process") }}', {
+            fetch('{{ route("qr-process") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

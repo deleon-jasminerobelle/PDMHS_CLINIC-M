@@ -78,6 +78,8 @@ Route::middleware(['auth', 'adviser'])
         Route::put('/profile', [AdviserController::class, 'updateAdviserProfile'])->name('profile.update');
         Route::put('/password', [AdviserController::class, 'updateAdviserPassword'])->name('password.update');
         Route::post('/upload-profile-picture', [AdviserController::class, 'uploadAdviserProfilePicture'])->name('upload-profile-picture');
+        Route::get('/scanner', fn() => view('scanner'))->name('scanner');
+        Route::get('/students/{id}', [AdviserController::class, 'viewStudentProfile'])->name('student-profile');
     });
 
 /*
@@ -92,11 +94,13 @@ Route::middleware(['auth', 'clinic_staff'])
         Route::get('/dashboard', [ClinicStaffController::class, 'clinicDashboard'])->name('dashboard');
         Route::get('/students', [ClinicStaffController::class, 'clinicStudents'])->name('students');
         Route::get('/students/{id}', [ClinicStaffController::class, 'studentProfile'])->name('student-profile');
+        Route::get('/students/{id}/visit', [ClinicStaffController::class, 'createStudentVisit'])->name('student-visit.create');
         Route::post('/students/{id}/visit', [ClinicStaffController::class, 'addStudentVisit'])->name('student-visit');
         Route::get('/visits', [ClinicStaffController::class, 'clinicVisits'])->name('visits');
+        Route::get('/visits/create', [ClinicStaffController::class, 'createVisit'])->name('visits.create');
         Route::get('/visits/{visitId}/details', [ClinicStaffController::class, 'getVisitDetails'])->name('visit-details');
         Route::post('/visits', [ClinicStaffController::class, 'storeVisit'])->name('visits-store');
-        Route::post('/qr-process', [ClinicStaffController::class, 'processQR'])->name('qr-process');
+        Route::post('/visits/general', [ClinicStaffController::class, 'storeGeneralVisit'])->name('visits-store-general');
         Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
         Route::post('/reports/export-pdf', [ReportsController::class, 'exportPdf'])->name('reports-export-pdf');
         Route::post('/reports/export-excel', [ReportsController::class, 'exportExcel'])->name('reports-export-excel');
@@ -122,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/health-form', [HealthFormController::class, 'store'])->name('health-form.store');
 
     Route::get('/scanner', fn() => view('scanner'))->name('scanner');
+    Route::post('/qr-process', [ClinicStaffController::class, 'processQR'])->name('qr-process');
 });
 
 /*

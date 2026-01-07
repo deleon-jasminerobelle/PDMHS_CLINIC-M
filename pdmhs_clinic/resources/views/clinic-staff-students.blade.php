@@ -175,13 +175,13 @@
             </a>
             <div class="navbar-nav me-auto">
                 <a class="nav-link" href="{{ route('clinic-staff.dashboard') }}">
-                    <i></i>Dashboard
+                    Dashboard
                 </a>
                 <a class="nav-link active" href="{{ route('clinic-staff.students') }}">
-                    <i ></i>Students
+                    Students
                 </a>
                 <a class="nav-link" href="{{ route('clinic-staff.visits') }}">
-                    <i></i>Visits
+                    Visits
                 </a>
                 <a class="nav-link" href="{{ route('scanner') }}">
                     Scanner
@@ -373,8 +373,8 @@
         }
 
         function addVisit(id) {
-            // For now, just redirect to student profile where they can add a visit
-            window.location.href = `/clinic-staff/students/${id}`;
+            // Redirect to create visit form for this student
+            window.location.href = `/clinic-staff/students/${id}/visit`;
         }
 
         // Auto-dismiss alerts after 5 seconds

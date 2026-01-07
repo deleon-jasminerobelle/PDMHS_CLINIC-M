@@ -35,6 +35,11 @@
             font-size: 25px !important;
             font-weight: 600 !important;
         }
+
+        .navbar-nav .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+        }
         
         .dropdown-menu .dropdown-item {
             font-family: 'Epilogue', sans-serif !important;
@@ -134,6 +139,9 @@
                 </a>
                 <a class="nav-link" href="{{ route('clinic-staff.visits') }}">
                     Visits
+                </a>
+                <a class="nav-link" href="{{ route('scanner') }}">
+                    Scanner
                 </a>
                 <a class="nav-link active" href="{{ route('clinic-staff.reports') }}">
                     Reports

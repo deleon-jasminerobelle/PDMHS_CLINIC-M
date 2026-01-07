@@ -49,55 +49,76 @@
                 </div>
             </div>
 
-            <!-- Student Information Card -->
+            <!-- Student Selection / Information Card -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Student Information</h5>
+                    <h5 class="mb-0">{{ isset($student) ? 'Student Information' : 'Select Student' }}</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>{{ $student->first_name }} {{ $student->last_name }}</h6>
-                            <p class="text-muted mb-1">Student ID: {{ $student->student_id }}</p>
-                            <p class="text-muted mb-1">Grade {{ $student->grade_level }} - {{ $student->section }}</p>
-                            @if($age)
-                                <p class="text-muted mb-1">Age: {{ $age }} years old</p>
-                            @endif
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Latest Vitals</h6>
-                            <div class="row">
-                                <div class="col-6">
-                                    <small class="text-muted">Weight:</small><br>
-                                    <strong>{{ $latestVitals->weight ?: 'Not recorded' }}</strong>
-                                </div>
-                                <div class="col-6">
-                                    <small class="text-muted">Height:</small><br>
-                                    <strong>{{ $latestVitals->height ?: 'Not recorded' }}</strong>
-                                </div>
-                                <div class="col-6">
-                                    <small class="text-muted">Temperature:</small><br>
-                                    <strong>{{ $latestVitals->temperature ?: 'Not recorded' }}</strong>
-                                </div>
-                                <div class="col-6">
-                                    <small class="text-muted">Blood Pressure:</small><br>
-                                    <strong>{{ $latestVitals->blood_pressure ?: 'Not recorded' }}</strong>
+                    @if(isset($student))
+                        <!-- Student Information Display -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>{{ $student->first_name }} {{ $student->last_name }}</h6>
+                                <p class="text-muted mb-1">Student ID: {{ $student->student_id }}</p>
+                                <p class="text-muted mb-1">Grade {{ $student->grade_level }} - {{ $student->section }}</p>
+                                @if($age)
+                                    <p class="text-muted mb-1">Age: {{ $age }} years old</p>
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Latest Vitals</h6>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-muted">Weight:</small><br>
+                                        <strong>{{ $latestVitals->weight ?: 'Not recorded' }}</strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Height:</small><br>
+                                        <strong>{{ $latestVitals->height ?: 'Not recorded' }}</strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Temperature:</small><br>
+                                        <strong>{{ $latestVitals->temperature ?: 'Not recorded' }}</strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Blood Pressure:</small><br>
+                                        <strong>{{ $latestVitals->blood_pressure ?: 'Not recorded' }}</strong>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    @if($allergies->count() > 0)
-                    <div class="mt-3">
-                        <h6>Allergies</h6>
-                        <div class="alert alert-warning">
-                            <ul class="mb-0">
-                                @foreach($allergies as $allergy)
-                                <li>{{ $allergy->allergy_name ?? $allergy }}</li>
-                                @endforeach
-                            </ul>
+                        @if($allergies->count() > 0)
+                        <div class="mt-3">
+                            <h6>Allergies</h6>
+                            <div class="alert alert-warning">
+                                <ul class="mb-0">
+                                    @foreach($allergies as $allergy)
+                                    <li>{{ $allergy->allergy_name ?? $allergy }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                        @endif
+                    @else
+                        <!-- Student Selection Form -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="student_search">Search and Select Student *</label>
+                                    <input type="text" class="form-control" id="student_search" placeholder="Type student name or ID...">
+                                    <input type="hidden" id="student_id" name="student_id">
+                                    <small class="form-text text-muted">Start typing to search for students</small>
+                                </div>
+                                <div id="student_info" style="display: none;">
+                                    <div class="alert alert-info">
+                                        <h6 id="selected_student_name"></h6>
+                                        <p id="selected_student_details" class="mb-0"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -145,7 +166,7 @@
                     <h5 class="mb-0">Visit Details</h5>
                 </div>
                 <div class="card-body">
-                    <form id="clinicVisitForm" action="{{ route('clinic-visit.store', $student->id) }}" method="POST">
+                    <form id="clinicVisitForm" action="{{ isset($student) ? route('clinic-visit.store', $student->id) : route('clinic-staff.visits-store-general') }}" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -201,7 +222,7 @@
                                         <div class="form-group">
                                             <label for="weight">Weight (kg)</label>
                                             <input type="number" step="0.1" class="form-control @error('weight') is-invalid @enderror"
-                                                   id="weight" name="weight" value="{{ old('weight', $latestVitals->weight) }}">
+                                                   id="weight" name="weight" value="{{ old('weight', isset($latestVitals) ? $latestVitals->weight : '') }}">
                                             @error('weight')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -211,7 +232,7 @@
                                         <div class="form-group">
                                             <label for="height">Height (cm)</label>
                                             <input type="number" step="0.1" class="form-control @error('height') is-invalid @enderror"
-                                                   id="height" name="height" value="{{ old('height', $latestVitals->height) }}">
+                                                   id="height" name="height" value="{{ old('height', isset($latestVitals) ? $latestVitals->height : '') }}">
                                             @error('height')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -221,7 +242,7 @@
                                         <div class="form-group">
                                             <label for="temperature">Temperature (°C)</label>
                                             <input type="number" step="0.1" class="form-control @error('temperature') is-invalid @enderror"
-                                                   id="temperature" name="temperature" value="{{ old('temperature', $latestVitals->temperature) }}">
+                                                   id="temperature" name="temperature" value="{{ old('temperature', isset($latestVitals) ? $latestVitals->temperature : '') }}">
                                             @error('temperature')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -232,7 +253,7 @@
                                             <label for="blood_pressure">Blood Pressure</label>
                                             <input type="text" class="form-control @error('blood_pressure') is-invalid @enderror"
                                                    id="blood_pressure" name="blood_pressure"
-                                                   placeholder="120/80" value="{{ old('blood_pressure', $latestVitals->blood_pressure) }}">
+                                                   placeholder="120/80" value="{{ old('blood_pressure', isset($latestVitals) ? $latestVitals->blood_pressure : '') }}">
                                             @error('blood_pressure')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -277,6 +298,27 @@
 </div>
 
 <script>
+// Student search functionality
+$(document).ready(function() {
+    $('#student_search').on('input', function() {
+        const query = $(this).val();
+        if (query.length >= 2) {
+            $.ajax({
+                url: '{{ route("clinic-staff.search-students") }}',
+                method: 'GET',
+                data: { q: query },
+                success: function(data) {
+                    // Handle search results - you might want to show a dropdown
+                    console.log('Search results:', data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Search error:', error);
+                }
+            });
+        }
+    });
+});
+
 // Auto-calculate BMI when weight and height are entered
 function calculateBMI() {
     const weight = parseFloat(document.getElementById('weight').value);

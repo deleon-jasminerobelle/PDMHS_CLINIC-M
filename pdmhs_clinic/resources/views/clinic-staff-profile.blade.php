@@ -216,13 +216,16 @@
             </a>
             <div class="navbar-nav me-auto">
                 <a class="nav-link" href="{{ route('clinic-staff.dashboard') }}">
-                    <i></i>Dashboard
+                    Dashboard
                 </a>
                 <a class="nav-link" href="{{ route('clinic-staff.students') }}">
-                    <i ></i>Students
+                    Students
                 </a>
                 <a class="nav-link" href="{{ route('clinic-staff.visits') }}">
-                    <i ></i>Visits
+                    Visits
+                </a>
+                <a class="nav-link" href="{{ route('scanner') }}">
+                    Scanner
                 </a>
                 <a class="nav-link" href="{{ route('clinic-staff.reports') }}">
                     Reports

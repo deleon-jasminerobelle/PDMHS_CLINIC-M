@@ -412,7 +412,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">First Name</label>
-                            <input type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', $student->first_name ?? 'Hannah Lorraine') }}" readonly required>
+                            <input type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', $student->first_name) }}" readonly required>
                             @error('first_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -426,7 +426,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Last Name</label>
-                            <input type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', $student->last_name ?? 'Geronday') }}" readonly required>
+                            <input type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', $student->last_name) }}" readonly required>
                             @error('last_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -437,14 +437,14 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Student Number</label>
-                            <input type="text" class="form-control" value="{{ $student->student_id ?? '000001' }}" readonly>
+                            <input type="text" class="form-control" value="{{ $student->student_id }}" readonly>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Gender</label>
                             <select class="form-select @error('gender') is-invalid @enderror" name="gender" disabled>
                                 <option value="">Select Gender</option>
                                 <option value="M" {{ old('gender', $student->gender ?? '') == 'M' ? 'selected' : '' }}>Male</option>
-                                <option value="F" {{ old('gender', $student->gender ?? 'F') == 'F' ? 'selected' : '' }}>Female</option>
+                                <option value="F" {{ old('gender', $student->gender) == 'F' ? 'selected' : '' }}>Female</option>
                             </select>
                             @error('gender')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -452,7 +452,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Birthday</label>
-                            <input type="date" class="form-control @error('birth_date') is-invalid @enderror" name="birth_date" value="{{ old('birth_date', $student->date_of_birth ?? '2005-04-01') }}" readonly>
+                            <input type="date" class="form-control @error('birth_date') is-invalid @enderror" name="birth_date" value="{{ old('birth_date', $student->date_of_birth) }}" readonly>
                             @error('birth_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -466,14 +466,14 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Grade Level</label>
-                            <input type="text" class="form-control @error('grade_level') is-invalid @enderror" name="grade_level" value="{{ old('grade_level', $student->grade_level ?? '12') }}" readonly>
+                            <input type="text" class="form-control @error('grade_level') is-invalid @enderror" name="grade_level" value="{{ old('grade_level', $student->grade_level) }}" readonly>
                             @error('grade_level')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label class="form-label">Section</label>
-                            <input type="text" class="form-control @error('section') is-invalid @enderror" name="section" value="{{ old('section', $student->section ?? 'STEM 1') }}" readonly>
+                            <input type="text" class="form-control @error('section') is-invalid @enderror" name="section" value="{{ old('section', $student->section) }}" readonly>
                             @error('section')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -504,14 +504,14 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Email Address</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email ?? 'loraineh540@gmail.com') }}" readonly required>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" readonly required>
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label class="form-label">Phone Number</label>
-                            <input type="text" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" value="{{ old('phone_number', $student->contact_number ?? '09923603742') }}" readonly>
+                            <input type="text" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" value="{{ old('phone_number', $student->contact_number) }}" readonly>
                             @error('phone_number')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -522,7 +522,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Address</label>
-                            <textarea class="form-control textarea-large @error('address') is-invalid @enderror" name="address" rows="3" readonly>{{ old('address', $student->address ?? 'Test Address Update') }}</textarea>
+                            <textarea class="form-control textarea-large @error('address') is-invalid @enderror" name="address" rows="3" readonly>{{ old('address', $student->address) }}</textarea>
                             @error('address')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -533,7 +533,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Emergency Contact</label>
-                            <input type="text" class="form-control @error('emergency_contact') is-invalid @enderror" name="emergency_contact" value="{{ old('emergency_contact', $student->emergency_contact ?? 'Parent: 09123456789') }}" readonly>
+                            <input type="text" class="form-control @error('emergency_contact') is-invalid @enderror" name="emergency_contact" value="{{ old('emergency_contact', $student->emergency_contact) }}" readonly>
                             @error('emergency_contact')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -631,8 +631,8 @@
                     </div>
                     <div class="student-info">
                         <h6 class="fw-bold">{{ $user->name }}</h6>
-                        <p class="text-muted mb-1">Student ID: {{ $student->student_id ?? '000001' }}</p>
-                        <p class="text-muted">{{ $student->grade_level ?? '12' }} - {{ $student->section ?? 'STEM 1' }}</p>
+                        <p class="text-muted mb-1">Student ID: {{ $student->student_id }}</p>
+                        <p class="text-muted">{{ $student->grade_level }} - {{ $student->section }}</p>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -694,9 +694,9 @@
 
             const studentData = {
                 name: '{{ $user->name }}',
-                student_id: '{{ $student->student_id ?? "000001" }}',
-                grade_level: '{{ $student->grade_level ?? "12" }}',
-                section: '{{ $student->section ?? "STEM 1" }}',
+                student_id: '{{ $student->student_id }}',
+                grade_level: '{{ $student->grade_level }}',
+                section: '{{ $student->section }}',
                 email: '{{ $user->email }}'
             };
 

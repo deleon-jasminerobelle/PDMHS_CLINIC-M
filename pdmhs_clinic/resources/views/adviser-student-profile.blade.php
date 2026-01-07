@@ -16,12 +16,12 @@
             --secondary: #3b82f6;
             --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         }
-        
+
         .navbar.bg-primary {
             background: var(--gradient) !important;
             padding: 1rem 0 !important;
         }
-        
+
         body {
             background-color: #f8f9fa;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -32,7 +32,7 @@
             font-size: 25px !important;
             font-weight: 600 !important;
         }
-        
+
         .dropdown-menu .dropdown-item {
             font-family: 'Epilogue', sans-serif !important;
             font-size: 20px !important;
@@ -285,30 +285,15 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="{{ $user->role === 'adviser' ? route('adviser.dashboard') : route('clinic-staff.dashboard') }}">
+            <a class="navbar-brand" href="{{ route('adviser.dashboard') }}">
             </a>
             <div class="navbar-nav me-auto">
-                @if($user->role === 'adviser')
                 <a class="nav-link" href="{{ route('adviser.dashboard') }}">
                     Dashboard
                 </a>
                 <a class="nav-link active" href="{{ route('adviser.dashboard') }}">
                     Students
                 </a>
-                @else
-                <a class="nav-link" href="{{ route('clinic-staff.dashboard') }}">
-                    Dashboard
-                </a>
-                <a class="nav-link active" href="{{ route('clinic-staff.students') }}">
-                    Students
-                </a>
-                <a class="nav-link" href="{{ route('clinic-staff.visits') }}">
-                    Visits
-                </a>
-                <a class="nav-link" href="{{ route('clinic-staff.reports') }}">
-                    Reports
-                </a>
-                @endif
             </div>
             <div class="navbar-nav ms-auto">
                 <div class="nav-item dropdown">
@@ -317,11 +302,7 @@
                         {{ $user->name }}
                     </a>
                     <ul class="dropdown-menu">
-                        @if($user->role === 'adviser')
                         <li><a class="dropdown-item" href="{{ route('adviser.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
-                        @else
-                        <li><a class="dropdown-item" href="{{ route('clinic-staff.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
-                        @endif
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -356,8 +337,8 @@
         @endif
 
         <!-- Back Button -->
-        <a href="{{ $user->role === 'adviser' ? route('adviser.dashboard') : route('clinic-staff.students') }}" class="back-btn">
-            <i class="fas fa-arrow-left"></i> {{ $user->role === 'adviser' ? 'Back to Dashboard' : 'Back to Students' }}
+        <a href="{{ route('adviser.dashboard') }}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
         </a>
 
         <!-- Student Profile Card -->
@@ -416,11 +397,6 @@
                 <div class="section-card">
                     <div class="section-header">
                         <h3 class="section-title"><i class="fas fa-heartbeat me-2"></i>Latest Vitals</h3>
-                        @if($user->role === 'clinic_staff')
-                        <button class="btn btn-primary btn-sm" onclick="addVitals()">
-                            <i class="fas fa-plus me-1"></i>Add Vitals
-                        </button>
-                        @endif
                     </div>
                     <div class="vitals-grid">
                         <div class="vital-item">
@@ -448,11 +424,6 @@
                 <div class="section-card">
                     <div class="section-header">
                         <h3 class="section-title"><i class="fas fa-exclamation-triangle me-2"></i>Allergies</h3>
-                        @if($user->role === 'clinic_staff')
-                        <button class="btn btn-primary btn-sm" onclick="addAllergy()">
-                            <i class="fas fa-plus me-1"></i>Add Allergy
-                        </button>
-                        @endif
                     </div>
                     <div>
                         @if($student->allergies && count($student->allergies) > 0)
@@ -477,9 +448,6 @@
         <div class="section-card">
             <div class="section-header">
                 <h3 class="section-title"><i class="fas fa-history me-2"></i>Recent Visits</h3>
-                <a href="{{ route('clinic-staff.student-visit.create', $student->id) }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-1"></i>Add New Visit
-                </a>
             </div>
             <div>
                 @if($student->visits && $student->visits->count() > 0)
@@ -503,21 +471,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function addVitals() {
-            alert('Add Vitals functionality coming soon!');
-            // TODO: Implement vitals modal/form
-        }
-
-        function addAllergy() {
-            alert('Add Allergy functionality coming soon!');
-            // TODO: Implement allergy modal/form
-        }
-
-        function addVisit() {
-            alert('Add Visit functionality coming soon!');
-            // TODO: Implement visit modal/form
-        }
-
         // Auto-dismiss alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
             const alerts = document.querySelectorAll('.alert');
