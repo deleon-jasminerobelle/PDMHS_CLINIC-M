@@ -7,223 +7,252 @@
     <title>My Students - PDMHS Clinic</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1e40af;
-            --primary-dark: #1e3a8a;
-            --secondary: #3b82f6;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --light: #f3f4f6;
+            --dark: #1f2937;
         }
 
-        .navbar.bg-primary {
-            background: var(--gradient) !important;
-            padding: 1rem 0 !important;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: #f8f9fa;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 2rem;
         }
 
-        .student-card {
-            background: white;
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 1.5rem;
-            margin-bottom: 1rem;
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
             transition: all 0.3s ease;
         }
 
-        .student-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        .navbar.scrolled {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
-        .student-name {
-            font-family: 'Albert Sans', sans-serif !important;
-            font-weight: 600 !important;
-            font-size: 20px !important;
-            color: #1e40af !important;
-            margin-bottom: 0.5rem !important;
-        }
-
-        .student-info {
-            font-family: 'Albert Sans', sans-serif !important;
-            font-weight: 500 !important;
-            font-size: 16px !important;
-            color: #6c757d !important;
-            margin-bottom: 0.25rem !important;
-        }
-
-        .student-info i {
-            width: 16px;
-            color: #1e40af;
-        }
-
-        .health-status {
-            font-size: 14px;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-
-        .healthy {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-
-        .needs-attention {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-
-        .critical {
-            background-color: #fee2e2;
-            color: #991b1b;
-        }
-
-        .btn-view-profile {
-            background: var(--gradient);
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-view-profile:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .empty-state-icon {
-            font-size: 4rem;
-            color: #cbd5e1;
-            margin-bottom: 1rem;
-        }
-
-        .empty-state-title {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 600;
-            font-size: 24px;
-            color: #475569;
-            margin-bottom: 0.5rem;
-        }
-
-        .empty-state-text {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 16px;
-            color: #64748b;
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .navbar-brand {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 0;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: #6b7280;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 0.2rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary);
+            color: white;
+            transform: none;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 2px solid var(--light);
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .user-avatar-default {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             font-weight: 600;
         }
 
-        .navbar-nav .nav-link {
-            font-family: 'Epilogue', sans-serif !important;
-            font-size: 16px !important;
-            font-weight: 600 !important;
+        .dropdown-menu {
+            position: absolute;
+            top: 120%;
+            right: 0;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
         }
 
-        .dropdown-menu .dropdown-item {
-            font-family: 'Epilogue', sans-serif !important;
-            font-size: 14px !important;
-            font-weight: 500 !important;
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--light);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
         }
 
         .page-header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
             font-family: 'Albert Sans', sans-serif;
-            font-weight: 800;
+            font-weight: 600;
             font-size: 32px;
-            color: #1e293b;
             margin-bottom: 0.5rem;
         }
 
         .page-subtitle {
             font-family: 'Albert Sans', sans-serif;
-            font-weight: 500;
-            font-size: 18px;
-            color: #64748b;
-        }
-
-        .stats-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border: none;
-        }
-
-        .stats-number {
-            font-family: 'Roboto', sans-serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: #1e40af;
-            margin-bottom: 0.5rem;
-        }
-
-        .stats-label {
-            font-family: 'Albert Sans', sans-serif;
+            font-weight: 600;
             font-size: 16px;
-            color: #64748b;
-            margin: 0;
+            color: #6c757d;
+            margin-bottom: 0;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
             <a class="navbar-brand" href="{{ route('adviser.dashboard') }}">
-                <i class="fas fa-heartbeat me-2"></i>PDMHS Clinic
+                <i class="fas fa-heartbeat"></i>
+                PDMHS Clinic
             </a>
-            <div class="navbar-nav me-auto">
-                <a class="nav-link" href="{{ route('adviser.dashboard') }}">
-                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
-                </a>
-                <a class="nav-link active" href="{{ route('adviser.my-students') }}">
-                    <i class="fas fa-users me-1"></i>My Students
-                </a>
-                <a class="nav-link" href="{{ route('adviser.scanner') }}">
-                    <i class="fas fa-qrcode me-1"></i>Scanner
-                </a>
-            </div>
-            <div class="navbar-nav ms-auto">
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user me-1"></i>
-                        {{ Auth::user()->name }}
+            <ul class="navbar-menu">
+                <li><a class="nav-link" href="{{ route('adviser.dashboard') }}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a class="nav-link active" href="{{ route('adviser.my-students') }}"><i class="fas fa-users"></i>My Students</a></li>
+                <li><a class="nav-link" href="{{ route('adviser.scanner') }}"><i class="fas fa-qrcode"></i>Scanner</a></li>
+            </ul>
+            <div class="user-dropdown">
+                <button class="user-btn" onclick="toggleDropdown()">
+                    @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
+                        <img src="{{ asset($user->profile_picture) }}" alt="Profile" class="user-avatar">
+                    @else
+                        <div class="user-avatar-default">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    @endif
+                    <span>{{ $user->name }}</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a class="dropdown-item" href="{{ route('adviser.profile') }}">
+                        <i class="fas fa-user-edit"></i>
+                        Profile
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('adviser.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </li>
-                    </ul>
+                    <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Hidden logout form -->
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
 
     <div class="container mt-4">
         <!-- Success/Error Messages -->
