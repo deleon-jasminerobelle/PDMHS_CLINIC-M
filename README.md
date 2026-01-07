@@ -10,7 +10,6 @@ A comprehensive medical management system designed specifically for PDMHS (Presi
 - **Concurrently** - Run multiple development processes simultaneously
 
 ### Infrastructure
-- **Docker** - Containerized development and deployment
 - **Redis** - Caching and session management
 - **Queue System** - Background job processing for heavy operations
 - **File Storage** - Secure document and image management
