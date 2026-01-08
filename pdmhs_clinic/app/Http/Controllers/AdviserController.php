@@ -84,7 +84,7 @@ class AdviserController extends Controller
             }
 
             // Load adviser with related students
-            $adviser = Adviser::where('user_id', $user->id)->with('students')->first();
+            $adviser = Adviser::where('user_id', $user->id)->with(['students.user'])->first();
             $students = $adviser->students ?? collect();
 
             $studentsData = $students->map(function ($student) {
@@ -235,7 +235,7 @@ class AdviserController extends Controller
             }
 
             $request->validate([
-                'profile_picture'=>'required|image|mimes:jpeg,png,jpg,gif|max:'.config('clinic.max_profile_picture_size')
+                'profile_picture'=>'required|image|mimes:jpeg,png,jpg,gif|max:5120'
             ]);
 
             $uploadPath = public_path('uploads/profile_pictures');

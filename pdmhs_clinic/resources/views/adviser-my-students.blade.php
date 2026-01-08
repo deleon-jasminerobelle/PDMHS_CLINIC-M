@@ -303,6 +303,7 @@
         <!-- Students List -->
         @if($students->count() > 0)
             @foreach($studentsData as $studentData)
+                @if($studentData['student'] && $studentData['student']->user)
                 <div class="student-card">
                     <div class="row align-items-center">
                         <div class="col-md-8">
@@ -320,7 +321,7 @@
                             @endif
                             @if($studentData['latestVitals'])
                                 <div class="student-info">
-                                    <i class="fas fa-weight me-1"></i>BMI: {{ number_format($studentData['bmi'], 1) }}
+                                    <i class="fas fa-weight me-1"></i>BMI: {{ is_numeric($studentData['bmi']) ? number_format((float)$studentData['bmi'], 1) : $studentData['bmi'] }}
                                     <span class="health-status {{ $studentData['bmiCategory'] === 'Normal' ? 'healthy' : ($studentData['bmiCategory'] === 'Overweight' || $studentData['bmiCategory'] === 'Underweight' ? 'needs-attention' : 'critical') }}">
                                         {{ $studentData['bmiCategory'] }}
                                     </span>
@@ -339,6 +340,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             @endforeach
         @else
             <div class="empty-state">

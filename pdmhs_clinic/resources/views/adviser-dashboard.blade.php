@@ -24,35 +24,37 @@
         }
         
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
         }
         .stat-card {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            backdrop-filter: blur(10px);
             border-radius: 12px;
             border: none;
             padding: 1.5rem;
             margin-bottom: 1rem;
-            color: white;
             font-weight: 500;
             text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: white;
         }
         .stat-card h2 {
             font-family: 'Roboto', sans-serif;
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            color: white;
         }
         .stat-card p {
             margin: 0;
-            opacity: 0.9;
             font-family: 'Roboto', sans-serif;
             font-size: 25px;
             font-weight: 700;
+            color: white;
+            opacity: 0.95;
         }
-        .stat-card-blue { background: var(--gradient); }
-        .stat-card-orange { background: var(--gradient); }
-        .stat-card-yellow { background: var(--gradient); }
-        .stat-card-purple { background: var(--gradient); }
         
         .btn-action {
             background: white;
@@ -121,7 +123,8 @@
         }
         
         .section-card {
-            background: white;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
             border-radius: 12px;
             border: none;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -148,25 +151,190 @@
             text-align: center;
             color: #6c757d;
         }
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .navbar-brand {
-            font-weight: 600;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        
-        .navbar-nav .nav-link {
-            font-family: 'Epilogue', sans-serif !important;
-            font-size: 25px !important;
-            font-weight: 600 !important;
+
+        .navbar-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
-        
-        .dropdown-menu .dropdown-item {
-            font-family: 'Epilogue', sans-serif !important;
-            font-size: 20px !important;
-            font-weight: 500 !important;
+
+        .nav-link {
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 2px solid #f3f4f6;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-avatar-default {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 120%;
+            right: 0;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: #f3f4f6;
         }
         .welcome-header {
             font-family: 'Albert Sans', sans-serif;
             font-weight: 800;
             font-size: 35px;
+        }
+        
+        .welcome-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .profile-pic-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .profile-pic-default-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            border: 4px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
         }
         
         .dashboard-subtitle {
@@ -178,45 +346,46 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
             <a class="navbar-brand" href="{{ route('adviser.dashboard') }}">
+                <i class="fas fa-heartbeat"></i>
+                PDMHS Clinic
             </a>
-            <div class="navbar-nav me-auto">
-                <a class="nav-link active" href="{{ route('adviser.dashboard') }}">
-                    <i></i>Dashboard
-                </a>
-                <a class="nav-link" href="{{ route('adviser.my-students') }}">
-                    <i></i>My Students
-                </a>
-                <a class="nav-link" href="{{ route('adviser.scanner') }}">
-                    <i></i>Scanner
-                </a>
-            </div>
-            <div class="navbar-nav ms-auto">
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user me-1"></i>
-                        {{ $user->name }}
+            <ul class="navbar-menu">
+                <li><a class="nav-link active" href="{{ route('adviser.dashboard') }}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a class="nav-link" href="{{ route('adviser.my-students') }}"><i class="fas fa-users"></i>My Students</a></li>
+                <li><a class="nav-link" href="{{ route('adviser.scanner') }}"><i class="fas fa-qrcode"></i>Scanner</a></li>
+            </ul>
+            <div class="user-dropdown">
+                <button class="user-btn" onclick="toggleDropdown()">
+                    @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
+                        <img src="{{ asset($user->profile_picture) }}" alt="Profile" class="user-avatar">
+                    @else
+                        <div class="user-avatar-default">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    @endif
+                    <span>{{ $user->name }}</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a href="{{ route('adviser.profile') }}" class="dropdown-item">
+                        <i class="fas fa-user-cog"></i>
+                        Profile Settings
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('adviser.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </li>
-                    </ul>
+                    <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                 </div>
             </div>
         </div>
     </nav>
-
-
 
     <div class="container mt-4">
         <!-- Success/Error Messages -->
@@ -242,7 +411,14 @@
             <div id="dashboard-section" class="content-section">
                 <!-- Header -->
                 <div class="mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="welcome-container">
+                        @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
+                            <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-pic-large">
+                        @else
+                            <div class="profile-pic-default-large">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        @endif
                         <div>
                             <h1 class="h3 mb-1 welcome-header">Welcome, {{ $user->name }}!</h1>
                             <p class="text-muted dashboard-subtitle">
@@ -598,6 +774,21 @@
             // This would typically make an AJAX call to mark the notification as read
             alert('Mark as read functionality will be implemented soon.');
         }
+
+        // Dropdown toggle
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            const userBtn = document.querySelector('.user-btn');
+            if (dropdown && !userBtn.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
 
         // Auto-dismiss alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {

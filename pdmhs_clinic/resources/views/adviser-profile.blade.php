@@ -12,36 +12,161 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1e40af;
-            --primary-dark: #1e3a8a;
-            --secondary: #3b82f6;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-        }
-        
-        .navbar.bg-primary {
-            background: var(--gradient) !important;
-            padding: 1rem 0 !important;
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --dark: #1f2937;
+            --light: #f3f4f6;
         }
         
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
         }
-        
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .navbar-brand {
-            font-weight: 600;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        
-        .navbar-nav .nav-link {
-            font-family: 'Epilogue', sans-serif !important;
-            font-size: 25px !important;
-            font-weight: 600 !important;
+
+        .navbar-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
-        
-        .dropdown-menu .dropdown-item {
-            font-family: 'Epilogue', sans-serif !important;
-            font-size: 20px !important;
-            font-weight: 500 !important;
+
+        .nav-link {
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 2px solid #f3f4f6;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-avatar-default {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 120%;
+            right: 0;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: #f3f4f6;
         }
         
         .profile-container {
@@ -209,31 +334,33 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
             <a class="navbar-brand" href="{{ route('adviser.dashboard') }}">
-                <i class="fas fa-heartbeat me-2"></i>
+                <i class="fas fa-heartbeat"></i>
                 PDMHS Clinic
             </a>
-            <div class="navbar-nav ms-auto">
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user me-1"></i>
-                        {{ $user->name }}
+            <div class="user-dropdown">
+                <button class="user-btn" onclick="toggleDropdown()">
+                    @if($user->profile_picture && file_exists(public_path($user->profile_picture)))
+                        <img src="{{ asset($user->profile_picture) }}" alt="Profile" class="user-avatar">
+                    @else
+                        <div class="user-avatar-default">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    @endif
+                    <span>{{ $user->name }}</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item active" href="{{ route('adviser.profile') }}"><i class="fas fa-user-cog me-2"></i>Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </li>
-                    </ul>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                 </div>
             </div>
         </div>
@@ -247,7 +374,7 @@
                     <h1 class="profile-title">Profile Settings</h1>
                     <p class="profile-subtitle">Manage your account information</p>
                 </div>
-                <a href="{{ route('adviser.dashboard') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('adviser.dashboard') }}" class="btn btn-primary" style="background: #4f46e5; border-color: #4f46e5;">
                     <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
                 </a>
             </div>
@@ -314,7 +441,7 @@
                     <div class="col-md-6">
                         <label for="first_name" class="form-label">First Name</label>
                         <input type="text" class="form-control @error('first_name') is-invalid @enderror" 
-                               id="first_name" name="first_name" value="{{ old('first_name', $user->first_name) }}" required>
+                               id="first_name" name="first_name" value="{{ old('first_name', $user->first_name) }}" required disabled>
                         @error('first_name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -323,7 +450,7 @@
                     <div class="col-md-6">
                         <label for="last_name" class="form-label">Last Name</label>
                         <input type="text" class="form-control @error('last_name') is-invalid @enderror" 
-                               id="last_name" name="last_name" value="{{ old('last_name', $user->last_name) }}" required>
+                               id="last_name" name="last_name" value="{{ old('last_name', $user->last_name) }}" required disabled>
                         @error('last_name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -335,7 +462,7 @@
                         <label for="middle_name" class="form-label">Middle Name</label>
                         <input type="text" class="form-control @error('middle_name') is-invalid @enderror" 
                                id="middle_name" name="middle_name" value="{{ old('middle_name', $user->middle_name) }}" 
-                               placeholder="Enter your middle name (optional)">
+                               placeholder="Enter your middle name (optional)" disabled>
                         @error('middle_name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -346,7 +473,7 @@
                     <div class="col-md-6">
                         <label for="birthday" class="form-label">Birthday</label>
                         <input type="date" class="form-control @error('birthday') is-invalid @enderror" 
-                               id="birthday" name="birthday" value="{{ old('birthday', $user->birthday) }}">
+                               id="birthday" name="birthday" value="{{ old('birthday', $user->birthday) }}" disabled>
                         @error('birthday')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -354,7 +481,7 @@
                     
                     <div class="col-md-6">
                         <label for="gender" class="form-label">Gender</label>
-                        <select class="form-control @error('gender') is-invalid @enderror" id="gender" name="gender">
+                        <select class="form-control @error('gender') is-invalid @enderror" id="gender" name="gender" disabled>
                             <option value="">Select Gender</option>
                             <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>Male</option>
                             <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>Female</option>
@@ -370,7 +497,7 @@
                         <label for="address" class="form-label">Address</label>
                         <textarea class="form-control @error('address') is-invalid @enderror" 
                                   id="address" name="address" rows="3" 
-                                  placeholder="Enter your complete address">{{ old('address', $user->address) }}</textarea>
+                                  placeholder="Enter your complete address" disabled>{{ old('address', $user->address) }}</textarea>
                         @error('address')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -382,7 +509,7 @@
                         <label for="contact_number" class="form-label">Contact Number</label>
                         <input type="tel" class="form-control @error('contact_number') is-invalid @enderror" 
                                id="contact_number" name="contact_number" value="{{ old('contact_number', $user->contact_number) }}" 
-                               placeholder="e.g., +63 912 345 6789">
+                               placeholder="e.g., +63 912 345 6789" disabled>
                         @error('contact_number')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -391,16 +518,22 @@
                     <div class="col-md-6">
                         <label for="email" class="form-label">Email Address</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                               id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                               id="email" name="email" value="{{ old('email', $user->email) }}" required disabled>
                         @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
 
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Update Profile
+                <div class="mt-4" id="formButtons">
+                    <button type="button" class="btn btn-primary" id="editBtn" onclick="enableEditMode()">
+                        <i class="fas fa-edit me-2"></i>Update Profile
+                    </button>
+                    <button type="submit" class="btn btn-success" id="saveBtn" style="display: none;">
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancelBtn" style="display: none;" onclick="cancelEditMode()">
+                        <i class="fas fa-times me-2"></i>Cancel
                     </button>
                 </div>
             </form>
@@ -566,6 +699,51 @@
                 modal.show();
             });
         @endif
+
+        // Dropdown toggle
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            const userBtn = document.querySelector('.user-btn');
+            if (dropdown && !userBtn.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Edit mode functionality
+        function enableEditMode() {
+            // Enable all form fields
+            const formFields = document.querySelectorAll('#profileForm input, #profileForm select, #profileForm textarea');
+            formFields.forEach(field => {
+                field.disabled = false;
+            });
+
+            // Toggle buttons
+            document.getElementById('editBtn').style.display = 'none';
+            document.getElementById('saveBtn').style.display = 'inline-block';
+            document.getElementById('cancelBtn').style.display = 'inline-block';
+        }
+
+        function cancelEditMode() {
+            // Disable all form fields
+            const formFields = document.querySelectorAll('#profileForm input, #profileForm select, #profileForm textarea');
+            formFields.forEach(field => {
+                field.disabled = true;
+            });
+
+            // Reset form to original values
+            document.getElementById('profileForm').reset();
+
+            // Toggle buttons
+            document.getElementById('editBtn').style.display = 'inline-block';
+            document.getElementById('saveBtn').style.display = 'none';
+            document.getElementById('cancelBtn').style.display = 'none';
+        }
 
         // Auto-dismiss alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
