@@ -264,7 +264,9 @@
         .scanner-controls {
             display: flex;
             gap: 1rem;
-            justify-content: center;
+            justify-content: center !important;
+            align-items: center;
+            flex-wrap: wrap;
             margin-top: 1.5rem;
         }
 
@@ -474,14 +476,14 @@
                 <div class="scanner-overlay"></div>
             </div>
 
-            <div class="scanner-controls">
+            <div class="scanner-controls" style="display: flex; justify-content: center; align-items: center; text-align: center;">
                 <button class="btn btn-primary" id="start-btn">
                     <i class="fas fa-camera me-1"></i> Start Scanner
                 </button>
-                <button class="btn btn-secondary" id="stop-btn" disabled>
+                <button class="btn btn-secondary" id="stop-btn" style="display: none;">
                     <i class="fas fa-stop me-1"></i> Stop Scanner
                 </button>
-                <button class="btn btn-outline-primary" onclick="document.getElementById('qr-upload').click()">
+                <button class="btn btn-outline-primary" onclick="document.getElementById('qr-upload').click()" style="display: none;">
                     <i class="fas fa-upload me-1"></i> Upload QR
                 </button>
                 <input type="file" id="qr-upload" accept="image/*" style="display: none;" onchange="processUploadedQR(event)">
@@ -619,8 +621,8 @@
             const startBtn = document.getElementById('start-btn');
             const stopBtn = document.getElementById('stop-btn');
 
-            if (startBtn) startBtn.disabled = false;
-            if (stopBtn) stopBtn.disabled = true;
+            if (startBtn) startBtn.style.display = 'inline-block';
+            if (stopBtn) stopBtn.style.display = 'none';
 
             if (qrVideoElement && qrVideoElement.srcObject) {
                 qrVideoElement.srcObject.getTracks().forEach(track => track.stop());
@@ -723,8 +725,8 @@
                 startBtn.addEventListener('click', async function() {
                     try {
                         isQRScanning = true;
-                        startBtn.disabled = true;
-                        stopBtn.disabled = false;
+                        startBtn.style.display = 'none';
+                        stopBtn.style.display = 'inline-block';
 
                         const constraints = {
                             video: { facingMode: 'environment' }

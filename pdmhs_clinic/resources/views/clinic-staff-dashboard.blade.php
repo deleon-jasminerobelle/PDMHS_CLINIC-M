@@ -579,7 +579,7 @@
                         <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Visits</h5>
                     </div>
                     <div class="section-content" style="text-align: left; padding: 1rem;">
-                        <div class="visit-item mb-3 p-3" style="background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <div class="visit-item mb-3 p-3" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 255, 0.95) 100%); border-radius: 8px; border-left: 4px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <div class="d-flex align-items-center">
                                 <div class="visit-avatar me-3">
                                     <i class="fas fa-user-circle" style="font-size: 2rem; color: var(--primary);"></i>
@@ -593,7 +593,7 @@
                             </div>
                         </div>
                         
-                        <div class="visit-item mb-3 p-3" style="background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <div class="visit-item mb-3 p-3" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 255, 0.95) 100%); border-radius: 8px; border-left: 4px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <div class="d-flex align-items-center">
                                 <div class="visit-avatar me-3">
                                     <i class="fas fa-user-circle" style="font-size: 2rem; color: var(--primary);"></i>
@@ -617,7 +617,7 @@
                     </div>
                     <div class="section-content" style="text-align: left; padding: 1rem;">
                         @forelse($studentsWithAllergies as $student)
-                        <div class="allergy-item mb-3 p-3" style="background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                        <div class="allergy-item mb-3 p-3" style="background: linear-gradient(135deg, rgba(255, 250, 230, 0.95) 0%, rgba(255, 245, 220, 0.95) 100%); border-radius: 8px; border-left: 4px solid #ffc107; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <div class="d-flex align-items-center">
                                 <div class="allergy-avatar me-3">
                                     <i class="fas fa-user-circle" style="font-size: 2rem; color: #ffc107;"></i>

@@ -302,11 +302,12 @@
         }
 
         .visit-form-section {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 255, 0.95) 100%);
             border-radius: 8px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             border-left: 4px solid var(--primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .section-title {
@@ -477,7 +478,7 @@
     <div class="modal fade" id="newVisitModal" tabindex="-1" aria-labelledby="newVisitModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header text-white" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); border-bottom: none;">
                     <h5 class="modal-title" id="newVisitModalLabel">
                         <i class="fas fa-plus me-2"></i>New Medical Visit
                     </h5>
