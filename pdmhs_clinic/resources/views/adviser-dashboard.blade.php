@@ -375,7 +375,7 @@
                         <i class="fas fa-user-cog"></i>
                         Profile Settings
                     </a>
-                    <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit(); return false;">
                         <i class="fas fa-sign-out-alt"></i>
                         Logout
                     </a>

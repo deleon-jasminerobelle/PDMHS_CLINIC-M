@@ -240,7 +240,7 @@
                         <i class="fas fa-user-edit"></i>
                         Profile
                     </a>
-                    <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit(); return false;">
                         <i class="fas fa-sign-out-alt"></i>
                         Logout
                     </a>

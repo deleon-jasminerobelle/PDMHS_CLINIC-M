@@ -14,8 +14,8 @@
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold text-sky-700">STUDENT'S HEALTH RECORD</h1>
                 <div class="flex gap-2">
-                    <a href="{{ route('student.dashboard') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-200">
-                        <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                    <a href="{{ route('register') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Register
                     </a>
                     <button type="button" id="editBtn" class="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg transition duration-200">
                         <i class="fas fa-edit mr-2"></i>Edit

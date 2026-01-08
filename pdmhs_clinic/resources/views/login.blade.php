@@ -41,6 +41,31 @@
         @keyframes slideInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes progressBar { from { width: 100%; } to { width: 0%; } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        
+        .login-container {
+            animation: slideIn 0.6s ease-out;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-container::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.05) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
         .alert { animation: slideInDown 0.5s ease-out; position: relative; overflow: hidden; }
         .alert::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; animation: progressBar 3s linear; }
         .alert-success { background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #065f46; border-color: #10b981; }
@@ -48,14 +73,93 @@
         .alert-error { background: linear-gradient(135deg, #fee2e2, #fecaca); color: #991b1b; border-color: #ef4444; box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2); }
         .alert-error::before { background: #ef4444; }
         .error-text { color: #ef4444; font-size: 12px; margin-top: 4px; display: block; animation: fadeIn 0.3s ease-out; }
-        .role-btn.active, .role-btn:hover { border-color: #1e40af; background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #1e40af; transform: translateY(-3px); box-shadow: 0 12px 32px rgba(30, 64, 175, 0.2); }
-        .role-btn .role-icon { filter: grayscale(0.3); transition: all 0.3s ease; }
-        .role-btn:hover .role-icon, .role-btn.active .role-icon { filter: grayscale(0); transform: scale(1.15); }
+        
+        .role-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .role-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(79, 70, 229, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .role-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .role-btn.active, .role-btn:hover { 
+            border-color: #4f46e5; 
+            background: linear-gradient(135deg, rgba(238, 242, 255, 0.8), rgba(224, 231, 255, 0.9)); 
+            color: #4f46e5; 
+            transform: translateY(-5px) scale(1.02); 
+            box-shadow: 0 15px 40px rgba(79, 70, 229, 0.25); 
+        }
+        
+        .role-btn .role-icon { 
+            filter: grayscale(0.3); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        .role-btn:hover .role-icon, .role-btn.active .role-icon { 
+            filter: grayscale(0) drop-shadow(0 4px 8px rgba(79, 70, 229, 0.3)); 
+            transform: scale(1.2) rotate(5deg); 
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .input-field:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);
+        }
+        
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(79, 70, 229, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="font-poppins text-slate-900 min-h-screen flex items-center justify-center overflow-x-hidden" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-<div class="bg-white rounded-2xl shadow-2xl p-12 w-full relative" style="max-width: 700px; min-height: 800px;">
-    <div class="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style="background: #4f46e5;"></div>
+<div class="bg-white rounded-2xl shadow-2xl p-12 w-full relative login-container" style="max-width: 700px; min-height: 800px;">
+    <div class="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style="background: linear-gradient(90deg, #4f46e5, #7c3aed, #4f46e5); background-size: 200% 100%; animation: shimmer 3s linear infinite;"></div>
 
     <div class="text-center mb-8">
         <h1 class="font-albert font-bold mb-2" style="color: #4f46e5; font-size: 40px;">Welcome Back</h1>
@@ -107,19 +211,19 @@
                 <div class="mb-3 flex justify-center">
                     <img src="{{ asset('assets/medical.png') }}" alt="Clinic Staff" class="w-12 h-12 role-icon">
                 </div>
-                <div class="font-semibold text-slate-700" style="font-size: 20px;">Clinic Staff</div>
+                <div class="role-name font-semibold text-slate-700" style="font-size: 20px;">Clinic Staff</div>
             </button>
             <button type="button" class="role-btn p-5 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="student">
                 <div class="mb-3 flex justify-center">
                     <img src="{{ asset('assets/student.png') }}" alt="Student" class="w-12 h-12 role-icon">
                 </div>
-                <div class="font-semibold text-slate-700" style="font-size: 20px;">Student</div>
+                <div class="role-name font-semibold text-slate-700" style="font-size: 20px;">Student</div>
             </button>
             <button type="button" class="role-btn p-5 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="adviser">
                 <div class="mb-3 flex justify-center">
                     <img src="{{ asset('assets/teacher.png') }}" alt="Adviser" class="w-12 h-12 role-icon">
                 </div>
-                <div class="font-semibold text-slate-700" style="font-size: 20px;">Adviser</div>
+                <div class="role-name font-semibold text-slate-700" style="font-size: 20px;">Adviser</div>
             </button>
         </div>
     </div>
@@ -131,7 +235,7 @@
         <div>
             <label for="username" class="block text-base font-medium text-slate-700 mb-2">Email Address</label>
             <input type="email" id="username" name="username" value="{{ old('username') }}" required
-                   class="w-full px-4 py-3.5 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                   class="input-field w-full px-4 py-3.5 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                    placeholder="Enter your email">
             @error('username')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -141,7 +245,7 @@
         <div>
             <label for="password" class="block text-base font-medium text-slate-700 mb-2">Password</label>
             <input type="password" id="password" name="password" required
-                   class="w-full px-4 py-3.5 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                   class="input-field w-full px-4 py-3.5 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                    placeholder="Enter your password">
             @error('password')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
