@@ -61,8 +61,9 @@
         }
 
         .navbar-brand {
-            font-size: 18px;
-            font-weight: 600;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
             color: var(--primary);
             text-decoration: none;
             display: flex;
@@ -72,29 +73,29 @@
 
         .navbar-menu {
             display: flex;
-            gap: 0;
+            gap: 2rem;
             align-items: center;
             list-style: none;
         }
 
         .nav-link {
-            color: #6b7280;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
             text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
             transition: all 0.3s ease;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin: 0 0.2rem;
         }
 
         .nav-link:hover, .nav-link.active {
             background: var(--primary);
             color: white;
-            transform: none;
+            transform: translateY(-2px);
         }
 
         .user-dropdown {
@@ -185,28 +186,320 @@
             padding: 0 2rem;
         }
 
+        /* Page Header */
         .page-header {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
             backdrop-filter: blur(10px);
-            border-radius: 12px;
+            border-radius: 1.5rem;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.5s ease;
         }
 
         .page-title {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 600;
-            font-size: 32px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
             margin-bottom: 0.5rem;
         }
 
         .page-subtitle {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 600;
-            font-size: 16px;
-            color: #6c757d;
+            color: #6b7280;
+            font-size: 1.1rem;
             margin-bottom: 0;
+        }
+
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Student Cards */
+        .student-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .student-id {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .student-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .detail-icon {
+            width: 16px;
+            color: var(--primary);
+        }
+
+        .health-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .health-badge.normal {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .health-badge.needs-attention {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .health-badge.critical {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: #f3f4f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #9ca3af;
+        }
+
+        .empty-state-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state-text {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-menu {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .student-details {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -254,49 +547,56 @@
         @csrf
     </form>
 
-    <div class="container mt-4">
+    <div class="container">
         <!-- Success/Error Messages -->
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                <i class="fas fa-check-circle me-2"></i>
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
                 <strong>Success!</strong> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-                <i class="fas fa-exclamation-triangle me-2"></i>
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle"></i>
                 <strong>Error!</strong> {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
         <!-- Page Header -->
-        <div class="mb-4">
-            <h1 class="page-header">My Students</h1>
+        <div class="page-header">
+            <h1 class="page-title">My Students</h1>
             <p class="page-subtitle">Manage and view profiles of students under your advisory</p>
         </div>
 
         <!-- Statistics Cards -->
-        <div class="row mb-4">
-            <div class="col-md-4 mb-3">
-                <div class="stats-card">
-                    <div class="stats-number">{{ $students->count() }}</div>
-                    <p class="stats-label">Total Students</p>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                        <i class="fas fa-users"></i>
+                    </div>
                 </div>
+                <div class="stat-value">{{ $students->count() }}</div>
+                <div class="stat-label">Total Students</div>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="stats-card">
-                    <div class="stats-number">{{ $studentsData->where('latestVitals', '!=', null)->count() }}</div>
-                    <p class="stats-label">With Health Records</p>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, var(--success), #10b981);">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
                 </div>
+                <div class="stat-value">{{ $studentsData->where('latestVitals', '!=', null)->count() }}</div>
+                <div class="stat-label">With Health Records</div>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="stats-card">
-                    <div class="stats-number">{{ $studentsData->where('allergies', '!=', null)->count() }}</div>
-                    <p class="stats-label">With Allergies</p>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, var(--warning), #f59e0b);">
+                        <i class="fas fa-allergies"></i>
+                    </div>
                 </div>
+                <div class="stat-value">{{ $studentsData->where('allergies', '!=', null)->count() }}</div>
+                <div class="stat-label">With Allergies</div>
             </div>
         </div>
 
@@ -305,39 +605,57 @@
             @foreach($studentsData as $studentData)
                 @if($studentData['student'] && $studentData['student']->user)
                 <div class="student-card">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
+                    <div class="student-header">
+                        <div class="student-avatar">
+                            {{ strtoupper(substr($studentData['student']->user->first_name ?? $studentData['student']->user->name, 0, 1)) }}{{ strtoupper(substr($studentData['student']->user->last_name ?? '', 0, 1)) }}
+                        </div>
+                        <div class="flex-grow-1">
                             <h3 class="student-name">{{ $studentData['student']->user->name }}</h3>
-                            <div class="student-info">
-                                <i class="fas fa-id-card me-1"></i>Student ID: {{ $studentData['student']->student_id }}
-                            </div>
-                            <div class="student-info">
-                                <i class="fas fa-envelope me-1"></i>{{ $studentData['student']->user->email }}
-                            </div>
-                            @if($studentData['student']->user->contact_number)
-                                <div class="student-info">
-                                    <i class="fas fa-phone me-1"></i>{{ $studentData['student']->user->contact_number }}
-                                </div>
-                            @endif
-                            @if($studentData['latestVitals'])
-                                <div class="student-info">
-                                    <i class="fas fa-weight me-1"></i>BMI: {{ is_numeric($studentData['bmi']) ? number_format((float)$studentData['bmi'], 1) : $studentData['bmi'] }}
-                                    <span class="health-status {{ $studentData['bmiCategory'] === 'Normal' ? 'healthy' : ($studentData['bmiCategory'] === 'Overweight' || $studentData['bmiCategory'] === 'Underweight' ? 'needs-attention' : 'critical') }}">
-                                        {{ $studentData['bmiCategory'] }}
-                                    </span>
-                                </div>
-                            @endif
-                            @if($studentData['allergies'])
-                                <div class="student-info">
-                                    <i class="fas fa-allergies me-1"></i>Allergies: {{ Str::limit($studentData['allergies'], 50) }}
-                                </div>
-                            @endif
+                            <div class="student-id">Student ID: {{ $studentData['student']->student_id }}</div>
                         </div>
-                        <div class="col-md-4 text-end">
-                            <a href="{{ route('adviser.student-profile', $studentData['student']->id) }}" class="btn btn-primary btn-view-profile">
-                                <i class="fas fa-eye me-1"></i>View Profile
-                            </a>
+                        <a href="{{ route('adviser.student-profile', $studentData['student']->id) }}" class="btn btn-primary">
+                            <i class="fas fa-eye"></i>View Profile
+                        </a>
+                    </div>
+
+                    <div class="student-details">
+                        <div class="detail-item">
+                            <i class="fas fa-envelope detail-icon"></i>
+                            <span>{{ $studentData['student']->user->email }}</span>
                         </div>
+                        @if($studentData['student']->user->contact_number)
+                        <div class="detail-item">
+                            <i class="fas fa-phone detail-icon"></i>
+                            <span>{{ $studentData['student']->user->contact_number }}</span>
+                        </div>
+                        @endif
+                        @if($studentData['student']->grade_level)
+                        <div class="detail-item">
+                            <i class="fas fa-graduation-cap detail-icon"></i>
+                            <span>Grade {{ $studentData['student']->grade_level }} - {{ $studentData['student']->section ?? 'N/A' }}</span>
+                        </div>
+                        @endif
+                        @if($studentData['latestVitals'])
+                        <div class="detail-item">
+                            <i class="fas fa-weight detail-icon"></i>
+                            <span>BMI: {{ is_numeric($studentData['bmi']) ? number_format((float)$studentData['bmi'], 1) : $studentData['bmi'] }}</span>
+                            <span class="health-badge {{ $studentData['bmiCategory'] === 'Normal' ? 'normal' : ($studentData['bmiCategory'] === 'Overweight' || $studentData['bmiCategory'] === 'Underweight' ? 'needs-attention' : 'critical') }}">
+                                {{ $studentData['bmiCategory'] }}
+                            </span>
+                        </div>
+                        @endif
+                        @if($studentData['allergies'])
+                        <div class="detail-item">
+                            <i class="fas fa-allergies detail-icon"></i>
+                            <span>Allergies: {{ Str::limit($studentData['allergies'], 50) }}</span>
+                        </div>
+                        @endif
+                        @if($studentData['clinicVisits'] && $studentData['clinicVisits']->count() > 0)
+                        <div class="detail-item">
+                            <i class="fas fa-calendar-check detail-icon"></i>
+                            <span>Last Visit: {{ $studentData['clinicVisits']->first()->visit_date ? $studentData['clinicVisits']->first()->visit_date->format('M d, Y') : 'N/A' }}</span>
+                        </div>
+                        @endif
                     </div>
                 </div>
                 @endif
@@ -355,15 +673,41 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            const userBtn = event.target.closest('.user-btn');
+            if (!userBtn && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        });
+
         // Auto-dismiss alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
             const alerts = document.querySelectorAll('.alert');
             alerts.forEach(alert => {
                 setTimeout(() => {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 300);
                 }, 5000);
             });
+        });
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         });
     </script>
 </body>
