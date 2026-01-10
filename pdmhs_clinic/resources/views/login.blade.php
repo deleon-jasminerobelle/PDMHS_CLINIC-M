@@ -4,34 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - PDMHS</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1e40af',
-                        'primary-dark': '#1e3a8a',
-                        secondary: '#3b82f6',
-                        accent: '#60a5fa',
-                        dark: '#0f172a',
-                        gray: '#64748b',
-                        light: '#f1f5f9',
-                        success: '#10b981',
-                        warning: '#f59e0b',
-                    },
-                    fontFamily: {
-                        'poppins': ['Poppins', 'sans-serif'],
-                        'albert': ['Albert Sans', 'sans-serif'],
-                    }
-                }
-            }
+    <style>
+        :root {
+            --primary: #1877f2;
+            --primary-dark: #166fe5;
+            --secondary: #42a5f5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #42a5f5;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+            --gradient: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
+            --gray: #64748b;
+            --gray-light: #f8fafc;
+            --white: #ffffff;
+            --gradient-subtle: linear-gradient(135deg, #eff6ff 0%, #dbe9ff 100%);
+            --shadow-blue: rgba(24, 119, 242, 0.1);
+            --shadow-blue-light: rgba(24, 119, 242, 0.05);
         }
-    </script>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gradient);
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+    </style>
     <style>
         .gradient-bg { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
         .gradient-text { background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -188,42 +195,42 @@
         }
     </style>
 </head>
-<body class="font-poppins text-slate-900 min-h-screen flex items-center justify-center overflow-x-hidden" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);">
-<div class="bg-white rounded-2xl shadow-2xl p-12 w-full relative login-container" style="max-width: 700px; min-height: 800px;">
-    <div class="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style="background: linear-gradient(90deg, #4f46e5, #7c3aed, #4f46e5); background-size: 200% 100%; animation: shimmer 3s linear infinite;"></div>
+<body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--dark); min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow-x: hidden;">
+<div style="background: var(--white); border-radius: 20px; box-shadow: 0 32px 64px var(--shadow-blue); border: 1px solid var(--shadow-blue-light); padding: 48px; width: 800px; position: relative; min-height: fit-content; margin: 2rem auto;" class="login-container">
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);"></div>
 
-    <div class="text-center mb-8">
-        <h1 class="font-albert font-bold mb-2" style="color: #4f46e5; font-size: 40px;">Welcome Back</h1>
-        <p class="text-slate-600 text-base font-semibold">Sign in to your PDMHS account</p>
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h1 style="color: var(--primary); font-size: 40px; font-weight: 900; margin-bottom: 0.5rem;">Welcome Back</h1>
+        <p style="color: #64748b; font-size: 16px; font-weight: 800; font-family: 'Albert Sans', sans-serif;">Sign in to your PDMHS account</p>
     </div>
 
     @if (session('success'))
-        <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-6 rounded-r-lg animate-slideInDown">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+        <div style="background: #f0fdf4; border-left: 4px solid #4ade80; padding: 1rem 1.5rem; margin-bottom: 1.5rem; border-radius: 0 0.5rem 0.5rem 0; animation: slideInDown 0.5s ease-out;">
+            <div style="display: flex;">
+                <div style="flex-shrink: 0;">
+                    <svg style="height: 1.25rem; width: 1.25rem; color: #4ade80;" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                     </svg>
                 </div>
-                <div class="ml-3">
-                    <p class="text-sm text-green-700">{{ session('success') }}</p>
+                <div style="margin-left: 0.75rem;">
+                    <p style="font-size: 0.875rem; color: #047857;">{{ session('success') }}</p>
                 </div>
             </div>
         </div>
     @endif
 
     @if ($errors->any())
-        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-r-lg animate-slideInDown">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+        <div style="background: #fef2f2; border-left: 4px solid #f87171; padding: 1rem 1.5rem; margin-bottom: 1.5rem; border-radius: 0 0.5rem 0.5rem 0; animation: slideInDown 0.5s ease-out;">
+            <div style="display: flex;">
+                <div style="flex-shrink: 0;">
+                    <svg style="height: 1.25rem; width: 1.25rem; color: #f87171;" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                     </svg>
                 </div>
-                <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800">Login Failed</h3>
-                    <div class="mt-2 text-sm text-red-700">
-                        <ul role="list" class="list-disc pl-5 space-y-1">
+                <div style="margin-left: 0.75rem;">
+                    <h3 style="font-size: 0.875rem; font-weight: 500; color: #991b1b;">Login Failed</h3>
+                    <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #b91c1c;">
+                        <ul style="list-style-type: disc; padding-left: 1.25rem;">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -235,55 +242,55 @@
     @endif
 
     <!-- Role Selection -->
-    <div class="mb-6">
-        <h3 class="text-xl font-semibold text-slate-700 mb-5 text-center">Select Your Role</h3>
-        <div class="grid grid-cols-3 gap-4">
-            <button type="button" class="role-btn p-5 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="clinic_staff">
-                <div class="mb-3 flex justify-center">
-                    <img src="{{ asset('assets/medical.png') }}" alt="Clinic Staff" class="w-12 h-12 role-icon">
+    <div style="margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-bottom: 1.25rem; text-align: center; font-family: 'Albert Sans', sans-serif;">Select Your Role</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+            <button type="button" class="role-btn" style="padding: 1.25rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; background: white; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); text-align: center;" data-role="clinic_staff">
+                <div style="margin-bottom: 0.75rem; display: flex; justify-content: center;">
+                    <div style="width: 3rem; height: 3rem; background: linear-gradient(135deg, #10b981, #34d399); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; animation: pulse 2s infinite;">🏥</div>
                 </div>
-                <div class="role-name font-semibold text-slate-700" style="font-size: 20px;">Clinic Staff</div>
+                <div class="role-name" style="font-weight: 600; color: #374151; font-size: 20px; font-family: 'Albert Sans', sans-serif;">Clinic Staff</div>
             </button>
-            <button type="button" class="role-btn p-5 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="student">
-                <div class="mb-3 flex justify-center">
-                    <img src="{{ asset('assets/student.png') }}" alt="Student" class="w-12 h-12 role-icon">
+            <button type="button" class="role-btn" style="padding: 1.25rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; background: white; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); text-align: center;" data-role="student">
+                <div style="margin-bottom: 0.75rem; display: flex; justify-content: center;">
+                    <img src="{{ asset('assets/student.png') }}" alt="Student" style="width: 3rem; height: 3rem;" class="role-icon">
                 </div>
-                <div class="role-name font-semibold text-slate-700" style="font-size: 20px;">Student</div>
+                <div class="role-name" style="font-weight: 600; color: #374151; font-size: 20px; font-family: 'Albert Sans', sans-serif;">Student</div>
             </button>
-            <button type="button" class="role-btn p-5 border-2 border-slate-200 rounded-xl hover:border-blue-600 hover:bg-blue-50 transition-all duration-300 text-center" data-role="adviser">
-                <div class="mb-3 flex justify-center">
-                    <img src="{{ asset('assets/teacher.png') }}" alt="Adviser" class="w-12 h-12 role-icon">
+            <button type="button" class="role-btn" style="padding: 1.25rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; background: white; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); text-align: center;" data-role="adviser">
+                <div style="margin-bottom: 0.75rem; display: flex; justify-content: center;">
+                    <div style="width: 3rem; height: 3rem; background: linear-gradient(135deg, #f59e0b, #fbbf24); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; animation: pulse 2s infinite;">👨‍🏫</div>
                 </div>
-                <div class="role-name font-semibold text-slate-700" style="font-size: 20px;">Adviser</div>
+                <div class="role-name" style="font-weight: 600; color: #374151; font-size: 20px; font-family: 'Albert Sans', sans-serif;">Adviser</div>
             </button>
         </div>
     </div>
 
     <!-- Login Form -->
-    <form method="POST" action="{{ route('login.post') }}" class="space-y-6 login-form">
+    <form method="POST" action="{{ route('login.post') }}" style="display: flex; flex-direction: column; gap: 1.5rem;" class="login-form">
         @csrf
         <input type="hidden" name="role" id="role" value="">
         <div>
-            <label for="username" class="block text-base font-medium text-slate-700 mb-2">Email Address</label>
+            <label for="username" style="display: block; font-size: 20px; font-weight: 600; color: #374151; margin-bottom: 8px; font-family: 'Albert Sans', sans-serif;">Email Address</label>
             <input type="email" id="username" name="username" value="{{ old('username') }}" required
-                   class="input-field w-full px-4 py-3.5 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                   style="width: 100%; padding: 0.875rem 1rem; font-size: 1rem; border: 1px solid #d1d5db; border-radius: 0.5rem; transition: all 0.3s ease; background: #ffffff; font-family: 'Albert Sans', sans-serif;"
                    placeholder="Enter your email">
             @error('username')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                <p style="margin-top: 0.25rem; font-size: 0.875rem; color: #dc2626;">{{ $message }}</p>
             @enderror
         </div>
 
         <div>
-            <label for="password" class="block text-base font-medium text-slate-700 mb-2">Password</label>
+            <label for="password" style="display: block; font-size: 20px; font-weight: 600; color: #374151; margin-bottom: 8px; font-family: 'Albert Sans', sans-serif;">Password</label>
             <input type="password" id="password" name="password" required
-                   class="input-field w-full px-4 py-3.5 text-base border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                   style="width: 100%; padding: 0.875rem 1rem; font-size: 1rem; border: 1px solid #d1d5db; border-radius: 0.5rem; transition: all 0.3s ease; background: #ffffff; font-family: 'Albert Sans', sans-serif;"
                    placeholder="Enter your password">
             @error('password')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                <p style="margin-top: 0.25rem; font-size: 0.875rem; color: #dc2626;">{{ $message }}</p>
             @enderror
         </div>
 
-        <button type="submit" class="w-full text-white font-semibold py-3.5 px-4 text-base rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 btn-primary" style="background: #4f46e5; box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);">
+        <button type="submit" class="btn-primary" style="width: 100%; color: white; font-weight: 600; padding: 0.875rem 1rem; font-size: 1rem; border: none; border-radius: 0.5rem; cursor: pointer; transition: all 0.3s ease; background: #1877f2; box-shadow: 0 8px 24px rgba(24, 119, 242, 0.3);">
             Sign In
         </button>
     </form>

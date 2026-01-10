@@ -12,8 +12,8 @@
 
     <style>
         :root {
-            --primary: #1e40af;
-            --primary-dark: #1e3a8a;
+            --primary: #1877f2;
+            --primary-dark: #166fe5;
             --secondary: #3b82f6;
             --accent: #60a5fa;
             --dark: #0f172a;
@@ -22,9 +22,13 @@
             --white: #ffffff;
             --success: #10b981;
             --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #3b82f6;
             --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --danger: #ef4444;
+            --info: #60a5fa;
+            --gray-light: #f8fafc;
+            --gradient-subtle: linear-gradient(135deg, #eff6ff 0%, #dbe9ff 100%);
+            --shadow-blue: rgba(24, 119, 242, 0.1);
+            --shadow-blue-light: rgba(24, 119, 242, 0.05);
         }
 
         * {
@@ -53,7 +57,8 @@
         }
 
         .navbar.scrolled {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .navbar-container {
@@ -1164,6 +1169,58 @@
             color: white;
         }
 
+        /* Advanced Filters */
+        .filters-section {
+            background: var(--light);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 2px solid var(--primary-light);
+            transition: all 0.3s ease;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-select {
+            padding: 0.5rem;
+            border: 2px solid var(--light);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.1);
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .navbar-menu {
@@ -1364,9 +1421,63 @@
                     <i class="fas fa-heartbeat"></i>
                     Health Information
                 </h5>
-                <a href="{{ route('health-form.index') }}" class="btn btn-outline">
-                    <i class="fas fa-edit"></i>Edit
-                </a>
+                <div class="d-flex gap-2 align-items-center">
+                    <button class="btn btn-outline btn-sm" onclick="toggleFilters()">
+                        <i class="fas fa-filter"></i>Filters
+                    </button>
+                    <a href="{{ route('health-form.index') }}" class="btn btn-outline btn-sm">
+                        <i class="fas fa-edit"></i>Edit
+                    </a>
+                </div>
+            </div>
+
+            <!-- Advanced Filters -->
+            <div class="filters-section" id="filtersSection" style="display: none; margin-bottom: 1.5rem;">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-calendar"></i>Date Range
+                        </label>
+                        <select class="filter-select" id="dateFilter">
+                            <option value="all">All Time</option>
+                            <option value="last-week">Last Week</option>
+                            <option value="last-month">Last Month</option>
+                            <option value="last-3-months">Last 3 Months</option>
+                            <option value="last-6-months">Last 6 Months</option>
+                            <option value="last-year">Last Year</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-tag"></i>Category
+                        </label>
+                        <select class="filter-select" id="categoryFilter">
+                            <option value="all">All Categories</option>
+                            <option value="vitals">Vitals</option>
+                            <option value="measurements">Measurements</option>
+                            <option value="personal">Personal Info</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">
+                            <i class="fas fa-check-circle"></i>Status
+                        </label>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="complete">Complete</option>
+                            <option value="incomplete">Incomplete</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <button class="btn btn-primary btn-sm" onclick="applyFilters()">
+                            <i class="fas fa-search"></i>Apply Filters
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="resetFilters()">
+                            <i class="fas fa-times"></i>Reset
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="health-grid">
                 <div class="tooltip-custom" data-tooltip="<strong>Height Information</strong><div class='tooltip-section'>Current Height: {{ $latestVitals->height ? $latestVitals->height . ' cm' : 'Not recorded' }}</div><div class='tooltip-section'>Height is used to calculate BMI and assess growth patterns.</div><div class='tooltip-section'>Regular height measurements help track development and identify potential health concerns.</div>">
@@ -2029,6 +2140,85 @@
                 console.error('Error fetching allergies:', error);
                 alert('Error loading allergies. Please try again.');
             });
+        }
+
+        // Advanced Filters functionality
+        function toggleFilters() {
+            const filtersSection = document.getElementById('filtersSection');
+            const filterBtn = event.target.closest('button');
+
+            if (filtersSection.style.display === 'none' || filtersSection.style.display === '') {
+                filtersSection.style.display = 'block';
+                filterBtn.innerHTML = '<i class="fas fa-times"></i>Hide Filters';
+                filterBtn.classList.remove('btn-outline');
+                filterBtn.classList.add('btn-primary');
+            } else {
+                filtersSection.style.display = 'none';
+                filterBtn.innerHTML = '<i class="fas fa-filter"></i>Filters';
+                filterBtn.classList.remove('btn-primary');
+                filterBtn.classList.add('btn-outline');
+            }
+        }
+
+        function applyFilters() {
+            const dateFilter = document.getElementById('dateFilter').value;
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            const healthItems = document.querySelectorAll('.health-item');
+
+            healthItems.forEach(item => {
+                let showItem = true;
+
+                // Date filter (placeholder - would need actual date data)
+                if (dateFilter !== 'all') {
+                    // Implement date filtering logic here
+                    // For now, show all items
+                }
+
+                // Category filter
+                if (categoryFilter !== 'all') {
+                    const itemLabel = item.querySelector('.health-item-label').textContent.toLowerCase();
+                    if (categoryFilter === 'vitals' && !['height', 'weight', 'bmi'].includes(itemLabel)) {
+                        showItem = false;
+                    } else if (categoryFilter === 'measurements' && !['height', 'weight', 'age'].includes(itemLabel)) {
+                        showItem = false;
+                    } else if (categoryFilter === 'personal' && !['age', 'blood type'].includes(itemLabel)) {
+                        showItem = false;
+                    }
+                }
+
+                // Status filter
+                if (statusFilter !== 'all') {
+                    const itemValue = item.querySelector('.health-item-value').textContent.toLowerCase();
+                    if (statusFilter === 'complete' && (itemValue === 'not set' || itemValue === 'n/a')) {
+                        showItem = false;
+                    } else if (statusFilter === 'incomplete' && itemValue !== 'not set' && itemValue !== 'n/a') {
+                        showItem = false;
+                    }
+                }
+
+                item.style.display = showItem ? 'block' : 'none';
+            });
+
+            // Show feedback
+            showAlert('success', 'Filters applied successfully!');
+        }
+
+        function resetFilters() {
+            // Reset all filter selects
+            document.getElementById('dateFilter').value = 'all';
+            document.getElementById('categoryFilter').value = 'all';
+            document.getElementById('statusFilter').value = 'all';
+
+            // Show all health items
+            const healthItems = document.querySelectorAll('.health-item');
+            healthItems.forEach(item => {
+                item.style.display = 'block';
+            });
+
+            // Show feedback
+            showAlert('success', 'Filters reset successfully!');
         }
     </script>
 

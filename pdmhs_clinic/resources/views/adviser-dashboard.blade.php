@@ -12,10 +12,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1e40af;
-            --primary-dark: #1e3a8a;
-            --secondary: #3b82f6;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --primary: #1877f2;
+            --primary-dark: #166fe5;
+            --secondary: #42a5f5;
+            --gradient: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
         }
         
         .navbar.bg-primary {

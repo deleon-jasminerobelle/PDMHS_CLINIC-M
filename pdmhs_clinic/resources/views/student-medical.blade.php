@@ -12,8 +12,8 @@
 
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
+            --primary: #1877f2;
+            --primary-dark: #166fe5;
             --secondary: #06b6d4;
             --success: #10b981;
             --warning: #f59e0b;
@@ -21,7 +21,7 @@
             --info: #3b82f6;
             --light: #f3f4f6;
             --dark: #1f2937;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --gradient: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
         }
 
         * {

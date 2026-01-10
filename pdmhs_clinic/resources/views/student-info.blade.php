@@ -12,8 +12,8 @@
 
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
+            --primary: #1877f2;
+            --primary-dark: #166fe5;
             --secondary: #06b6d4;
             --success: #10b981;
             --warning: #f59e0b;

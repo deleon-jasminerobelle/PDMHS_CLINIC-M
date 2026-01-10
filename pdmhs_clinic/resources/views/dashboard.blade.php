@@ -12,8 +12,8 @@
         }
 
         :root {
-            --primary: #1e40af;
-            --primary-dark: #1e3a8a;
+            --primary: #1877f2;
+            --primary-dark: #166fe5;
             --secondary: #3b82f6;
             --accent: #60a5fa;
             --dark: #0f172a;

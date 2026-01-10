@@ -13,38 +13,43 @@
         }
 
         :root {
-            --primary: #1e40af;
-            --primary-dark: #1e3a8a;
-            --secondary: #3b82f6;
-            --accent: #60a5fa;
-            --dark: #0f172a;
-            --gray: #64748b;
-            --light: #f1f5f9;
-            --white: #ffffff;
+            --primary: #1877f2;
+            --primary-dark: #166fe5;
+            --secondary: #42a5f5;
             --success: #10b981;
             --warning: #f59e0b;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --danger: #ef4444;
+            --info: #42a5f5;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+            --gradient: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
+            --gray: #64748b;
+            --gray-light: #f8fafc;
+            --white: #ffffff;
+            --gradient-subtle: linear-gradient(135deg, #eff6ff 0%, #dbe9ff 100%);
+            --shadow-blue: rgba(24, 119, 242, 0.1);
+            --shadow-blue-light: rgba(24, 119, 242, 0.05);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gradient);
             min-height: 100vh;
             color: var(--dark);
             line-height: 1.6;
-            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow-x: hidden;
+            padding-bottom: 2rem;
         }
 
         .register-container {
-            background: #f8f9fa;
+            background: var(--white);
             border-radius: 20px;
             padding: 48px;
-            box-shadow: 0 32px 64px rgba(30, 64, 175, 0.15);
-            border: 1px solid rgba(30, 64, 175, 0.1);
+            box-shadow: 0 32px 64px var(--shadow-blue);
+            border: 1px solid var(--shadow-blue-light);
             width: 800px;
             min-height: fit-content;
             position: relative;
@@ -71,7 +76,7 @@
             font-size: 40px;
             font-weight: 900;
             margin-bottom: 8px;
-            color: #4f46e5;
+            color: var(--primary);
         }
 
         .register-header p {
@@ -245,15 +250,15 @@
         }
 
         .btn-primary {
-            background: #4f46e5;
+            background: #1877f2;
             color: var(--white);
-            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 8px 24px rgba(24, 119, 242, 0.3);
         }
 
         .btn-primary:hover {
-            background: #4338ca;
+            background: #166fe5;
             transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 12px 32px rgba(24, 119, 242, 0.4);
         }
 
         .register-footer {
