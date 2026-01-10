@@ -186,27 +186,27 @@
             padding: 0 2rem;
         }
 
+        /* Page Header */
         .page-header {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(220, 220, 250, 0.95) 100%);
             backdrop-filter: blur(10px);
-            border-radius: 12px;
+            border-radius: 1.5rem;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.5s ease;
         }
-
+        
         .page-title {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 600;
-            font-size: 32px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
             margin-bottom: 0.5rem;
         }
-
+        
         .page-subtitle {
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 600;
-            font-size: 16px;
-            color: #6c757d;
+            color: #6b7280;
+            font-size: 1.1rem;
             margin-bottom: 0;
         }
 
@@ -251,7 +251,6 @@
             color: white;
             font-size: 16px;
             text-align: center;
-            font-family: 'Albert Sans', sans-serif;
             font-weight: 600;
         }
 
@@ -265,7 +264,9 @@
         .scanner-controls {
             display: flex;
             gap: 1rem;
-            justify-content: center;
+            justify-content: center !important;
+            align-items: center;
+            flex-wrap: wrap;
             margin-top: 1.5rem;
         }
 
@@ -273,7 +274,6 @@
             padding: 12px;
             border-radius: 8px;
             font-weight: 600;
-            font-family: 'Albert Sans', sans-serif;
             text-align: center;
             margin-top: 1rem;
         }
@@ -298,14 +298,12 @@
         }
 
         .instructions h6 {
-            font-family: 'Albert Sans', sans-serif;
             font-weight: 600;
             color: var(--primary);
             margin-bottom: 1rem;
         }
 
         .instructions ol {
-            font-family: 'Albert Sans', sans-serif;
             font-size: 14px;
             color: #495057;
             margin-bottom: 0;
@@ -331,13 +329,11 @@
             font-weight: 600;
             color: #212529;
             margin-bottom: 2px;
-            font-family: 'Albert Sans', sans-serif;
         }
 
         .scan-result-details {
             font-size: 12px;
             color: #6c757d;
-            font-family: 'Albert Sans', sans-serif;
             font-weight: 600;
         }
 
@@ -363,6 +359,29 @@
             background: var(--primary) !important;
             border-color: var(--primary) !important;
             color: white !important;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -443,18 +462,8 @@
 
         <!-- Page Header -->
         <div class="page-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1 class="page-title">QR Code Scanner</h1>
-                    <p class="page-subtitle">Scan or upload student QR codes for quick identification</p>
-                </div>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary btn-lg" onclick="document.getElementById('qr-upload').click()">
-                        <i class="fas fa-upload me-2"></i>Upload QR
-                    </button>
-                    <input type="file" id="qr-upload" accept="image/*" style="display: none;" onchange="processUploadedQR(event)">
-                </div>
-            </div>
+            <h1 class="page-title">QR Code Scanner</h1>
+            <p class="page-subtitle">Scan or upload student QR codes for quick identification</p>
         </div>
 
         <!-- Scanner Section -->
@@ -467,13 +476,17 @@
                 <div class="scanner-overlay"></div>
             </div>
 
-            <div class="scanner-controls">
+            <div class="scanner-controls" style="display: flex; justify-content: center; align-items: center; text-align: center;">
                 <button class="btn btn-primary" id="start-btn">
                     <i class="fas fa-camera me-1"></i> Start Scanner
                 </button>
-                <button class="btn btn-secondary" id="stop-btn" disabled>
+                <button class="btn btn-secondary" id="stop-btn" style="display: none;">
                     <i class="fas fa-stop me-1"></i> Stop Scanner
                 </button>
+                <button class="btn btn-outline-primary" onclick="document.getElementById('qr-upload').click()" style="display: none;">
+                    <i class="fas fa-upload me-1"></i> Upload QR
+                </button>
+                <input type="file" id="qr-upload" accept="image/*" style="display: none;" onchange="processUploadedQR(event)">
             </div>
 
             <div class="scanner-status" id="scanner-status" style="display: none;"></div>
@@ -608,8 +621,8 @@
             const startBtn = document.getElementById('start-btn');
             const stopBtn = document.getElementById('stop-btn');
 
-            if (startBtn) startBtn.disabled = false;
-            if (stopBtn) stopBtn.disabled = true;
+            if (startBtn) startBtn.style.display = 'inline-block';
+            if (stopBtn) stopBtn.style.display = 'none';
 
             if (qrVideoElement && qrVideoElement.srcObject) {
                 qrVideoElement.srcObject.getTracks().forEach(track => track.stop());
@@ -712,8 +725,8 @@
                 startBtn.addEventListener('click', async function() {
                     try {
                         isQRScanning = true;
-                        startBtn.disabled = true;
-                        stopBtn.disabled = false;
+                        startBtn.style.display = 'none';
+                        stopBtn.style.display = 'inline-block';
 
                         const constraints = {
                             video: { facingMode: 'environment' }
