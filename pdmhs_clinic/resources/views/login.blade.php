@@ -188,7 +188,7 @@
         }
     </style>
 </head>
-<body class="font-poppins text-slate-900 min-h-screen flex items-center justify-center overflow-x-hidden" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+<body class="font-poppins text-slate-900 min-h-screen flex items-center justify-center overflow-x-hidden" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);">
 <div class="bg-white rounded-2xl shadow-2xl p-12 w-full relative login-container" style="max-width: 700px; min-height: 800px;">
     <div class="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style="background: linear-gradient(90deg, #4f46e5, #7c3aed, #4f46e5); background-size: 200% 100%; animation: shimmer 3s linear infinite;"></div>
 

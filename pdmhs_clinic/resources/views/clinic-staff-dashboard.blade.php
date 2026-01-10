@@ -20,6 +20,7 @@
             --info: #3b82f6;
             --light: #f3f4f6;
             --dark: #1f2937;
+            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         }
 
         * {
@@ -30,7 +31,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient);
             min-height: 100vh;
             padding-bottom: 2rem;
         }
@@ -625,11 +626,7 @@
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1 allergy-name">{{ $student->first_name }} {{ $student->last_name }}</h6>
                                     <p class="mb-0 allergy-list">
-                                        @if(is_array($student->allergies) && count($student->allergies) > 0)
-                                            {{ implode(', ', $student->allergies) }}
-                                        @else
-                                            Allergies recorded
-                                        @endif
+                                        {{ $student->allergies_display ?: 'Allergies recorded' }}
                                     </p>
                                 </div>
                                 <i class="fas fa-exclamation-circle text-warning"></i>

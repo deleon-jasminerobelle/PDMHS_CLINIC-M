@@ -1,18 +1,18 @@
-# Student Dashboard Enhancements
+# Update Student Pages Color Scheme
 
-## Hover Effects and Tooltips
-- [ ] Add CSS styles for custom tooltips
-- [ ] Add tooltip data attributes to stat-cards (BMI, Blood Type, Allergies, Last Visit)
-- [ ] Add tooltip data attributes to health-items (Height, Weight, Age, BMI, Blood Type)
-- [ ] Add JavaScript for tooltip positioning and display
+## Plan
+- Update CSS variables in all student pages to match landing page
+- Change background gradient to use landing page colors
+- Add missing CSS variables (--accent, --gray, --white, --gradient)
 
-## Medical History Timeline
-- [ ] Add timeline section HTML structure
-- [ ] Add CSS for vertical timeline with connecting lines
-- [ ] Add timeline items with clinic visit data
-- [ ] Ensure responsive design for timeline
+## Files to Edit
+- [ ] student-dashboard.blade.php
+- [ ] student-health-form.blade.php
+- [ ] student-info.blade.php
+- [ ] student-medical-history.blade.php
+- [ ] student-medical.blade.php
+- [ ] student-profile.blade.php
 
-## Testing and Validation
-- [ ] Test hover effects and tooltips on different screen sizes
-- [ ] Verify timeline displays correctly with connecting lines
-- [ ] Check animations and transitions work smoothly
+## Followup Steps
+- [ ] Verify color changes look correct on all pages
+- [ ] Test responsiveness and ensure no styling breaks

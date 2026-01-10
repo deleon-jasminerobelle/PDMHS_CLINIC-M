@@ -12,15 +12,19 @@
 
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --secondary: #06b6d4;
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #60a5fa;
+            --dark: #0f172a;
+            --gray: #64748b;
+            --light: #f1f5f9;
+            --white: #ffffff;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
             --info: #3b82f6;
-            --light: #f3f4f6;
-            --dark: #1f2937;
+            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         }
 
         * {
@@ -31,7 +35,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient);
             min-height: 100vh;
             padding-bottom: 2rem;
         }
@@ -1252,8 +1256,7 @@
                 </button>
                 <div class="dropdown-menu" id="userDropdown">
                     <a class="dropdown-item" href="{{ route('student.info') }}">
-                        <i class="fas fa-user"></i>
-                        User
+                        
                     </a>
                     <a class="dropdown-item" href="{{ route('student.profile') }}">
                         <i class="fas fa-user-edit"></i>

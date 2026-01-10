@@ -21,6 +21,7 @@
             --info: #3b82f6;
             --light: #f3f4f6;
             --dark: #1f2937;
+            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
         }
 
         * {
@@ -31,7 +32,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient);
             min-height: 100vh;
             padding-bottom: 2rem;
         }
@@ -781,6 +782,7 @@
             <ul class="navbar-menu">
                 <li><a class="nav-link" href="{{ route('student.dashboard') }}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                 <li><a class="nav-link active" href="{{ route('student.medical') }}"><i class="fas fa-notes-medical"></i>My Medical</a></li>
+                <li><a class="nav-link" href="{{ route('health-form.index') }}"><i class="fas fa-clipboard-list"></i>Health Form</a></li>
             </ul>
 
             <div class="user-dropdown">
