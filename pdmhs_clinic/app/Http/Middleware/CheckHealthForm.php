@@ -17,7 +17,7 @@ class CheckHealthForm
         }
 
         // ✅ Allow health form routes (VERY IMPORTANT)
-        if ($request->routeIs('student-health-form', 'student.health.store')) {
+        if ($request->routeIs('health-form.index', 'health-form.store', 'student-health-form', 'student.health.store')) {
             return $next($request);
         }
 

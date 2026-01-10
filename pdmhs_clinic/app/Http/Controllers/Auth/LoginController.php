@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Student;
 use App\Models\Adviser;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -98,7 +99,7 @@ class LoginController extends Controller
                     'contact_number' => $request->contact_number,
                     'address' => $request->address,
                     'age' => Carbon::parse($request->birthday)->age,
-                    'student_id' => 'STU'.time(),
+                    'STU-' . Str::upper(Str::random(8)), 
                 ]);
 
                 // Create user linked to student

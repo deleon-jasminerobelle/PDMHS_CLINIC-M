@@ -234,7 +234,10 @@ class StudentDashboardController extends Controller
             return redirect()->route('student-health-form')->with('error', 'Please complete your health form first.');
         }
 
-        return view('student-info', compact('user', 'student'));
+        $age = $student->age ?? '';
+        $adviser = $student->advisers()->first();
+
+        return view('student-info', compact('user', 'student', 'age', 'adviser'));
     }
 
     /**

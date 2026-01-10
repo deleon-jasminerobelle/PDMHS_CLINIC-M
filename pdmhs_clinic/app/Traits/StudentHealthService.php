@@ -113,7 +113,7 @@ trait StudentHealthService
             if (!is_array($allergies)) $allergies = [];
 
             return collect($allergies)->map(fn($a) => (object)[
-                'allergy_name' => is_string($a) ? $a : ($a['name'] ?? 'Unknown'),
+                'allergy_name' => is_string($a) ? $a : ($a['allergy_name'] ?? $a['name'] ?? 'Unknown'),
                 'severity' => $a['severity'] ?? 'Unknown'
             ]);
         } catch (\Exception $e) {

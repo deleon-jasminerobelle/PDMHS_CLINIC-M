@@ -622,6 +622,7 @@
             <ul class="navbar-menu">
                 <li><a class="nav-link" href="{{ route('student.dashboard') }}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                 <li><a class="nav-link active" href="{{ route('student.medical') }}"><i class="fas fa-notes-medical"></i>My Medical</a></li>
+                <li><a class="nav-link" href="{{ route('health-form.index') }}"><i class="fas fa-clipboard-list"></i>Health Form</a></li>
             </ul>
 
             <div class="user-dropdown">
@@ -714,29 +715,29 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">School</label>
-                        <input type="text" class="form-control" value="Don Dada High School" readonly>
+                        <input type="text" class="form-control" value="{{ $student->school ?? 'Not specified' }}" readonly>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Grade Level & Section</label>
-                        <input type="text" class="form-control" value="{{ $student->grade_level ?? '12 - STEM-1' }}" readonly>
+                        <input type="text" class="form-control" value="{{ $student->formattedGradeSectionAttribute ?? 'Not specified' }}" readonly>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Birthday</label>
-                        <input type="text" class="form-control" value="{{ $student->date_of_birth ? \Carbon\Carbon::parse($student->date_of_birth)->format('m/d/Y') : '04/01/2005' }}" readonly>
+                        <input type="text" class="form-control" value="{{ $student->date_of_birth ? $student->date_of_birth->format('m/d/Y') : 'Not specified' }}" readonly>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Sex/Age</label>
-                        <input type="text" class="form-control" value="{{ $student->gender ?? 'F' }}/{{ $age ?? '20' }}" readonly>
+                        <input type="text" class="form-control" value="{{ $student->gender ?? 'Not specified' }}/{{ $age ?? 'Not specified' }}" readonly>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Adviser</label>
-                        <input type="text" class="form-control" value="{{ $adviser->name ?? 'Ms. Rea Loloy' }}" readonly>
+                        <input type="text" class="form-control" value="{{ $adviser->name ?? 'Not assigned' }}" readonly>
                     </div>
                 </div>
             </form>

@@ -17,12 +17,6 @@ class HealthFormController extends Controller
 
         if (Auth::check() && Auth::user()->student_id) {
             $student = Student::find(Auth::user()->student_id);
-
-            // Redirect to dashboard if already completed
-            if ($student && $student->health_form_completed) {
-                return redirect()->route('student.dashboard')
-                    ->with('info', 'You have already completed your health form.');
-            }
         }
 
         $advisers = Adviser::where('is_active', true)
