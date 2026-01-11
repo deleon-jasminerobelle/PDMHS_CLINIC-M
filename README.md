@@ -54,7 +54,7 @@ A secure and comprehensive medical management system built for **President Diosd
 
 ---
 
-## 🧱 System Architecture (High-Level)
+## 🧱 System Architecture
 
 * **Web Layer** – User interface for clinic staff
 * **Application Layer** – Business logic and validation
