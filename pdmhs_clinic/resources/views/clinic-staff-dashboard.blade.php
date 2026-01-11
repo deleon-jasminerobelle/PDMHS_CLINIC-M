@@ -32,7 +32,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--gradient);
+            background: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
             min-height: 100vh;
             padding-bottom: 2rem;
         }
@@ -629,7 +629,11 @@
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1 allergy-name">{{ $student->first_name }} {{ $student->last_name }}</h6>
                                     <p class="mb-0 allergy-list">
-                                        {{ $student->allergies_display ?: 'Allergies recorded' }}
+                                        @if(is_array($student->allergies))
+                                            {{ implode(', ', $student->allergies) }}
+                                        @else
+                                            {{ $student->allergies ?: 'Allergies recorded' }}
+                                        @endif
                                     </p>
                                 </div>
                                 <i class="fas fa-exclamation-circle text-warning"></i>

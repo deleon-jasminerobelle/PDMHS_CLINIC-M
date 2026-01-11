@@ -194,7 +194,7 @@
         /* Health Tips Carousel */
         .health-tips {
             padding: 5rem 2rem;
-            background: var(--white);
+            background: #1877f2;
         }
 
         .tips-container {
@@ -311,7 +311,7 @@
         /* Educational Articles */
         .educational-articles {
             padding: 5rem 2rem;
-            background: var(--white);
+            background: #1877f2;
         }
 
         .articles-container {
@@ -341,7 +341,7 @@
         }
 
         .article-image {
-            background: var(--gradient);
+            background: #1877f2;
             height: 200px;
             display: flex;
             align-items: center;
@@ -394,7 +394,7 @@
         /* How It Works Section */
         .how-it-works {
             padding: 5rem 2rem;
-            background: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
+            background: #1877f2;
         }
 
         .how-it-works-container {
@@ -433,7 +433,7 @@
             transform: translateX(-50%);
             width: 40px;
             height: 40px;
-            background: var(--gradient);
+            background: #1877f2;
             color: var(--white);
             border-radius: 50%;
             display: flex;
@@ -447,7 +447,7 @@
         .step-icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            background: #1877f2;
             border-radius: 20px;
             display: flex;
             align-items: center;
@@ -457,13 +457,13 @@
         }
 
         .step-card:hover .step-icon {
-            background: var(--gradient);
+            background: #1877f2;
             transform: scale(1.1) rotate(5deg);
         }
 
         .step-icon i {
             font-size: 2.5rem;
-            color: var(--primary);
+            color: white;
             transition: all 0.3s ease;
         }
 
@@ -665,13 +665,13 @@
         .feature-icon-small {
             width: 55px;
             height: 55px;
-            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            background: #1877f2;
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
         }
 
         .feature-icon-small i {
@@ -695,10 +695,10 @@
 
         .modal-mission {
             padding: 3rem 4rem;
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            background: #1877f2;
             text-align: center;
-            border-top: 4px solid #f59e0b;
-            border-bottom: 4px solid #f59e0b;
+            border-top: 4px solid #1877f2;
+            border-bottom: 4px solid #1877f2;
             position: relative;
             overflow: hidden;
         }
@@ -710,7 +710,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="2" fill="%23f59e0b" opacity="0.1"/><circle cx="90" cy="20" r="3" fill="%23f59e0b" opacity="0.1"/><circle cx="50" cy="90" r="2" fill="%23f59e0b" opacity="0.1"/></svg>');
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="2" fill="%23ffffff" opacity="0.1"/><circle cx="90" cy="20" r="3" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="90" r="2" fill="%23ffffff" opacity="0.1"/></svg>');
             pointer-events: none;
         }
 
@@ -719,24 +719,24 @@
             margin-bottom: 1.2rem;
             display: inline-block;
             animation: glow 2s ease-in-out infinite;
-            filter: drop-shadow(0 4px 8px rgba(245, 158, 11, 0.3));
+            filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.3));
         }
 
         @keyframes glow {
             0%, 100% {
                 transform: scale(1);
-                filter: drop-shadow(0 4px 8px rgba(245, 158, 11, 0.3));
+                filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.3));
             }
             50% {
                 transform: scale(1.1);
-                filter: drop-shadow(0 8px 16px rgba(245, 158, 11, 0.5));
+                filter: drop-shadow(0 8px 16px rgba(255, 255, 255, 0.5));
             }
         }
 
         .modal-mission h3 {
             font-size: 1.8rem;
             font-weight: 800;
-            color: #92400e;
+            color: white;
             margin-bottom: 1.2rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -748,17 +748,17 @@
             display: block;
             width: 80px;
             height: 4px;
-            background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+            background: linear-gradient(90deg, transparent, white, transparent);
             margin: 0.8rem auto 0;
             border-radius: 2px;
         }
 
         .modal-mission p {
             font-size: 1.1rem;
-            color: #78350f;
+            color: white;
             line-height: 1.8;
             margin: 0;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .modal-benefits {
@@ -801,15 +801,23 @@
         }
 
         .benefit-card:hover {
-            border-color: #4f46e5;
+            border-color: #1877f2;
             transform: translateY(-5px);
-            box-shadow: 0 12px 32px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 12px 32px rgba(24, 119, 242, 0.2);
         }
 
         .benefit-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: inline-block;
+            width: 80px;
+            height: 80px;
+            background: #1877f2;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 8px 24px rgba(24, 119, 242, 0.3);
             animation: float 3s ease-in-out infinite;
         }
 
@@ -852,9 +860,7 @@
         .stat-number {
             font-size: 2.8rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #1877f2;
             margin-bottom: 0.6rem;
         }
 
@@ -943,8 +949,8 @@
 
         .section-header p {
             font-size: 1.2rem;
-            font-weight: 700;
-            color: white;
+            font-weight: 500;
+            color: #ffffff;
             max-width: 600px;
             margin: 0 auto;
         }
@@ -972,7 +978,7 @@
         .feature-icon {
             width: 60px;
             height: 60px;
-            background: var(--gradient);
+            background: #1877f2;
             border-radius: 16px;
             display: flex;
             align-items: center;
@@ -995,6 +1001,146 @@
         .feature-card p {
             color: var(--gray);
             line-height: 1.6;
+        }
+
+        /* Contact/Support Section */
+        .contact-section {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: #1877f2;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 8px 24px rgba(24, 119, 242, 0.3);
+        }
+
+        .contact-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .contact-email {
+            font-size: 1.1rem;
+            color: #1877f2;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-email:hover {
+            color: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .hours-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0 0 0;
+        }
+
+        .hours-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .hours-list li:last-child {
+            border-bottom: none;
+        }
+
+        .day {
+            font-weight: 600;
+        }
+
+        .time {
+            color: #1877f2;
+            font-weight: 600;
+        }
+
+        /* Modal Support Hours */
+        .modal-hours {
+            padding: 3rem 4rem;
+            background: #1877f2;
+            text-align: center;
+        }
+
+        .modal-hours h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .modal-hours p {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .modal-hours-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto;
+            max-width: 500px;
+        }
+
+        .modal-hours-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: white;
+            margin-bottom: 0.75rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .modal-hours-list li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(24, 119, 242, 0.2);
         }
 
         /* Responsive Design */
@@ -1436,6 +1582,38 @@
         </div>
     </section>
 
+    <!-- Contact/Support Section -->
+    <section class="contact-section">
+        <div class="contact-container">
+            <div class="section-header">
+                <h2>Get In Touch</h2>
+                <p>Have questions? We're here to help</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-card fade-in">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email Us</h3>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=sdotapat.pdmhs@deped.gov.ph" target="_blank" class="contact-email">
+                        sdotapat.pdmhs@deped.gov.ph
+                    </a>
+                </div>
+                <div class="contact-card fade-in">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Visit Us</h3>
+                    <a href="https://www.google.com/maps/search/?api=1&query=8th+Street+GHQ+Village+Katuparan+Taguig+Philippines+1630" target="_blank" class="contact-email" style="display: block; margin-top: 1rem;">
+                        8th Street GHQ Village<br>
+                        Katuparan, Taguig<br>
+                        Philippines, 1630
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- About Modal -->
     <div id="aboutModal" class="modal">
         <div class="modal-content">
@@ -1544,45 +1722,38 @@
                     <h3 class="benefits-title">Why Schools Choose Our System</h3>
                     <div class="benefits-grid">
                         <div class="benefit-card">
-                            <div class="benefit-icon">⚡</div>
+                            <div class="benefit-icon"><i class="fas fa-bolt"></i></div>
                             <h4>Increased Efficiency</h4>
                             <p>Reduce clinic visit processing time by 70% with instant QR code identification and digital records.</p>
                         </div>
                         <div class="benefit-card">
-                            <div class="benefit-icon">📊</div>
+                            <div class="benefit-icon"><i class="fas fa-chart-line"></i></div>
                             <h4>Better Decision Making</h4>
                             <p>Data-driven insights help administrators make informed decisions about health programs and resources.</p>
                         </div>
                         <div class="benefit-card">
-                            <div class="benefit-icon">🔒</div>
+                            <div class="benefit-icon"><i class="fas fa-shield-alt"></i></div>
                             <h4>Enhanced Compliance</h4>
                             <p>Meet all regulatory requirements with automated tracking, audit trails, and secure data management.</p>
                         </div>
                         <div class="benefit-card">
-                            <div class="benefit-icon">👨‍👩‍👧‍👦</div>
+                            <div class="benefit-icon"><i class="fas fa-users"></i></div>
                             <h4>Parent Engagement</h4>
                             <p>Keep parents informed and involved with automated notifications and transparent health tracking.</p>
                         </div>
                     </div>
                 </div>
-                
-                <div class="modal-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label">Secure & Encrypted</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">System Access</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">99.9%</div>
-                        <div class="stat-label">Uptime Guarantee</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">70%</div>
-                        <div class="stat-label">Time Saved</div>
-                    </div>
+
+                <div class="modal-hours">
+                    <h3><i class="fas fa-clock"></i> Support Hours</h3>
+                    <p>We're available during these hours</p>
+                    <ul class="modal-hours-list">
+                        <li><span class="day">Monday</span><span class="time">8:00 AM - 5:00 PM</span></li>
+                        <li><span class="day">Tuesday</span><span class="time">8:00 AM - 5:00 PM</span></li>
+                        <li><span class="day">Wednesday</span><span class="time">8:00 AM - 5:00 PM</span></li>
+                        <li><span class="day">Thursday</span><span class="time">8:00 AM - 5:00 PM</span></li>
+                        <li><span class="day">Friday</span><span class="time">8:00 AM - 5:00 PM</span></li>
+                    </ul>
                 </div>
             </div>
         </div>
