@@ -20,7 +20,7 @@
             --info: #3b82f6;
             --light: #f3f4f6;
             --dark: #1f2937;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --gradient: #2196F3;
         }
 
         * {
@@ -94,7 +94,7 @@
         }
 
         .nav-link:hover, .nav-link.active {
-            background: var(--primary);
+            background: #2196F3;
             color: white;
             transform: translateY(-2px);
         }
@@ -289,14 +289,14 @@
         }
         
         .btn-view {
-            background-color: #4f46e5;
-            border-color: #4f46e5;
+            background-color: #2196F3;
+            border-color: #2196F3;
             color: white;
         }
         
         .btn-view:hover {
-            background-color: #4338ca;
-            border-color: #4338ca;
+            background-color: #2196F3;
+            border-color: #2196F3;
         }
         
         .btn-visit {
@@ -324,7 +324,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <a class="navbar-brand" href="{{ route('clinic-staff.dashboard') }}">
-                <i class="fas fa-heartbeat"></i>
+                <img src="{{ asset('logo.jpg') }}" alt="PDMHS Logo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                 PDMHS Clinic
             </a>
             <ul class="navbar-menu">

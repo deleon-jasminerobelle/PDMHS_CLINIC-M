@@ -195,9 +195,9 @@
         }
     </style>
 </head>
-<body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--dark); min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow-x: hidden;">
-<div style="background: var(--white); border-radius: 20px; box-shadow: 0 32px 64px var(--shadow-blue); border: 1px solid var(--shadow-blue-light); padding: 48px; width: 800px; position: relative; min-height: fit-content; margin: 2rem auto;" class="login-container">
-    <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);"></div>
+<body class="font-poppins text-slate-900 min-h-screen flex items-center justify-center overflow-x-hidden" style="background: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);">
+<div class="bg-white rounded-2xl shadow-2xl p-12 w-full relative login-container" style="max-width: 700px; min-height: 800px;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);"></div>
 
     <div style="text-align: center; margin-bottom: 2rem;">
         <h1 style="color: var(--primary); font-size: 40px; font-weight: 900; margin-bottom: 0.5rem;">Welcome Back</h1>
@@ -247,7 +247,7 @@
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
             <button type="button" class="role-btn" style="padding: 1.25rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; background: white; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); text-align: center;" data-role="clinic_staff">
                 <div style="margin-bottom: 0.75rem; display: flex; justify-content: center;">
-                    <div style="width: 3rem; height: 3rem; background: linear-gradient(135deg, #10b981, #34d399); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; animation: pulse 2s infinite;">🏥</div>
+                    <img src="{{ asset('assets/nurse.png') }}" alt="Clinic Staff" style="width: 3rem; height: 3rem;" class="role-icon">
                 </div>
                 <div class="role-name" style="font-weight: 600; color: #374151; font-size: 20px; font-family: 'Albert Sans', sans-serif;">Clinic Staff</div>
             </button>
@@ -259,7 +259,7 @@
             </button>
             <button type="button" class="role-btn" style="padding: 1.25rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; background: white; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); text-align: center;" data-role="adviser">
                 <div style="margin-bottom: 0.75rem; display: flex; justify-content: center;">
-                    <div style="width: 3rem; height: 3rem; background: linear-gradient(135deg, #f59e0b, #fbbf24); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; animation: pulse 2s infinite;">👨‍🏫</div>
+                    <img src="{{ asset('assets/adviser.png') }}" alt="Adviser" style="width: 3rem; height: 3rem;" class="role-icon">
                 </div>
                 <div class="role-name" style="font-weight: 600; color: #374151; font-size: 20px; font-family: 'Albert Sans', sans-serif;">Adviser</div>
             </button>

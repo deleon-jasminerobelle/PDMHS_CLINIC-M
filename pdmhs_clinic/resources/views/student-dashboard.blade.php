@@ -22,7 +22,7 @@
             --white: #ffffff;
             --success: #10b981;
             --warning: #f59e0b;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --gradient: #2196F3;
             --danger: #ef4444;
             --info: #60a5fa;
             --gray-light: #f8fafc;

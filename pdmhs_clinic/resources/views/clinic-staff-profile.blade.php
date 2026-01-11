@@ -20,7 +20,7 @@
             --info: #3b82f6;
             --light: #f3f4f6;
             --dark: #1f2937;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --gradient: #2196F3;
         }
 
         * {
@@ -64,7 +64,7 @@
         .navbar-brand {
             font-family: 'Albert Sans', sans-serif;
             font-size: 20px;
-            font-weight: 700;
+            font-weight: 500;
             color: var(--primary);
             text-decoration: none;
             display: flex;
@@ -94,7 +94,7 @@
         }
 
         .nav-link:hover, .nav-link.active {
-            background: var(--primary);
+            background: #2196F3;
             color: white;
             transform: translateY(-2px);
         }
@@ -204,17 +204,17 @@
         
         .profile-title {
             color: #2c3e50;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 0.5rem;
             font-family: 'Albert Sans', sans-serif;
-            font-size: 35px;
+            font-size: 32px;
         }
         
         .profile-subtitle {
             color: #6c757d;
             margin-bottom: 0;
             font-family: 'Albert Sans', sans-serif;
-            font-size: 25px;
+            font-size: 20px;
             font-weight: 700;
         }
         
@@ -277,31 +277,22 @@
         }
         
         .btn-primary {
-            background: var(--primary) !important;
+            background: #2196F3 !important;
             border: none;
             border-radius: 10px;
             padding: 0.75rem 2rem;
             font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-dark) !important;
-            transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
         }
         
         .btn-outline-secondary {
-            border: 2px solid #6c757d;
+            background: #2196F3 !important;
+            color: white;
+            border: none;
             border-radius: 10px;
-            padding: 0.5rem 1.5rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-outline-secondary:hover {
-            background-color: #6c757d;
-            border-color: #6c757d;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
         }
         
         .btn-danger {
@@ -440,7 +431,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <a class="navbar-brand" href="{{ route('clinic-staff.dashboard') }}">
-                <i class="fas fa-heartbeat"></i>
+                <img src="{{ asset('logo.jpg') }}" alt="PDMHS Logo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                 PDMHS Clinic
             </a>
             <ul class="navbar-menu">

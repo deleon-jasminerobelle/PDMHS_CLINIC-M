@@ -39,15 +39,14 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
             border-bottom: 1px solid rgba(30, 64, 175, 0.1);
             z-index: 1000;
             transition: all 0.3s ease;
         }
 
         .navbar.scrolled {
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            background: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
@@ -64,7 +63,7 @@
         .logo {
             font-size: 1.5rem;
             font-weight: 800;
-            color: var(--white);
+            color: white;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -80,7 +79,7 @@
 
         .nav-links a {
             text-decoration: none;
-            color: var(--white);
+            color: white;
             font-weight: 600;
             font-size: 25px;
             font-family: 'Epilogue', sans-serif;
@@ -88,13 +87,13 @@
         }
 
         .nav-links a:hover {
-            color: var(--accent);
+            color: rgba(255, 255, 255, 0.8);
         }
 
         /* Hero Section */
         .hero {
             min-height: 100vh;
-            background: linear-gradient(rgba(248, 250, 252, 0.8), rgba(224, 242, 254, 0.8)), url('/pdmhs.jpg');
+            background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('/pdmhs.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -129,15 +128,13 @@
             font-size: 70px;
             font-weight: 800;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #1877f2;
             line-height: 1.2;
         }
 
         .hero p {
             font-size: 23px;
-            font-weight: 500;
+            font-weight: 700;
             color: var(--gray);
             margin-bottom: 2rem;
             max-width: 600px;
@@ -397,7 +394,7 @@
         /* How It Works Section */
         .how-it-works {
             padding: 5rem 2rem;
-            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            background: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
         }
 
         .how-it-works-container {
@@ -578,7 +575,7 @@
         }
 
         .modal-header-section {
-            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            background: #1877f2;
             padding: 3.5rem 4rem 3rem;
             text-align: center;
             border-radius: 24px 24px 0 0;
@@ -617,7 +614,7 @@
             font-size: 2rem;
             font-weight: 800;
             margin-bottom: 0.5rem;
-            color: var(--white);
+            color: white;
             line-height: 1.3;
         }
 
@@ -924,7 +921,7 @@
         /* Features Section */
         .features {
             padding: 5rem 2rem;
-            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            background: white;
         }
 
         .features-container {
@@ -941,14 +938,13 @@
             font-size: 3rem;
             font-weight: 800;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: white;
         }
 
         .section-header p {
             font-size: 1.2rem;
-            color: var(--gray);
+            font-weight: 700;
+            color: white;
             max-width: 600px;
             margin: 0 auto;
         }

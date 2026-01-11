@@ -20,7 +20,7 @@
             --info: #3b82f6;
             --light: #f3f4f6;
             --dark: #1f2937;
-            --gradient: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
+            --gradient: #2196F3;
         }
 
         * {
@@ -94,7 +94,7 @@
         }
 
         .nav-link:hover, .nav-link.active {
-            background: var(--primary);
+            background: #2196F3;
             color: white;
             transform: translateY(-2px);
         }
@@ -199,8 +199,9 @@
         }
         
         .page-title {
-            font-size: 2rem;
-            font-weight: 700;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
             color: var(--dark);
             margin-bottom: 0.5rem;
         }
@@ -391,7 +392,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <a class="navbar-brand" href="{{ Auth::user()->role === 'adviser' ? route('adviser.dashboard') : route('clinic-staff.dashboard') }}">
-                <i class="fas fa-heartbeat"></i>
+                <img src="{{ asset('logo.jpg') }}" alt="PDMHS Logo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                 PDMHS Clinic
             </a>
             <ul class="navbar-menu">
@@ -478,7 +479,7 @@
             </div>
 
             <div class="scanner-controls" style="display: flex; justify-content: center; align-items: center; text-align: center;">
-                <button class="btn btn-primary" id="start-btn">
+                <button class="btn btn-primary" id="start-btn" style="background: white !important; color: #2196F3 !important; border: 2px solid #2196F3 !important; font-weight: 700;">
                     <i class="fas fa-camera me-1"></i> Start Scanner
                 </button>
                 <button class="btn btn-secondary" id="stop-btn" style="display: none;">

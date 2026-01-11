@@ -20,7 +20,7 @@
             --info: #3b82f6;
             --light: #f3f4f6;
             --dark: #1f2937;
-            --gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --gradient: #2196F3;
         }
 
         * {
@@ -94,7 +94,7 @@
         }
 
         .nav-link:hover, .nav-link.active {
-            background: var(--primary);
+            background: #2196F3;
             color: white;
             transform: translateY(-2px);
         }
@@ -198,7 +198,7 @@
         
         .page-title {
             font-family: 'Albert Sans', sans-serif;
-            font-weight: 600;
+            font-weight: 800;
             font-size: 32px;
             margin-bottom: 0.5rem;
         }
@@ -349,14 +349,14 @@
 
         /* Custom Button Styles */
         .btn-primary {
-            background: var(--primary) !important;
-            border-color: var(--primary) !important;
+            background: #2196F3 !important;
+            border-color: #2196F3 !important;
             color: white !important;
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark) !important;
-            border-color: var(--primary-dark) !important;
+            background: #2196F3 !important;
+            border-color: #2196F3 !important;
         }
 
         .btn-outline-primary {
@@ -377,7 +377,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <a class="navbar-brand" href="{{ route('clinic-staff.dashboard') }}">
-                <i class="fas fa-heartbeat"></i>
+                <img src="{{ asset('logo.jpg') }}" alt="PDMHS Logo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                 PDMHS Clinic
             </a>
             <ul class="navbar-menu">
@@ -479,7 +479,7 @@
     <div class="modal fade" id="newVisitModal" tabindex="-1" aria-labelledby="newVisitModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header text-white" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); border-bottom: none;">
+                <div class="modal-header text-white" style="background: #2196F3; border-bottom: none;">
                     <h5 class="modal-title" id="newVisitModalLabel">
                         <i class="fas fa-plus me-2"></i>New Medical Visit
                     </h5>
@@ -685,7 +685,7 @@
     <div class="modal fade" id="qrScannerModal" tabindex="-1" aria-labelledby="qrScannerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header text-white" style="background: #2196F3;">
                     <h5 class="modal-title" id="qrScannerModalLabel">
                         <i class="fas fa-qrcode me-2"></i>Scan Student QR Code
                     </h5>
@@ -715,7 +715,7 @@
 
                     <div class="instructions mt-4">
                         <h6><i class="fas fa-info-circle me-2"></i>Instructions</h6>
-                        <ol class="text-start">
+                        <ol class="text-start" style="font-weight: 600;">
                             <li>Click "Start Scanner" to activate the camera</li>
                             <li>Position the student's QR code within the highlighted frame</li>
                             <li>Wait for automatic detection and student selection</li>
