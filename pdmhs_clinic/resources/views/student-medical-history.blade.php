@@ -72,6 +72,13 @@
             gap: 0.5rem;
         }
 
+        .navbar-brand img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
         .navbar-menu {
             display: flex;
             gap: 2rem;
@@ -775,7 +782,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <a class="navbar-brand" href="{{ route('student.dashboard') }}">
-                <i class="fas fa-clinic-medical"></i>
+                <img src="{{ asset('logo.jpg') }}" alt="PDMHS Logo">
                 PDMHS Clinic
             </a>
 

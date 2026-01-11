@@ -460,7 +460,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <a class="navbar-brand" href="{{ route('clinic-staff.dashboard') }}">
-                <img src="{{ asset('logo.jpg') }}" alt="PDMHS Logo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                <i class="fas fa-heartbeat"></i>
                 PDMHS Clinic
             </a>
             <ul class="navbar-menu">
@@ -630,7 +630,7 @@
                                     <h6 class="mb-1 allergy-name">{{ $student->first_name }} {{ $student->last_name }}</h6>
                                     <p class="mb-0 allergy-list">
                                         @if(is_array($student->allergies))
-                                            {{ implode(', ', $student->allergies) }}
+                                            {{ collect($student->allergies)->flatten()->implode(', ') }}
                                         @else
                                             {{ $student->allergies ?: 'Allergies recorded' }}
                                         @endif

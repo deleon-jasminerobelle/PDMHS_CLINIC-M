@@ -70,6 +70,13 @@
             gap: 0.5rem;
         }
 
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
         .nav-links {
             display: flex;
             list-style: none;
@@ -1218,8 +1225,8 @@
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="{{ route('home') }}" class="logo">
-              
-              
+                <img src="{{ asset('logo.jpg') }}" alt="PDMHS Logo">
+                PDMHS Clinic
             </a>
             <ul class="nav-links">
                 <li><a href="{{ route('home') }}">Home</a></li>
