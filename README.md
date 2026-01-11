@@ -38,7 +38,7 @@ A secure and comprehensive medical management system built for **President Diosd
 ### Backend
 
 * **Laravel (PHP 8.2+)** – Robust MVC framework
-* **MySQL 8.0+ / PostgreSQL 13+** – Relational database
+* **MySQL – Relational database
 * **Redis** – Cache & session management
 
 ### Frontend
@@ -80,7 +80,7 @@ Make sure you have the following installed:
 * PHP **8.2+**
 * Composer
 * Node.js **18+** and npm
-* MySQL **8.0+** or PostgreSQL **13+**
+* MySQL **8.0+**
 * Git
 
 ---
