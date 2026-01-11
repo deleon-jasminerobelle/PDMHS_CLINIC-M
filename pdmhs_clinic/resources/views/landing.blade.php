@@ -201,12 +201,20 @@
         /* Health Tips Carousel */
         .health-tips {
             padding: 5rem 2rem;
-            background: #1877f2;
+            background: var(--white);
         }
 
         .tips-container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .health-tips .section-header h2 {
+            color: var(--dark);
+        }
+
+        .health-tips .section-header p {
+            color: var(--gray);
         }
 
         .carousel {
@@ -318,12 +326,20 @@
         /* Educational Articles */
         .educational-articles {
             padding: 5rem 2rem;
-            background: #1877f2;
+            background: var(--white);
         }
 
         .articles-container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .educational-articles .section-header h2 {
+            color: #000000;
+        }
+
+        .educational-articles .section-header p {
+            color: #000000;
         }
 
         .articles-grid {
@@ -401,12 +417,20 @@
         /* How It Works Section */
         .how-it-works {
             padding: 5rem 2rem;
-            background: #1877f2;
+            background: var(--white);
         }
 
         .how-it-works-container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .how-it-works .section-header h2 {
+            color: var(--dark);
+        }
+
+        .how-it-works .section-header p {
+            color: var(--gray);
         }
 
         .steps-grid {
@@ -1014,6 +1038,14 @@
         .contact-section {
             padding: 5rem 2rem;
             background: var(--white);
+        }
+
+        .contact-section .section-header h2 {
+            color: #000000;
+        }
+
+        .contact-section .section-header p {
+            color: #000000;
         }
 
         .contact-container {
