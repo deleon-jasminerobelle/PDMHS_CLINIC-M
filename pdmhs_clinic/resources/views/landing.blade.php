@@ -1250,6 +1250,105 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Animated Nurse Cat Guide */
+        .nurse-cat-guide {
+            position: fixed;
+            top: 50%;
+            left: 5%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .nurse-cat-guide.dragging {
+            cursor: grabbing;
+        }
+
+        .cat-container {
+            position: relative;
+            width: 200px;
+            height: 180px;
+        }
+
+        .cat-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 12px rgba(30, 64, 175, 0.3));
+            animation: cat-float 3s ease-in-out infinite;
+        }
+
+        @keyframes cat-float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Speech Bubble */
+        .speech-bubble {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 10px 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            animation: bubble-appear 3s ease-in-out infinite;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        @keyframes bubble-appear {
+            0%, 100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(5px);
+            }
+            50% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .bubble-text {
+            color: #1e40af;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .bubble-arrow {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #ffffff;
+        }
+
+        /* Responsive adjustments for cat */
+        @media (max-width: 768px) {
+            .nurse-cat-guide {
+                left: 2%;
+                top: 60%;
+            }
+
+            .cat-container {
+                width: 150px;
+                height: 135px;
+            }
+
+            .speech-bubble {
+                display: none; /* Hide bubble on mobile for cleaner look */
+            }
+        }
     </style>
 </head>
 <body>
@@ -1271,10 +1370,61 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <!-- Animated Nurse Cat Guide -->
+        <div class="nurse-cat-guide" id="nurse-cat">
+            <div class="cat-container">
+                <svg class="cat-svg" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Nurse Hat -->
+                    <path d="M85 15 L115 15 L120 5 L80 5 Z" fill="#ffffff" stroke="#1e40af" stroke-width="2"/>
+                    <!-- Medical Cross -->
+                    <circle cx="100" cy="10" r="3" fill="#dc2626"/>
+                    <rect x="95" y="5" width="10" height="2" fill="#dc2626"/>
+
+
+                    <!-- Cat Ears -->
+                    <path d="M70,40 Q75,20 80,25 Q85,20 90,40 Z" fill="#60a5fa"/>
+                    <path d="M110,40 Q115,20 120,25 Q125,20 130,40 Z" fill="#60a5fa"/>
+                    <path d="M75,35 Q78,25 80,28 Q82,25 85,35 Z" fill="#ffffff"/>
+                    <path d="M115,35 Q118,25 120,28 Q122,25 125,35 Z" fill="#ffffff"/>
+
+                    <!-- Cat Face -->
+                    <ellipse cx="100" cy="65" rx="35" ry="30" fill="#60a5fa"/>
+
+                    <!-- Eyes -->
+                    <circle cx="88" cy="58" r="4" fill="#ffffff"/>
+                    <circle cx="112" cy="58" r="4" fill="#ffffff"/>
+                    <circle cx="89" cy="57" r="2" fill="#000000"/>
+                    <circle cx="113" cy="57" r="2" fill="#000000"/>
+
+                    <!-- Nose -->
+                    <polygon points="98,68 102,68 100,72" fill="#ff6b6b"/>
+
+                    <!-- Mouth -->
+                    <path d="M95 75 Q100 80 105 75" stroke="#000000" stroke-width="1.5" fill="none"/>
+                    <line x1="95" y1="75" x2="92" y2="72" stroke="#000000" stroke-width="1.5"/>
+                    <line x1="105" y1="75" x2="108" y2="72" stroke="#000000" stroke-width="1.5"/>
+
+                    <!-- Whiskers -->
+                    <line x1="65" y1="65" x2="75" y2="68" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="65" y1="70" x2="75" y2="70" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="125" y1="68" x2="135" y2="65" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="125" y1="70" x2="135" y2="70" stroke="#ffffff" stroke-width="2"/>
+
+
+                </svg>
+
+                <!-- Speech Bubble -->
+                <div class="speech-bubble">
+                    <div class="bubble-text">Hi, I am bluey, do you need help?</div>
+                    <div class="bubble-arrow"></div>
+                </div>
+            </div>
+        </div>
+
         <div class="hero-content fade-in">
             <h1>PDMHS Student</h1>
             <h1>Medical System</h1>
-            
+
             <p>Modern Healthcare Management designed specifically for PDMHS students. Secure, Efficient, and Accessible.</p>
         </div>
     </section>
@@ -1909,6 +2059,165 @@
             if (event.key === 'Escape') {
                 closeAboutModal();
             }
+        });
+
+        // Function to show signup/login instructions
+        function showSignupInstructions() {
+            const instructions = `
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    padding: 30px;
+                    border-radius: 20px;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                    z-index: 10000;
+                    max-width: 500px;
+                    width: 90%;
+                    font-family: 'Epilogue', sans-serif;
+                    border: 2px solid #1e40af;
+                ">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 3rem; margin-bottom: 10px;">🐱‍👤</div>
+                        <h3 style="color: #1e40af; margin: 0; font-size: 1.5rem; font-weight: 700;">Welcome to PDMHS Clinic!</h3>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #1e40af; margin-bottom: 15px; font-size: 1.2rem;">How to Get Started:</h4>
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                            <strong style="color: #1e40af;">For Students:</strong><br>
+                            1. Click "Sign Up" in the navigation<br>
+                            2. Fill out your student information<br>
+                            3. Complete your health form<br>
+                            4. Access your dashboard
+                        </div>
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                            <strong style="color: #1e40af;">For Advisers:</strong><br>
+                            1. Click "Sign Up" in the navigation<br>
+                            2. Select "Adviser" role<br>
+                            3. Provide your credentials<br>
+                            4. Manage your students
+                        </div>
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 10px;">
+                            <strong style="color: #1e40af;">For Clinic Staff:</strong><br>
+                            1. Click "Sign Up" in the navigation<br>
+                            2. Select "Clinic Staff" role<br>
+                            3. Provide your credentials<br>
+                            4. Access clinic management tools
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button onclick="this.parentElement.parentElement.remove()" style="
+                            background: #1e40af;
+                            color: white;
+                            border: none;
+                            padding: 12px 30px;
+                            border-radius: 25px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            font-size: 1rem;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.background='#1e3a8a'" onmouseout="this.style.background='#1e40af'">
+                            Got it! Let's Get Started
+                        </button>
+                    </div>
+                </div>
+                <div style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.5);
+                    z-index: 9999;
+                " onclick="this.nextElementSibling.remove(); this.remove();"></div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', instructions);
+        }
+
+        // Nurse Cat Guide Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const nurseCat = document.getElementById('nurse-cat');
+            const navLinks = document.querySelector('.nav-links');
+            let isDragging = false;
+            let dragStartX = 0;
+            let dragStartY = 0;
+            let catStartX = 0;
+            let catStartY = 0;
+
+            // Dragging functionality
+            nurseCat.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                const rect = nurseCat.getBoundingClientRect();
+                catStartX = rect.left;
+                catStartY = rect.top;
+                nurseCat.classList.add('dragging');
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (isDragging) {
+                    wasDragged = true;
+                    const deltaX = e.clientX - dragStartX;
+                    const deltaY = e.clientY - dragStartY;
+                    const newX = catStartX + deltaX;
+                    const newY = catStartY + deltaY;
+
+                    // Keep cat within viewport bounds
+                    const maxX = window.innerWidth - nurseCat.offsetWidth;
+                    const maxY = window.innerHeight - nurseCat.offsetHeight;
+                    const clampedX = Math.max(0, Math.min(newX, maxX));
+                    const clampedY = Math.max(0, Math.min(newY, maxY));
+
+                    nurseCat.style.left = clampedX + 'px';
+                    nurseCat.style.top = clampedY + 'px';
+                    nurseCat.style.transform = 'none'; // Remove initial transform
+                }
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    nurseCat.classList.remove('dragging');
+                }
+            });
+
+            // Make cat clickable (when not dragging) to show signup/login instructions
+            let wasDragged = false;
+            nurseCat.addEventListener('mousedown', function(e) {
+                wasDragged = false;
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                const rect = nurseCat.getBoundingClientRect();
+                catStartX = rect.left;
+                catStartY = rect.top;
+                nurseCat.classList.add('dragging');
+                e.preventDefault();
+            });
+
+            nurseCat.addEventListener('click', function(e) {
+                if (!wasDragged) {
+                    showSignupInstructions();
+                }
+            });
+
+            // Add highlight animation for nav links
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes highlight-nav {
+                    0%, 100% {
+                        box-shadow: 0 0 0 0 rgba(30, 64, 175, 0.4);
+                    }
+                    50% {
+                        box-shadow: 0 0 0 10px rgba(30, 64, 175, 0.1);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
         });
     </script>
 </body>
