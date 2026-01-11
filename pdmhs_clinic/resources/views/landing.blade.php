@@ -336,7 +336,7 @@
             background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 40px rgba(128, 128, 128, 0.25), 0 8px 20px rgba(128, 128, 128, 0.15);
             transition: all 0.3s ease;
             text-decoration: none;
             display: block;
@@ -421,7 +421,7 @@
             padding: 2.5rem 2rem;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 40px rgba(128, 128, 128, 0.25), 0 8px 20px rgba(128, 128, 128, 0.15);
             border: 2px solid transparent;
             transition: all 0.3s ease;
             position: relative;
