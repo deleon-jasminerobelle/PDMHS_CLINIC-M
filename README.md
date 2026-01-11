@@ -63,6 +63,14 @@ A secure and comprehensive medical management system built for **President Diosd
 
 ---
 
+| Name                  | Role(s)                       | Contributions                                                       | Commit Focus               
+| --------------------- | ----------------------------- | ------------------------------------------------------------------- | -------------------------- 
+| **Clarence Villas**   | UX/UI · Developer · Tech Lead | UI/UX design, system architecture, core development, code review    | Frontend · Backend · UI/UX 
+| **Jasmine De Leon**   | Project Manager · Developer   | Project coordination, feature development, testing support          | Backend · Docs · Testing  
+| **Krislyn Francisco** | Developer                     | Debugging, documentation                                            | Backend · Docs  
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
