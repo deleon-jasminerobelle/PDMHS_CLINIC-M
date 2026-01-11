@@ -20,6 +20,7 @@
             --info: #3b82f6;
             --light: #f3f4f6;
             --dark: #1f2937;
+            --gradient: #2196F3;
         }
 
         * {
@@ -30,7 +31,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient);
             min-height: 100vh;
             padding-bottom: 2rem;
         }
@@ -93,7 +94,7 @@
         }
 
         .nav-link:hover, .nav-link.active {
-            background: var(--primary);
+            background: #2196F3;
             color: white;
             transform: translateY(-2px);
         }
@@ -198,8 +199,9 @@
         }
 
         .page-title {
-            font-size: 2rem;
-            font-weight: 700;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
             color: var(--dark);
             margin-bottom: 0.5rem;
         }
@@ -207,6 +209,7 @@
         .page-subtitle {
             color: #6b7280;
             font-size: 1.1rem;
+            font-weight: 500;
             margin-bottom: 0;
         }
 
@@ -508,7 +511,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <a class="navbar-brand" href="{{ route('adviser.dashboard') }}">
-                <i class="fas fa-heartbeat"></i>
+                <img src="{{ asset('logo.jpg') }}" alt="PDMHS Logo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                 PDMHS Clinic
             </a>
             <ul class="navbar-menu">
