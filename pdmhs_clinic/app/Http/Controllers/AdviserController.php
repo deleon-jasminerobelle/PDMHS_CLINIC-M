@@ -39,7 +39,16 @@ class AdviserController extends Controller
                 $query->whereIn('id', $students->pluck('id'));
             })->with('student')->orderBy('visit_date', 'desc')->limit(10)->get();
 
-            $studentsWithAllergies = $students->where('allergies', '!=', '')->whereNotNull('allergies')->count();
+            $studentsWithAllergies = $students->where('allergies', '!=', '')->whereNotNull('allergies');
+
+            // Prepare recent activities for display
+            $recentActivities = $recentVisits->take(5)->map(function ($visit) {
+                return (object) [
+                    'student_name' => $visit->student->first_name . ' ' . $visit->student->last_name,
+                    'type' => 'Clinic Visit',
+                    'date' => $visit->visit_date->format('M d, Y')
+                ];
+            });
 
             $studentsData = $students->map(function ($student) {
                 $latestVitals = $this->getLatestVitalsForStudent($student);
