@@ -15,6 +15,7 @@ use App\Http\Controllers\VitalController;
 use App\Http\Controllers\HealthFormController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BlueyBotController;
 use App\Http\Middleware\CheckHealthForm; // <-- directly use middleware class
 
 /*
@@ -31,6 +32,18 @@ Route::get('/register', fn() => view('register'))->name('register');
 Route::post('/register', [LoginController::class, 'register'])->name('register.post');
 
 Route::get('/feature', fn() => view('feature'))->name('features');
+
+/*
+|--------------------------------------------------------------------------
+| Bluey Health Bot Routes (Public Access)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('bluey')->name('bluey.')->group(function () {
+    Route::get('/', [BlueyBotController::class, 'index'])->name('chat');
+    Route::post('/ask', [BlueyBotController::class, 'ask'])->name('ask');
+    Route::get('/tip', [BlueyBotController::class, 'tip'])->name('tip');
+    Route::get('/topics', [BlueyBotController::class, 'topics'])->name('topics');
+});
 
 /*
 |--------------------------------------------------------------------------

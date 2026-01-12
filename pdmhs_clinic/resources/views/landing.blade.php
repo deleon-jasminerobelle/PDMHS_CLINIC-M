@@ -1415,7 +1415,7 @@
 
                 <!-- Speech Bubble -->
                 <div class="speech-bubble">
-                    <div class="bubble-text">Hi, I am bluey, do you need help?</div>
+                    <div class="bubble-text">Hi, I'm Bluey! Click me for health tips! 💙</div>
                     <div class="bubble-arrow"></div>
                 </div>
             </div>
@@ -2201,7 +2201,8 @@
 
             nurseCat.addEventListener('click', function(e) {
                 if (!wasDragged) {
-                    showSignupInstructions();
+                    // Redirect to Bluey Health Bot
+                    window.location.href = '/bluey';
                 }
             });
 
